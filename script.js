@@ -284,7 +284,7 @@ function resize() {
 		const aspect = rendererWidth / rendererHeight;
 		cameras[cameraMode].aspect = aspect;
 	} else {
-		alert(window.innerHeight);
+		alert(rendererHeight);
 		cameras[cameraMode].left = -rendererWidth * cameraFrustumSize;
 		cameras[cameraMode].right = rendererWidth * cameraFrustumSize;
 		cameras[cameraMode].top = rendererHeight * cameraFrustumSize;
