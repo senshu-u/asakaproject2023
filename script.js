@@ -1,9 +1,12 @@
 import * as THREE from "three";
+// import CameraControls from "./node_modules/camera-controls/dist/camera-controls.module.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-
+ 
 console.log(THREE);
 console.log(OrbitControls);
+
+// CameraControls.install({THREE: THREE});
 
 // マップの3Dモデルが置かれているディレクトリのパスとファイル名をまとめた連想配列
 const map3DModelPaths = {
@@ -22,7 +25,7 @@ const map3DModelPaths = {
 };
 
 // アイコンのパスをまとめた連想配列
-const mapInfoIconPaths = {
+const mapInfoIcon = {
 	"男子トイレ": "data/icon/stairsIcon.png",
 	"女子トイレ": "data/icon/stairsIcon.png",
 	"階段": "data/icon/stairsIcon.png",
@@ -32,7 +35,7 @@ const mapInfoIconPaths = {
 };
 
 // レンダラーの作成
-const canvas = document.querySelector("#canvas");
+const canvas = document.getElementById("canvas");
 const renderer = new THREE.WebGLRenderer({
 	canvas: canvas
 });
@@ -80,17 +83,23 @@ renderer.setAnimationLoop(animation);
 function animation() {
 	// OrbitControlsでカメラを滑らかに動かすためのupdate()
 	controls.update();
+
+	// const delta = clock.getDelta();
+	// cameraControls.update(delta);
 	renderer.render(scene, cameras[cameraMode]);
 
 	// 教室名やアイコンなどをマップのオブジェクトに付ける関数
 	setMapInfoPos();
+
+	// let cameraPosition = cameras[cameraMode].position.x + ", " + cameras[cameraMode].position.y + ", " + cameras[cameraMode].position.z;
+	// document.getElementById("mapName").textContent = cameras[cameraMode].zoom;
 }
 
 // 教室名やアイコンなどをマップのオブジェクトに付ける関数
 function setMapInfoPos() {
 	for (let mapInfo of document.getElementsByClassName("mapInfo")) {
 		// 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
-		let [x, y] = getCoord(mapInfo.dataset.name);
+		let [x, y] = getMapObjCoord(mapInfo.dataset.name);
 
 		x = x - mapInfo.getBoundingClientRect().width / 2;
 		y = y - mapInfo.getBoundingClientRect().height / 2;
@@ -100,7 +109,7 @@ function setMapInfoPos() {
 }
 
 // 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
-function getCoord(mapObj) {
+function getMapObjCoord(mapObj) {
 	let target = scene.getObjectByName(mapObj);
 	
 	const targetWorldPos = target.getWorldPosition(new THREE.Vector3());
@@ -112,10 +121,25 @@ function getCoord(mapObj) {
 	return [targetCanvasX, targetCanvasY];
 }
 
+// const clock = new THREE.Clock();
+// const cameraControls = new CameraControls(cameras[cameraMode], mapArea);
+
+// OrbitControlsのインスタンスを作成
+const mapArea  = document.getElementById("mapArea");
+const controls = new OrbitControls(cameras[cameraMode], mapArea);
+controls.enableDamping = true;
+controls.enableRotate = true;
+controls.mouseButtons["LEFT"] = THREE.MOUSE.PAN;
+controls.mouseButtons["RIGHT"] = THREE.MOUSE.ROTATE;
+controls.touches["ONE"] = THREE.TOUCH.PAN;
+controls.touches["TWO"] = THREE.TOUCH.DOLLY_ROTATE;
+controls.minZoom = 1;
+console.log(controls.target);
+
+
 let mapMode = 2;
 // 教室名やアイコンなどを作る関数
 function createMapInfo(mapNames) {
-	const mapArea = document.getElementById("mapArea");
 	switch (mapMode) {
 		case 0:
 			break;
@@ -125,7 +149,7 @@ function createMapInfo(mapNames) {
 			for (let mapObj of scene.getObjectByName(mapNames).children) {
 				if (mapObj.name != "object") {
 					const mapObjNamefirstWord = mapObj.name.substring(0, mapObj.name.indexOf("_"));
-					if (Object.keys(mapInfoIconPaths).includes(mapObjNamefirstWord)) {
+					if (Object.keys(mapInfoIcon).includes(mapObjNamefirstWord)) {
 						// アイコンを作る
 						const mapInfo = document.createElement("div");
 						mapInfo.classList.add("mapInfo");
@@ -133,9 +157,8 @@ function createMapInfo(mapNames) {
 						mapInfo.dataset.name = mapObj.name;
 
 						const icon = document.createElement("img");
-						icon.src = mapInfoIconPaths[mapObjNamefirstWord];
+						icon.src = mapInfoIcon[mapObjNamefirstWord];
 						icon.alt = mapObjNamefirstWord;
-						icon.width = 20;
 						icon.height = 20;
 
 						mapInfo.appendChild(icon);
@@ -176,6 +199,7 @@ async function loadMap(mapName) {
 		floorNames.push(map.name);
 		map.position.set(0, count * 1, 0);
 
+		console.log(map);
 		scene.add(map);
 		count++;
 	}
@@ -190,27 +214,22 @@ loadMap("10号館").then(function(mapNames) {
 	createMapInfo("1");
 });
 
-// カメラを操作
-const test  = document.getElementById("mapArea");
-console.log(renderer.domElement);
-const controls = new OrbitControls(cameras[cameraMode], test);
-controls.enableDamping = true;
-
 // 3Dモデルのクリックの設定
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 
-// canvasにクリックイベントを追加
-canvas.addEventListener("click", function(event) {
-	const canvasOffset = canvas.getBoundingClientRect();
+/*
+// mapAreaにクリックイベントを追加
+mapArea.addEventListener("click", function(event) {
+	const mapAreaOffset = mapArea.getBoundingClientRect();
 	// .setFromCamera()に必要な正規化デバイス座標に変換したマウスカーソルの座標の取得方法
-	// ブラウザウィンドウの左上を基準にマウスカーソルの座標を取得して、canvasの座標を引くことで、
-	// canvasの左上を基準にしたマウスカーソルの座標を取得する
-	// 取得したcanvas上のマウスカーソルのx座標をcanvasの幅で割る
-	// これにより、canvasの幅を0から1としたときのマウスカーソルのx座標を得られる
+	// ブラウザウィンドウの左上を基準にマウスカーソルの座標を取得して、mapAreaの座標を引くことで、
+	// mapAreaの左上を基準にしたマウスカーソルの座標を取得する
+	// 取得したmapArea上のマウスカーソルのx座標をmapAreaの幅で割る
+	// これにより、mapAreaの幅を0から1としたときのマウスカーソルのx座標を得られる
 	// これを2倍して1引くことで、-1から1の範囲でマウスカーソルのx座標を得られる
-	pointer.x = (event.clientX - canvasOffset.left) / canvasOffset.width * 2 - 1;
-	pointer.y = (event.clientY - canvasOffset.top) / canvasOffset.height * -2 + 1;
+	pointer.x = (event.clientX - mapAreaOffset.left) / mapAreaOffset.width * 2 - 1;
+	pointer.y = (event.clientY - mapAreaOffset.top) / mapAreaOffset.height * -2 + 1;
 	raycaster.setFromCamera(pointer, cameras[cameraMode]);
 	// console.log(pointer);
 
@@ -221,6 +240,30 @@ canvas.addEventListener("click", function(event) {
 		console.log(intersects[0].object);
 	}
 });
+*/
+
+function getClickedMapObj(event) {
+	if (isClick(event.clientX, event.clientY)) {
+		const mapAreaOffset = mapArea.getBoundingClientRect();
+		// .setFromCamera()に必要な正規化デバイス座標に変換したマウスカーソルの座標の取得方法
+		// ブラウザウィンドウの左上を基準にマウスカーソルの座標を取得して、mapAreaの座標を引くことで、
+		// mapAreaの左上を基準にしたマウスカーソルの座標を取得する
+		// 取得したmapArea上のマウスカーソルのx座標をmapAreaの幅で割る
+		// これにより、mapAreaの幅を0から1としたときのマウスカーソルのx座標を得られる
+		// これを2倍して1引くことで、-1から1の範囲でマウスカーソルのx座標を得られる
+		pointer.x = (event.clientX - mapAreaOffset.left) / mapAreaOffset.width * 2 - 1;
+		pointer.y = (event.clientY - mapAreaOffset.top) / mapAreaOffset.height * -2 + 1;
+		raycaster.setFromCamera(pointer, cameras[cameraMode]);
+		// console.log(pointer);
+
+		const intersects = raycaster.intersectObjects(scene.children);
+		// console.log(scene.children);
+		// console.log(intersects);
+		if (intersects.length > 0) {
+			console.log(intersects[0].object);
+		}
+	}
+}
 
 // 画面のリサイズ
 window.addEventListener("resize", resize);
@@ -245,3 +288,29 @@ function resize() {
 	}
 	cameras[cameraMode].updateProjectionMatrix();
 }
+
+mapArea.addEventListener("pointerdown", getPointerdownCoord);
+mapArea.addEventListener("pointerup", getClickedMapObj);
+
+let prevX, prevY;
+function getPointerdownCoord(event) {
+	prevX = event.clientX;
+	prevY = event.clientY;
+}
+
+function isClick(currentX, currentY) {
+	const deltaX = currentX - prevX;
+	const deltaY = currentY - prevY;
+	// console.log(deltaX, deltaY);
+	if (Math.abs(deltaX) < 5 && Math.abs(deltaY) < 5) {
+		return true;
+	} else {
+		return false;
+	}
+}
+/*
+const mapLeftRotationBtn = document.getElementById("mapLeftRotationBtn");
+mapLeftRotationBtn.addEventListener("click", function(event) {
+	
+});
+*/

@@ -1,0 +1,154 @@
+/*pcバージョン*/
+body {
+	margin: 0px;
+	position: relative;
+}
+
+#headerArea {
+	display: flex;
+	position: fixed;
+	z-index: 1;
+	align-items: center;
+	height: 60px;
+	width: 100%;
+	background-color: white;
+	text-align: center;
+}
+
+#searchBox {
+	width: 600px;
+	margin: 0px auto;            /* 中央寄せ */
+	/*font-size: 100%;
+	text-align: left;/*右から入力させる*/
+	/*position: absolute;
+	top: 4%;                    /* 親要素の半分下にずらす */
+	/*left: 50%;                   /* 親要素の半分右にずらす */
+	/*transform: translateY(-50%) translateX(-50%);    /* 要素自体の半分、上と左にずらす */
+}
+.item {
+	margin: 10px;
+	padding: 10px;
+}
+img.images1 {
+		width: 50px;
+		height: 50px;
+}
+img.images2 {
+	width: 50px;
+	height: 50px;
+}
+/*#footerArea{
+	position: absolute;/* 要素の配置方法を指定 
+	bottom: 0;
+	width: 100%;/*幅を画面いっぱいに
+	display: flex;/*itemを水平に
+	justify-content: space-around;/*itemを真ん中に置(水平方向の調整)
+	align-items: center;/*itemを真ん中に置く（垂直方向の調整）
+	background-color: white;
+	z-index: 100;/* 重なり順を一番上にする 
+}*/
+
+	/*ハンバーガーアイコンに関するデータ*/
+.drawer_hidden {
+  display: none;	/* チェックボックスを非表示にする */
+}
+
+/* ハンバーガーアイコンの設置スペース */
+.drawer_open {
+	margin: 0px;
+  display: flex;
+	padding: 10px;
+  height: 40px;
+  width: 5%;
+	right: 100px;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;/* 重なり順を一番上にする */
+  cursor: pointer;
+}
+
+/* ハンバーガーメニューのアイコン */
+.drawer_open span,
+.drawer_open span:before,
+.drawer_open span:after {
+  content: '';
+  display: block;
+  height: 4px;
+  width: 27px;
+  border-radius: 3px;
+  background: #333;
+  transition: 0.5s;
+  position: absolute;
+}
+
+/* 三本線の一番上の棒の位置調整 */
+.drawer_open span:before {
+  bottom: 8px;
+	/*right: 15px;*/
+}
+
+/* 三本線の一番下の棒の位置調整 */
+.drawer_open span:after {
+  top: 8px;
+	/*right: 15px;*/
+}
+  
+/* メニューのデザイン*/
+.nav_content {
+  width: 10%;
+  height: 79.5%;
+  position: fixed;
+	top: 8.5%;
+  /*bottom: 100%;*/
+	left: 100%;
+  /*right: 0%; /* メニューを画面の外に飛ばす */
+  z-index: 99;
+  background: #fefefe;
+  transition: 0.5s;
+	padding-top: 20px;
+	margin-bottom: 64px;
+	margin-top: 0px;
+}
+
+.nav_item{
+	margin: 10px;
+	padding: 10px;
+}
+/* メニュー黒ポチを消す */
+.nav_list {
+  list-style: none;
+}
+
+/* アイコンがクリックされたらメニューを表示 */
+#drawer_input:checked ~ .nav_content {
+	left: 90%;
+  /*bottom: 0;/* メニューを画面に入れる */
+}
+
+
+
+canvas {
+	display: block;
+}
+
+#mapArea {
+	position: relative;
+	z-index: 0;
+	overflow: hidden;
+	user-select: none;
+}
+
+#mapArea>div {
+	position: absolute;
+}
+
+.mapInfo {
+	white-space: nowrap;
+}
+
+#mapLeftRotationBtn {
+	position: absolute;
+	z-index: 1;
+	bottom: 0px;
+	left: 0px;
+}
