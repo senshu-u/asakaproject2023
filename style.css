@@ -152,3 +152,8 @@ canvas {
 	bottom: 0px;
 	left: 0px;
 }
+
+#mapName {
+	top: 60px;
+	left: 0px;
+}

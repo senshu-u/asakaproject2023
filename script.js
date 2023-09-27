@@ -92,7 +92,7 @@ function animation() {
 	setMapInfoPos();
 
 	// let cameraPosition = cameras[cameraMode].position.x + ", " + cameras[cameraMode].position.y + ", " + cameras[cameraMode].position.z;
-	// document.getElementById("mapName").textContent = cameras[cameraMode].zoom;
+	document.getElementById("mapName").textContent = test;
 }
 
 // 教室名やアイコンなどをマップのオブジェクトに付ける関数
@@ -108,11 +108,13 @@ function setMapInfoPos() {
 	}
 }
 
+let test;
 // 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
 function getMapObjCoord(mapObj) {
 	let target = scene.getObjectByName(mapObj);
 	
 	const targetWorldPos = target.getWorldPosition(new THREE.Vector3());
+	test = targetWorldPos.z;
 	const targetCanvasPos = targetWorldPos.project(cameras[cameraMode]);
 	
 	const targetCanvasX = (rendererWidth / 2) * (targetCanvasPos.x + 1);
