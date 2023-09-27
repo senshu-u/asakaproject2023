@@ -118,8 +118,8 @@ function getMapObjCoord(mapObj) {
 	const targetCanvasPos = targetWorldPos.project(cameras[cameraMode]);
 	test = targetCanvasPos.y;
 	
-	const targetCanvasX = (rendererWidth / 2) * (targetCanvasPos.x + 1);
-	const targetCanvasY = (rendererHeight / 2) * -(targetCanvasPos.y - 1);
+	const targetCanvasX = (rendererWidth / 2 * 2.625) * (targetCanvasPos.x + 1);
+	const targetCanvasY = (rendererHeight / 2 * 2.625) * -(targetCanvasPos.y - 1);
 	
 	return [targetCanvasX, targetCanvasY];
 }
