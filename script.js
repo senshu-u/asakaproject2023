@@ -92,7 +92,7 @@ function animation() {
 	setMapInfoPos();
 
 	// let cameraPosition = cameras[cameraMode].position.x + ", " + cameras[cameraMode].position.y + ", " + cameras[cameraMode].position.z;
-	document.getElementById("mapName").textContent = test;
+	document.getElementById("mapName").textContent = window.devicePixelRatio;
 }
 
 // 教室名やアイコンなどをマップのオブジェクトに付ける関数
@@ -108,6 +108,7 @@ function setMapInfoPos() {
 	}
 }
 
+console.log("解像度:" + window.devicePixelRatio);
 let test;
 // 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
 function getMapObjCoord(mapObj) {
