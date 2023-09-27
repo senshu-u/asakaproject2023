@@ -272,6 +272,7 @@ function getClickedMapObj(event) {
 window.addEventListener("resize", resize);
 
 function resize() {
+	alert(window.innerHeight);
 	// レンダラーのサイズの設定
 	rendererWidth = window.innerWidth;
   rendererHeight = window.innerHeight;
