@@ -47,7 +47,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 
 // カメラの作成と設定
-let cameraMode = 0;
+let cameraMode = 1;
 // cameraModeで透視投影カメラと平行投影カメラを切り替える
 // 透視投影カメラ: 0
 // 平行投影カメラ: 1
@@ -92,7 +92,7 @@ function animation() {
 	setMapInfoPos();
 
 	// let cameraPosition = cameras[cameraMode].position.x + ", " + cameras[cameraMode].position.y + ", " + cameras[cameraMode].position.z;
-	document.getElementById("mapName").textContent = window.innerHeight;
+	document.getElementById("mapName").textContent = window.innerWidth;
 }
 
 // 教室名やアイコンなどをマップのオブジェクトに付ける関数
@@ -269,6 +269,7 @@ function getClickedMapObj(event) {
 window.addEventListener("resize", resize);
 
 function resize() {
+	alert(window.innerWidth);
 	// レンダラーのサイズの設定
 	rendererWidth = window.innerWidth;
 	rendererHeight = window.innerHeight;
@@ -281,7 +282,6 @@ function resize() {
 		const aspect = rendererWidth / rendererHeight;
 		cameras[cameraMode].aspect = aspect;
 	} else {
-		alert(rendererHeight);
 		cameras[cameraMode].left = -rendererWidth * cameraFrustumSize;
 		cameras[cameraMode].right = rendererWidth * cameraFrustumSize;
 		cameras[cameraMode].top = rendererHeight * cameraFrustumSize;
