@@ -115,7 +115,7 @@ function getMapObjCoord(mapObj) {
 	
 	const targetWorldPos = target.getWorldPosition(new THREE.Vector3());
 	const targetCanvasPos = targetWorldPos.project(cameras[cameraMode]);
-	test = targetCanvasPos.z;
+	test = targetCanvasPos.y;
 	
 	const targetCanvasX = (rendererWidth / 2) * (targetCanvasPos.x + 1);
 	const targetCanvasY = (rendererHeight / 2) * -(targetCanvasPos.y - 1);
