@@ -92,7 +92,7 @@ function animation() {
 	setMapInfoPos();
 
 	// let cameraPosition = cameras[cameraMode].position.x + ", " + cameras[cameraMode].position.y + ", " + cameras[cameraMode].position.z;
-	document.getElementById("mapName").textContent = window.devicePixelRatio;
+	document.getElementById("mapName").textContent = window.innerHeight;
 }
 
 // 教室名やアイコンなどをマップのオブジェクトに付ける関数
