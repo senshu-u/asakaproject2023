@@ -92,7 +92,7 @@ function animation() {
 	setMapInfoPos();
 
 	// let cameraPosition = cameras[cameraMode].position.x + ", " + cameras[cameraMode].position.y + ", " + cameras[cameraMode].position.z;
-	document.getElementById("mapName").textContent = "width:" + window.innerWidth + ", height:" + window.innerHeight;
+	// document.getElementById("mapName").textContent = cameraPosition;
 }
 
 // 教室名やアイコンなどをマップのオブジェクトに付ける関数
@@ -269,7 +269,6 @@ function getClickedMapObj(event) {
 window.addEventListener("resize", resize);
 
 function resize() {
-	alert("width:" + window.innerWidth + ", height:" + window.innerHeight);
 	// レンダラーのサイズの設定
 	rendererWidth = window.innerWidth;
 	rendererHeight = window.innerHeight;
