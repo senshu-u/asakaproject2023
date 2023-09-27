@@ -65,10 +65,6 @@ const cameraFrustumSize = 0.005;
 // この値をrendererの大きさにかけて平行投影カメラの視錐台の大きさを決めている
 cameras[1].near = 0.1;
 cameras[1].far = 2000;
-cameras[1].left = -rendererWidth * cameraFrustumSize;
-cameras[1].right = rendererWidth * cameraFrustumSize;
-cameras[1].top = window.innerHeight * cameraFrustumSize;
-cameras[1].bottom = -window.innerHeight * cameraFrustumSize;
 cameras[1].position.set(0, 200, 0);
 
 // レンダラーとカメラのサイズの初期化
@@ -276,7 +272,6 @@ function getClickedMapObj(event) {
 window.addEventListener("resize", resize);
 
 function resize() {
-	alert(window.innerHeight);
 	// レンダラーのサイズの設定
 	rendererWidth = window.innerWidth;
   rendererHeight = window.innerHeight;
@@ -289,6 +284,7 @@ function resize() {
 		const aspect = rendererWidth / rendererHeight;
 		cameras[cameraMode].aspect = aspect;
 	} else {
+		alert(window.innerHeight);
 		cameras[cameraMode].left = -rendererWidth * cameraFrustumSize;
 		cameras[cameraMode].right = rendererWidth * cameraFrustumSize;
 		cameras[cameraMode].top = rendererHeight * cameraFrustumSize;
