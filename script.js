@@ -47,7 +47,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 
 // カメラの作成と設定
-let cameraMode = 1;
+let cameraMode = 0;
 // cameraModeで透視投影カメラと平行投影カメラを切り替える
 // 透視投影カメラ: 0
 // 平行投影カメラ: 1
@@ -108,15 +108,12 @@ function setMapInfoPos() {
 	}
 }
 
-console.log("解像度:" + window.devicePixelRatio);
-let test;
 // 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
 function getMapObjCoord(mapObj) {
 	let target = scene.getObjectByName(mapObj);
 	
 	const targetWorldPos = target.getWorldPosition(new THREE.Vector3());
 	const targetCanvasPos = targetWorldPos.project(cameras[cameraMode]);
-	test = targetCanvasPos.y;
 	
 	const targetCanvasX = (rendererWidth / 2) * (targetCanvasPos.x + 1);
 	const targetCanvasY = (rendererHeight / 2) * -(targetCanvasPos.y - 1);
@@ -274,7 +271,7 @@ window.addEventListener("resize", resize);
 function resize() {
 	// レンダラーのサイズの設定
 	rendererWidth = window.innerWidth;
-  rendererHeight = window.innerHeight;
+	rendererHeight = window.innerHeight;
 	renderer.setSize(rendererWidth, rendererHeight);
 	// 解像度に合わせて3Dモデルをきれいに表示
 	renderer.setPixelRatio(window.devicePixelRatio);
