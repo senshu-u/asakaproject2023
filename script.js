@@ -2,7 +2,7 @@ import * as THREE from "three";
 // import CameraControls from "./node_modules/camera-controls/dist/camera-controls.module.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
- 
+
 console.log(THREE);
 console.log(OrbitControls);
 
@@ -111,13 +111,13 @@ function setMapInfoPos() {
 // 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
 function getMapObjCoord(mapObj) {
 	let target = scene.getObjectByName(mapObj);
-	
+
 	const targetWorldPos = target.getWorldPosition(new THREE.Vector3());
 	const targetCanvasPos = targetWorldPos.project(cameras[cameraMode]);
-	
+
 	const targetCanvasX = (rendererWidth / 2) * (targetCanvasPos.x + 1);
 	const targetCanvasY = (rendererHeight / 2) * -(targetCanvasPos.y - 1);
-	
+
 	return [targetCanvasX, targetCanvasY];
 }
 
@@ -125,7 +125,7 @@ function getMapObjCoord(mapObj) {
 // const cameraControls = new CameraControls(cameras[cameraMode], mapArea);
 
 // OrbitControlsのインスタンスを作成
-const mapArea  = document.getElementById("mapArea");
+const mapArea = document.getElementById("mapArea");
 const controls = new OrbitControls(cameras[cameraMode], mapArea);
 controls.enableDamping = true;
 controls.enableRotate = true;
@@ -135,7 +135,6 @@ controls.touches["ONE"] = THREE.TOUCH.PAN;
 controls.touches["TWO"] = THREE.TOUCH.DOLLY_ROTATE;
 controls.minZoom = 1;
 console.log(controls.target);
-
 
 let mapMode = 2;
 // 教室名やアイコンなどを作る関数
@@ -178,6 +177,21 @@ function createMapInfo(mapNames) {
 	}
 }
 
+// 画像をクリックしたときのイベントリスナーを追加
+const imageElement = document.getElementById('rotateCameraButton');
+imageElement.addEventListener('click', rotateCamera);
+
+//カメラを90度回転させる機能
+function rotateCamera() {
+    const radius = cameras[cameraMode].position.clone().setY(0).length();
+    const theta = Math.atan2(cameras[cameraMode].position.x, cameras[cameraMode].position.z) + Math.PI / 2;
+
+    cameras[cameraMode].position.x = radius * Math.sin(theta);
+    cameras[cameraMode].position.z = radius * Math.cos(theta);
+    cameras[cameraMode].lookAt(new THREE.Vector3(0, 0, 0));
+}
+
+
 // 引数の名前の3Dモデルを読み込む関数
 async function loadMap(mapName) {
 	let floorNames = [];
@@ -209,7 +223,7 @@ async function loadMap(mapName) {
 // 引数の名前の3Dモデルを読み込む関数
 // 3Dモデル読み込み後、教室名やアイコンなどを作る関数を実行
 // そのとき読み込んだ3Dモデルの名前を配列mapNamesとして渡す
-loadMap("10号館").then(function(mapNames) {
+loadMap("10号館").then(function (mapNames) {
 	console.log(mapNames);
 	createMapInfo("1");
 });
