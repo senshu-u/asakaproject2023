@@ -191,6 +191,30 @@ function rotateCamera() {
     cameras[cameraMode].lookAt(new THREE.Vector3(0, 0, 0));
 }
 
+// 前回ハイライトされたオブジェクトを参照するための変数
+let highlightedObject = null;
+let originalColor = null;
+
+const searchBox = document.getElementById('searchBox');
+searchBox.addEventListener('input', function() {
+    const searchTerm = searchBox.value;
+
+    // 前回ハイライトされたオブジェクトのマテリアルを元に戻す
+    if (highlightedObject && originalColor) {
+        highlightedObject.material.color.copy(originalColor);
+        highlightedObject = null;
+        originalColor = null;
+    }
+
+    // シーン内のオブジェクトをループして一致するオブジェクトを探す
+    scene.traverse((object) => {
+        if (!highlightedObject && object.material && object.name === searchTerm) {
+            originalColor = object.material.color.clone();
+            object.material.color.set(0xff0000);  // ハイライトカラー（赤）に変更
+            highlightedObject = object;
+        }
+    });
+});
 
 // 引数の名前の3Dモデルを読み込む関数
 async function loadMap(mapName) {
