@@ -76,6 +76,23 @@ light.position.set(0, 1, -1);
 // ライトをシーンに追加
 scene.add(light);
 
+// Ambient Lightの追加
+const ambientLight = new THREE.AmbientLight(0x404040, 0.2); // soft white light
+scene.add(ambientLight);
+
+// 複数のDirectional Lightsの追加
+const light2 = new THREE.DirectionalLight(0xffffff, 0.4);
+light2.position.set(1, 1, 1);
+scene.add(light2);
+
+const light3 = new THREE.DirectionalLight(0xffffff, 0.4);
+light3.position.set(-1, 1, -1);
+scene.add(light3);
+
+// Hemisphere Lightの追加
+const hemiLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.3);
+scene.add(hemiLight);
+
 // レンダーループ
 renderer.setAnimationLoop(animation);
 
