@@ -1,46 +1,53 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>map</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="senshu_map.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
     <script type="importmap">
-      {
-        "imports": {
-          "three": "https://unpkg.com/three@0.154.0/build/three.module.js",
-          "three/addons/": "https://unpkg.com/three@0.154.0/examples/jsm/"
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.154.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.154.0/examples/jsm/"
+          }
         }
-      }
-    </script>
+      </script>
     <script src="script.js" type="module"></script>
   </head>
-
-  <body>
+  <body> 
     <div id="headerArea">
-      <img src="images/el.png" alt="アイコン" class="images1">
-      <input id="searchBox" type="search" name="s" placeholder="部屋番号を入力">
-      <img src="images/toi.png" alt="アイコン" class="images2">
-      <input id="drawer_input" class="drawer_hidden" type="checkbox">
-      <label for="drawer_input" class="drawer_open"><span></span></label>
-      <div class="nav_content">
-        <div class="nav_item">a</div>
-        <div class="nav_item">b</div>
-        <div class="nav_item">c</div>
-        <div class="nav_item">d</div>
-        <div class="nav_item">e</div>
-        <div class="nav_item">f</div>
-        <div class="nav_item">g</div>
-        <div class="nav_item">h</div>
-        <div class="nav_item">i</div>
-        <div class="nav_item">j</div>
-      </div>
+      <img src="data/icon/parkingLot.png" alt="アイコン" class="images1">
+      <input class="searchBox" type="search" name="s" placeholder="部屋番号を入力">
+      <div id="lightArea">
+       <input id="seach_input" class="seach_hidden" type="checkbox"><!--サーチアイコンにするためのチェックボックス-->
+      <label for="seach_input" >
+      <img src="data/icon/search.png" alt="検索アイコン" class="seachimge"></label>
+      <img src="data/icon/routeguidance.png" alt="アイコンj" class="images2">
+          <input id="drawer_input" class="drawer_hidden" type="checkbox">
+          <label for="drawer_input" class="drawer_open"><span></span></label>
+          <div class="nav_content">
+            <div class="nav_item">a</div>
+            <div class="nav_item">b</div>
+            <div class="nav_item">c</div>
+            <div class="nav_item">d</div>
+            <div class="nav_item">e</div>
+            <div class="nav_item">f</div>
+            <div class="nav_item">g</div>
+            <div class="nav_item">h</div>
+            <div class="nav_item">i</div>
+            <div class="nav_item">j</div>
+          </div>
+          <div class =smartphone_seach>
+            <input class="searchBox_sm" type="search" name="s" placeholder="部屋番号を入力">
+            </div>
+        </div>
     </div>
     <div id="mapArea">
-      <div id="mapName">
+			<div id="mapName">
         <div id="currentBuilding"></div>
         <div id="currentFloor"></div>
       </div>
@@ -54,12 +61,5 @@
     <div id="mapLeftRotationBtn">
       <img id="rotateCameraButton" src="data/icon/rotation.png" alt="マップ左回転ボタン" height="100">
     </div>
-    
-    <!-- <div id="footerArea">
-      <div class="item">item 1</div>
-      <div class="item">item 2</div>
-      <div class="item">item 3</div>
-      <div class="item">item 4</div>
-    </div>-->
   </body>
 </html>
