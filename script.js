@@ -3,8 +3,16 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-console.log(THREE);
-console.log(OrbitControls);
+if ('serviceWorker' in navigator) {
+	window.addEventListener('load', () => {
+		navigator.serviceWorker.register('/service-worker.js')
+			.then(registration => {
+				console.log('Service Worker registered with scope:', registration.scope);
+			}, err => {
+				console.log('Service Worker registration failed:', err);
+			});
+	});
+}
 
 // CameraControls.install({THREE: THREE});
 
