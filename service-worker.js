@@ -15,8 +15,8 @@ const urlsToCache = [
   '/data/icon/rotation.png',
   '/data/icon/stairsIcon.png',
   '/images/el.png',
-  '/rest.png',
-  '/toi.png'
+  '/images/rest.png',
+  '/images/toi.png'
   // 他にキャッシュしたいアセットのパスを追加
 ];
 
