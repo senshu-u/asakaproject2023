@@ -6,13 +6,19 @@
 #headerArea{
 	display: flex;
 	align-items: center;
-	height: 60px;
+	height: 61px;
 	width: 100%;
 	background-color:white;
 	text-align:center
 	}
-	
-	#searchBox {
+#lightArea{
+	display: flex;
+	align-items: center;
+
+	width: 18%;
+	justify-content: center;
+}
+	.searchBox {
 		width: 600px;
 		margin:  0 auto;            /* 中央寄せ */
 	}
@@ -20,15 +26,22 @@
 		display: none;
 		width: 50px;
 		height: 50px;
+		padding-right: 20px;
 	}
 	@media (max-width: 767px) {
-		#searchBox {
-			display: none;          /* 中央寄せ */
+		.searchBox {
+			display: none;
 		}
 		img.seachimge{
 			display: inline;
 		}
+		#lightArea{
+			margin-left: auto; /* 右端に寄せる */
+			width: 40%;
+			justify-content: center;
+		}
 	}
+	
 	.item{
 		margin: 10px;
 		padding: 10px;
@@ -36,11 +49,14 @@
 	img.images1{
 			width: 50px;
 			height: 50px;
+			margin-left: 20px;
+			margin-right: 20px;
 	}
 	img.images2{
 		width: 50px;
 		height: 50px;
-	}
+		margin-right: 20px;
+}
 
 	/*ハンバーガーアイコンに関するデータ*/
 .drawer_hidden {
@@ -59,6 +75,7 @@
   align-items: center;
   z-index: 100;/* 重なり順を一番上にする */
   cursor: pointer;
+	margin-left: 20px;
 }
 
 /* ハンバーガーメニューのアイコン */
@@ -78,13 +95,11 @@
 /* 三本線の一番上の棒の位置調整 */
 .drawer_open span:before {
   bottom: 8px;
-	/*right: 15px;*/
 }
 
 /* 三本線の一番下の棒の位置調整 */
 .drawer_open span:after {
   top: 8px;
-	/*right: 15px;*/
 }
   
 /* メニューのデザイン*/
@@ -93,9 +108,7 @@
   height: 79.5%;
   position: fixed;
 	top: 8.5%;
-  /*bottom: 100%;*/
 	left: 100%;
-  /*right: 0%; /* メニューを画面の外に飛ばす */
   z-index: 99;
   background: #fefefe;
   transition: .5s;
@@ -116,5 +129,58 @@
 /* アイコンがクリックされたらメニューを表示 */
 #drawer_input:checked ~ .nav_content {
 	left: 90%;
-  /*bottom: 0;/* メニューを画面に入れる */
+}
+
+	/*スマホver検索バーに関するデータ*/
+
+	.seach_hidden {
+		display: none;	/* チェックボックスを非表示にする */
+	}
+	/*スマホ検索バーのdiv*/
+	.smartphone_seach{
+	width: 100%;
+  position: fixed;
+	top: -60%;
+  z-index: 99;
+  transition: top.5s;
+	left: 0px;
+}
+.searchBox_sm{
+	width: 500px;
+	margin:  0 auto;   
+}
+/*検索アイコンを押したら検索バーが降りてくる*/
+#seach_input:checked ~ .smartphone_seach {
+	top: 9%;
+}
+
+canvas {
+	display: block;
+}
+
+#mapArea {
+	position: relative;
+	z-index: 0;
+	overflow: hidden;
+	user-select: none;
+}
+
+#mapArea>div {
+	position: absolute;
+}
+
+.mapInfo {
+	white-space: nowrap;
+}
+
+#mapLeftRotationBtn {
+	position: absolute;
+	z-index: 1;
+	bottom: 0px;
+	left: 0px;
+}
+
+#mapName {
+	top: 60px;
+	left: 0px;
 }
