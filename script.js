@@ -202,6 +202,7 @@ function createMapInfo(mapNames) {
 	}
 }
 
+//消してもいいよ
 // 画像をクリックしたときのイベントリスナーを追加
 const imageElement = document.getElementById('rotateCameraButton');
 imageElement.addEventListener('click', rotateCamera);
@@ -215,6 +216,7 @@ function rotateCamera() {
     cameras[cameraMode].position.z = radius * Math.cos(theta);
     cameras[cameraMode].lookAt(new THREE.Vector3(0, 0, 0));
 }
+//ここまで
 
 // 前回ハイライトされたオブジェクトを参照するための変数
 let highlightedObject = null;
