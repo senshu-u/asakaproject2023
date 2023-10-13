@@ -2,7 +2,7 @@
     "name": "My PWA App",
     "short_name": "PWA App",
     "description": "Description of your PWA app.",
-    "start_url": "/",
+    "start_url": "/asakaproject2023/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",
