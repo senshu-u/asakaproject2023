@@ -173,7 +173,7 @@ canvas {
 	white-space: nowrap;
 }
 
-#mapLeftRotationBtn {
+#mapRotationBtn {
 	position: absolute;
 	z-index: 1;
 	bottom: 0px;
