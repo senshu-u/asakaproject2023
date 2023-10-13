@@ -5,7 +5,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
-		navigator.serviceWorker.register('/service-worker.js')
+		navigator.serviceWorker.register('/asakaproject2023/service-worker.js')
 			.then(registration => {
 				console.log('Service Worker registered with scope:', registration.scope);
 			}, err => {
