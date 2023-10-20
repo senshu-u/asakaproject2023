@@ -68,10 +68,12 @@
             </div>
         </div>
     </div>
+    <div id="mapBackBtn" class="hidden">
+      <img src="data/icon/back.png" alt="マップ一覧に戻るボタン" height="48">
+    </div>
     <div id="mapArea">
-      <div id="mapName">
-        <div id="currentBuilding"></div>
-        <div id="currentFloor"></div>
+      <div id="mapName" class="hidden">
+        <span id="currentFloor"></span>
       </div>
       <div id="floorsNav">
         <div id="topFloor"></div>
@@ -82,7 +84,7 @@
     </div>
     <div id="mapRotationBtn">
        <!--回転させるために加えたid↓-->
-      <img id="rotateCameraButton" src="data/icon/rotation.png" alt="マップ左回転ボタン" height="100">
+      <img src="data/icon/rotation.png" alt="マップ左回転ボタン" height="100">
     </div>
   </body>
 </html>
