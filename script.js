@@ -247,6 +247,28 @@ async function switchScene(mapName) {
 	return mapNames;
 }
 
+// 前回ハイライトされたオブジェクトを参照するための変数
+let highlightedObject = null;
+let originalColor = null;
+const searchBox = document.getElementById('searchBox');
+searchBox.addEventListener('input', function() {
+    const searchTerm = searchBox.value;
+    // 前回ハイライトされたオブジェクトのマテリアルを元に戻す
+    if (highlightedObject && originalColor) {
+        highlightedObject.material.color.copy(originalColor);
+        highlightedObject = null;
+        originalColor = null;
+    }
+    // シーン内のオブジェクトをループして一致するオブジェクトを探す
+    scenes[currentSceneName].traverse((object) => {
+        if (!highlightedObject && object.material && object.name === searchTerm) {
+            originalColor = object.material.color.clone();
+            object.material.color.set(0xff0000);  // ハイライトカラー（赤）に変更
+            highlightedObject = object;
+        }
+    });
+});
+
 // 引数の連想配列から3Dモデルを読み込む関数
 async function loadMap(maps) {
 	const loader = new GLTFLoader();
