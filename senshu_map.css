@@ -22,7 +22,7 @@
 		width: 600px;
 		margin:  0 auto;            /* 中央寄せ */
 	}
-	img.seachimge{
+	img.searchimge{
 		display: none;
 		width: 50px;
 		height: 50px;
@@ -32,7 +32,7 @@
 		.searchBox {
 			display: none;
 		}
-		img.seachimge{
+		img.searchimge{
 			display: inline;
 		}
 		#lightArea{
@@ -149,11 +149,11 @@
 
 /*スマホver検索バーに関するデータ*/
 
-.seach_hidden {
+.search_hidden {
 		display: none;	/* チェックボックスを非表示にする */
 }
 /*スマホ検索バーのdiv*/
-.smartphone_seach{
+.smartphone_search{
 	width: 100%;
         position: fixed;
 	top: -60%;
@@ -166,7 +166,7 @@
 	margin:  0 auto;   
 }
 /*検索アイコンを押したら検索バーが降りてくる*/
-#seach_input:checked ~ .smartphone_seach {
+#search_input:checked ~ .smartphone_search {
 	top: 9%;
 }
 
