@@ -53,6 +53,9 @@
 			cursor: pointer;
 			margin-right: 30px;
 		}
+		#drawer_input:checked ~ .nav_content {
+			left: 40%;
+		}
 		
 	}
 	
