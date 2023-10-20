@@ -6,6 +6,8 @@ const urlsToCache = [
   '/senshu_map.css',
   '/script.js',
   '/camera-controls.module.js',
+  '/mapData.js',
+  '/mapInfoIcon.js',
   '/data/map3DModel/wholeMap.glb',
   '/data/map3DModel/building10/10_1.glb',
   '/data/map3DModel/building10/10_2.glb',
