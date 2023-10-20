@@ -144,21 +144,21 @@
 
 /* アイコンがクリックされたらメニューを表示 */
 #drawer_input:checked ~ .nav_content {
-	left: 90%;
+	left: 60%;
 }
 
-	/*スマホver検索バーに関するデータ*/
+/*スマホver検索バーに関するデータ*/
 
-	.seach_hidden {
+.seach_hidden {
 		display: none;	/* チェックボックスを非表示にする */
-	}
-	/*スマホ検索バーのdiv*/
-	.smartphone_seach{
+}
+/*スマホ検索バーのdiv*/
+.smartphone_seach{
 	width: 100%;
-  position: fixed;
+        position: fixed;
 	top: -60%;
-  z-index: 99;
-  transition: top.5s;
+        z-index: 99;
+        transition: top.5s;
 	left: 0px;
 }
 .searchBox_sm{
