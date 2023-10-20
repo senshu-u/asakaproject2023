@@ -1,45 +1,19 @@
 import * as THREE from "three";
-// import CameraControls from "./node_modules/camera-controls/dist/camera-controls.module.js";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import CameraControls from "camera-controls";
+import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
+import {MapData} from "./mapData.js";
+import {MapInfoIcon} from "./mapInfoIcon.js";
 
-if ('serviceWorker' in navigator) {
-	window.addEventListener('load', () => {
-		navigator.serviceWorker.register('/asakaproject2023/service-worker.js')
-			.then(registration => {
-				console.log('Service Worker registered with scope:', registration.scope);
-			}, err => {
-				console.log('Service Worker registration failed:', err);
-			});
-	});
-}
-
-// CameraControls.install({THREE: THREE});
-
-// マップの3Dモデルが置かれているディレクトリのパスとファイル名をまとめた連想配列
-const map3DModelPaths = {
-	"全体マップ": {
-		"dirPath": "data/map3DModel/",
-		"fileNames": ["map"]
-	},
-	"10号館": {
-		"dirPath": "data/map3DModel/building10/",
-		"fileNames": ["10_1"]
-	},
-	"9号館": {
-		"dirPath": "data/map3DModel/building9/",
-		"fileNames": ["9_1"]
-	}
-};
+CameraControls.install({THREE: THREE});
 
 // アイコンのパスをまとめた連想配列
-const mapInfoIcon = {
-	"男子トイレ": "data/icon/stairsIcon.png",
-	"女子トイレ": "data/icon/stairsIcon.png",
-	"階段": "data/icon/stairsIcon.png",
-	"エスカレーター": "data/icon/stairsIcon.png",
-	"エレベーター": "data/icon/stairsIcon.png",
-	"プリンター": "data/icon/stairsIcon.png"
+const mapInfoIcons = {
+	"男子トイレ": "data/icon/stairs.png",
+	"女子トイレ": "data/icon/stairs.png",
+	"階段": "data/icon/stairs.png",
+	"エスカレーター": "data/icon/stairs.png",
+	"エレベーター": "data/icon/stairs.png",
+	"プリンター": "data/icon/stairs.png"
 };
 
 // レンダラーの作成
@@ -50,12 +24,15 @@ const renderer = new THREE.WebGLRenderer({
 let rendererWidth;
 let rendererHeight;
 
+// シーンを格納する連想配列の作成
+let scenes = {};
+let currentSceneName;
 // シーンの作成と設定
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xffffff);
+// const scene = new THREE.Scene();
+// scene.background = new THREE.Color(0xffffff);
 
 // カメラの作成と設定
-let cameraMode = 1;
+let cameraMode = 0;
 // cameraModeで透視投影カメラと平行投影カメラを切り替える
 // 透視投影カメラ: 0
 // 平行投影カメラ: 1
@@ -66,56 +43,73 @@ const cameras = [
 cameras[0].fov = 40;
 cameras[0].near = 0.1;
 cameras[0].far = 2000;
-cameras[0].position.set(0, 200, -450);
+// cameras[0].position.set(0, 150, -300);
 
 const cameraFrustumSize = 0.005;
 // 平行投影カメラの視錐台の大きさを決める倍率
 // この値をrendererの大きさにかけて平行投影カメラの視錐台の大きさを決めている
 cameras[1].near = 0.1;
 cameras[1].far = 2000;
-cameras[1].position.set(0, 200, 0);
+// cameras[1].position.set(0, 200, 0);
 
 // レンダラーとカメラのサイズの初期化
 resize();
 
-// ライトの作成と設定
-const light = new THREE.DirectionalLight(0xffffff, 1.0);
-light.position.set(0, 1, -1);
-// ライトをシーンに追加
-scene.add(light);
+// camera-controlsの作成と設定
+const clock = new THREE.Clock();
+const cameraControls = [
+	new CameraControls(cameras[0], mapArea),
+	new CameraControls(cameras[1], mapArea)
+];
+cameraControls[0].mouseButtons.left = CameraControls.ACTION.OFFSET;
+cameraControls[0].mouseButtons.right = CameraControls.ACTION.ROTATE;
+cameraControls[0].mouseButtons.wheel = CameraControls.ACTION.DOLLY;
+cameraControls[0].mouseButtons.middle = CameraControls.ACTION.ROTATE;
+cameraControls[0].touches.one = CameraControls.ACTION.TOUCH_OFFSET;
+cameraControls[0].touches.two = CameraControls.ACTION.TOUCH_DOLLY_ROTATE;
+cameraControls[0].minDistance = 50;
+cameraControls[0].maxDistance = 300;
+cameraControls[0].maxPolarAngle = degToRad(80);
+cameraControls[0].setTarget(0, 0, 0, false);
+cameraControls[0].dollyTo(275, false);
+cameraControls[0].rotateTo(degToRad(180), degToRad(55), false);
+cameraControls[0].setFocalOffset(0, 0, 0, false);
+cameraControls[0].zoomTo(1, false);
 
-// Ambient Lightの追加
-const ambientLight = new THREE.AmbientLight(0x404040, 0.2); // soft white light
-scene.add(ambientLight);
+cameraControls[1].mouseButtons.left = CameraControls.ACTION.OFFSET;
+cameraControls[1].mouseButtons.right = CameraControls.ACTION.NONE;
+cameraControls[1].mouseButtons.wheel = CameraControls.ACTION.ZOOM;
+cameraControls[1].mouseButtons.middle = CameraControls.ACTION.NONE;
+cameraControls[1].touches.one = CameraControls.ACTION.TOUCH_OFFSET;
+cameraControls[1].touches.two = CameraControls.ACTION.TOUCH_DOLLY_ROTATE;
 
-// 複数のDirectional Lightsの追加
-const light2 = new THREE.DirectionalLight(0xffffff, 0.4);
-light2.position.set(1, 1, 1);
-scene.add(light2);
 
-const light3 = new THREE.DirectionalLight(0xffffff, 0.4);
-light3.position.set(-1, 1, -1);
-scene.add(light3);
 
-// Hemisphere Lightの追加
-const hemiLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.3);
-scene.add(hemiLight);
+// 引数の名前の3Dモデルを読み込む関数
+// 3Dモデル読み込み後、教室名やアイコンなどを作る関数を実行
+// そのとき読み込んだ3Dモデルの名前を配列mapNamesとして渡す
+switchScene("全体マップ").then(function(mapNames) {
+	console.log(mapNames);
+	console.log(scenes);
+	createMapInfo("1");
+});
 
 // レンダーループ
 renderer.setAnimationLoop(animation);
 
 // この関数をループさせている
 function animation() {
-	// OrbitControlsでカメラを滑らかに動かすためのupdate()
-	controls.update();
+	// カメラの位置と向きを更新
+	const delta = clock.getDelta();
+	cameraControls[cameraMode].update(delta);
 
-	// const delta = clock.getDelta();
-	// cameraControls.update(delta);
-	renderer.render(scene, cameras[cameraMode]);
+	// レンダリング
+	renderer.render(scenes[currentSceneName], cameras[cameraMode]);
 
 	// 教室名やアイコンなどをマップのオブジェクトに付ける関数
 	setMapInfoPos();
-
+	
+	// console.log(cameras[cameraMode].zoom);
 	// let cameraPosition = cameras[cameraMode].position.x + ", " + cameras[cameraMode].position.y + ", " + cameras[cameraMode].position.z;
 	// document.getElementById("mapName").textContent = cameraPosition;
 }
@@ -124,7 +118,7 @@ function animation() {
 function setMapInfoPos() {
 	for (let mapInfo of document.getElementsByClassName("mapInfo")) {
 		// 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
-		let [x, y] = getMapObjCoord(mapInfo.dataset.name);
+		let [x, y] = getMapObjCoord(mapInfo.dataset.mapObj);
 
 		x = x - mapInfo.getBoundingClientRect().width / 2;
 		y = y - mapInfo.getBoundingClientRect().height / 2;
@@ -135,66 +129,57 @@ function setMapInfoPos() {
 
 // 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
 function getMapObjCoord(mapObj) {
-	let target = scene.getObjectByName(mapObj);
-
+	let target = scenes[currentSceneName].getObjectByName(mapObj);
+	
 	const targetWorldPos = target.getWorldPosition(new THREE.Vector3());
 	const targetCanvasPos = targetWorldPos.project(cameras[cameraMode]);
-
+	
 	const targetCanvasX = (rendererWidth / 2) * (targetCanvasPos.x + 1);
 	const targetCanvasY = (rendererHeight / 2) * -(targetCanvasPos.y - 1);
-
+	
 	return [targetCanvasX, targetCanvasY];
 }
 
-// const clock = new THREE.Clock();
-// const cameraControls = new CameraControls(cameras[cameraMode], mapArea);
-
-// OrbitControlsのインスタンスを作成
-const mapArea = document.getElementById("mapArea");
-const controls = new OrbitControls(cameras[cameraMode], mapArea);
-controls.enableDamping = true;
-controls.enableRotate = true;
-controls.mouseButtons["LEFT"] = THREE.MOUSE.PAN;
-controls.mouseButtons["RIGHT"] = THREE.MOUSE.ROTATE;
-controls.touches["ONE"] = THREE.TOUCH.PAN;
-controls.touches["TWO"] = THREE.TOUCH.DOLLY_ROTATE;
-controls.minZoom = 1;
-console.log(controls.target);
-
-let mapMode = 2;
+let mapMode = 0;
 // 教室名やアイコンなどを作る関数
 function createMapInfo(mapNames) {
+	removeMapInfo();
+	const mapInfoIcon = new MapInfoIcon();
+	const mapInfoIcons = mapInfoIcon.mapInfoIcons;
+
 	switch (mapMode) {
 		case 0:
 			break;
 		case 1:
 			break;
 		case 2:
-			for (let mapObj of scene.getObjectByName(mapNames).children) {
+			for (let mapObj of scenes[currentSceneName].getObjectByName(mapNames).children) {
 				if (mapObj.name != "object") {
-					const mapObjNamefirstWord = mapObj.name.substring(0, mapObj.name.indexOf("_"));
-					if (Object.keys(mapInfoIcon).includes(mapObjNamefirstWord)) {
+					const mapObjNameFirstWord = mapObj.name.substring(0, mapObj.name.indexOf("_"));
+					if (Object.keys(mapInfoIcons).includes(mapObjNameFirstWord)) {
 						// アイコンを作る
 						const mapInfo = document.createElement("div");
 						mapInfo.classList.add("mapInfo");
 						mapInfo.classList.add("icon");
-						mapInfo.dataset.name = mapObj.name;
+						mapInfo.dataset.mapObj = mapObj.name;
+						mapInfo.dataset.filterItem = mapInfoIcons[mapObjNameFirstWord]["filterItem"];
 
+						mapInfo.textContent = mapObjNameFirstWord;
 						const icon = document.createElement("img");
-						icon.src = mapInfoIcon[mapObjNamefirstWord];
-						icon.alt = mapObjNamefirstWord;
+						icon.src = mapInfoIcon.iconPath + mapInfoIcons[mapObjNameFirstWord]["fileName"];
+						icon.alt = mapObjNameFirstWord;
 						icon.height = 20;
 
-						mapInfo.appendChild(icon);
-						mapArea.appendChild(mapInfo);
+						mapInfo.prepend(icon);
+						mapArea.append(mapInfo);
 					} else {
 						// 教室名を作る
 						const mapInfo = document.createElement("div");
 						mapInfo.classList.add("mapInfo");
 						mapInfo.classList.add("roomName");
-						mapInfo.dataset.name = mapObj.name;
+						mapInfo.dataset.mapObj = mapObj.name;
 						mapInfo.textContent = mapObj.name;
-						mapArea.appendChild(mapInfo);
+						mapArea.append(mapInfo);
 					}
 				}
 			}
@@ -202,110 +187,111 @@ function createMapInfo(mapNames) {
 	}
 }
 
-//消してもいいよ↓
-// 画像をクリックしたときのイベントリスナーを追加
-const imageElement = document.getElementById('rotateCameraButton');
-imageElement.addEventListener('click', rotateCamera);
-
-//カメラを90度回転させる機能
-function rotateCamera() {
-    const radius = cameras[cameraMode].position.clone().setY(0).length();
-    const theta = Math.atan2(cameras[cameraMode].position.x, cameras[cameraMode].position.z) + Math.PI / 2;
-
-    cameras[cameraMode].position.x = radius * Math.sin(theta);
-    cameras[cameraMode].position.z = radius * Math.cos(theta);
-    cameras[cameraMode].lookAt(new THREE.Vector3(0, 0, 0));
+function removeMapInfo() {
+	while (document.getElementsByClassName("mapInfo")[0]) {
+		document.getElementsByClassName("mapInfo")[0].remove();
+	}
 }
-//ここまで↑
 
-// 前回ハイライトされたオブジェクトを参照するための変数
-let highlightedObject = null;
-let originalColor = null;
+async function switchScene(mapName) {
+	let mapNames = [];
 
-const searchBox = document.getElementById('searchBox');
-searchBox.addEventListener('input', function() {
-    const searchTerm = searchBox.value;
+	if (Object.keys(scenes).includes(mapName)) {
+		currentSceneName = mapName;
+		for (let sceneChild of scenes[currentSceneName].children) {
+			if (!sceneChild.isLight) {
+				mapNames.push(sceneChild.name);
+			}
+		}
 
-    // 前回ハイライトされたオブジェクトのマテリアルを元に戻す
-    if (highlightedObject && originalColor) {
-        highlightedObject.material.color.copy(originalColor);
-        highlightedObject = null;
-        originalColor = null;
-    }
+	} else {
+		const mapData = new MapData();
+		const extractedMaps = mapData.extractMapsByMapName(mapName);
 
-    // シーン内のオブジェクトをループして一致するオブジェクトを探す
-    scene.traverse((object) => {
-        if (!highlightedObject && object.material && object.name === searchTerm) {
-            originalColor = object.material.color.clone();
-            object.material.color.set(0xff0000);  // ハイライトカラー（赤）に変更
-            highlightedObject = object;
-        }
-    });
-});
+		if (Object.keys(extractedMaps).length > 0) {
+			currentSceneName = mapName;
+			scenes[currentSceneName] = new THREE.Scene();
+			scenes[currentSceneName].name = mapName;
+			scenes[currentSceneName].background = new THREE.Color(0xffffff);
 
-// 引数の名前の3Dモデルを読み込む関数
-async function loadMap(mapName) {
-	let floorNames = [];
+			// ライトの作成と設定
+			const ambientLight = new THREE.AmbientLight(0x808080, 0.8);
+			scenes[currentSceneName].add(ambientLight);
+
+			const frontLeftLight = new THREE.DirectionalLight(0xffffff, 0.7);
+			frontLeftLight.position.set(-1, 1, 1);
+			scenes[currentSceneName].add(frontLeftLight);
+
+			const backRightLight = new THREE.DirectionalLight(0xffffff, 0.7);
+			backRightLight.position.set(1, 1, -1);
+			scenes[currentSceneName].add(backRightLight);
+			
+			mapNames = await loadMap(extractedMaps);
+		} else {
+			throw new Error(mapName + "のマップデータはありません");
+		}
+	}
+
+	return mapNames;
+}
+
+// 引数の連想配列から3Dモデルを読み込む関数
+async function loadMap(maps) {
 	const loader = new GLTFLoader();
+	const distance = 1.5;
+
+	let mapNames = [];
 	let count = 0;
-	for (let fileName of map3DModelPaths[mapName]["fileNames"]) {
-		const map3DModelPath = map3DModelPaths[mapName]["dirPath"] + fileName + ".glb";
-		const glb = await loader.loadAsync(map3DModelPath);
+	for (let fileName in maps) {
+		const mapDataPath = maps[fileName]["dirPath"] + fileName;
+		const glb = await loader.loadAsync(mapDataPath);
 		const map = glb.scene;
 
 		// 読み込んだ3Dモデルに名前を付ける
-		if (fileName.includes("_")) {
-			// 各階の3Dモデルの場合は階の名前を付ける
-			map.name = fileName.substring(fileName.indexOf("_") + 1);
+		if (maps[fileName]["floor"] == "") {
+			// 階のないマップの場合はマップ名をそのまま付ける
+			map.name = maps[fileName]["mapName"];
 		} else {
-			// それ以外の3Dモデルの場合はファイル名をそのまま付ける
-			map.name = fileName;
+			// 階のあるマップの場合は階の名前を付ける
+			map.name = maps[fileName]["floor"];
 		}
-		floorNames.push(map.name);
-		map.position.set(0, count * 1, 0);
+		mapNames.push(map.name);
+		map.position.set(0, count * distance, 0);
 
-		console.log(map);
-		scene.add(map);
+		// console.log(map);
+		scenes[currentSceneName].add(map);
 		count++;
 	}
-	return floorNames;
+
+	return mapNames;
 }
 
-// 引数の名前の3Dモデルを読み込む関数
-// 3Dモデル読み込み後、教室名やアイコンなどを作る関数を実行
-// そのとき読み込んだ3Dモデルの名前を配列mapNamesとして渡す
-loadMap("10号館").then(function (mapNames) {
-	console.log(mapNames);
-	createMapInfo("1");
-});
+function moveCameraTo(mapName = null) {
+	if (mapName) {
+		for (let sceneChild of scenes[currentSceneName].children) {
+			if (!(sceneChild.isLight || sceneChild.name == mapName)) {
+				sceneChild.visible = false;
+			}
+		}
+		cameraControls[cameraMode].rotateTo(degToRad(0), degToRad(0), true);
+		cameraControls[cameraMode].setFocalOffset(0, 0, 0, true);
+		cameraControls[cameraMode].zoomTo(1, true);
+
+	} else {
+		for (let sceneChild of scenes[currentSceneName].children) {
+			if (!sceneChild.visible) {
+				sceneChild.visible = true;
+			}
+		}
+		cameraControls[cameraMode].rotateTo(degToRad(135), degToRad(55), true);
+		cameraControls[cameraMode].setFocalOffset(0, 0, 0, true);
+		cameraControls[cameraMode].zoomTo(1, true);
+	}
+}
 
 // 3Dモデルのクリックの設定
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
-
-/*
-// mapAreaにクリックイベントを追加
-mapArea.addEventListener("click", function(event) {
-	const mapAreaOffset = mapArea.getBoundingClientRect();
-	// .setFromCamera()に必要な正規化デバイス座標に変換したマウスカーソルの座標の取得方法
-	// ブラウザウィンドウの左上を基準にマウスカーソルの座標を取得して、mapAreaの座標を引くことで、
-	// mapAreaの左上を基準にしたマウスカーソルの座標を取得する
-	// 取得したmapArea上のマウスカーソルのx座標をmapAreaの幅で割る
-	// これにより、mapAreaの幅を0から1としたときのマウスカーソルのx座標を得られる
-	// これを2倍して1引くことで、-1から1の範囲でマウスカーソルのx座標を得られる
-	pointer.x = (event.clientX - mapAreaOffset.left) / mapAreaOffset.width * 2 - 1;
-	pointer.y = (event.clientY - mapAreaOffset.top) / mapAreaOffset.height * -2 + 1;
-	raycaster.setFromCamera(pointer, cameras[cameraMode]);
-	// console.log(pointer);
-
-	const intersects = raycaster.intersectObjects(scene.children);
-	// console.log(scene.children);
-	// console.log(intersects);
-	if (intersects.length > 0) {
-		console.log(intersects[0].object);
-	}
-});
-*/
 
 function getClickedMapObj(event) {
 	if (isClick(event.clientX, event.clientY)) {
@@ -321,13 +307,78 @@ function getClickedMapObj(event) {
 		raycaster.setFromCamera(pointer, cameras[cameraMode]);
 		// console.log(pointer);
 
-		const intersects = raycaster.intersectObjects(scene.children);
-		// console.log(scene.children);
-		// console.log(intersects);
-		if (intersects.length > 0) {
-			console.log(intersects[0].object);
+		const intersects = raycaster.intersectObjects(scenes[currentSceneName].children);
+		const clickedMapObjName = getClickedObjName(intersects);
+		console.log(clickedMapObjName);
+
+		if (clickedMapObjName) {
+			switch (mapMode) {
+				case 0:
+					switchScene(clickedMapObjName).then(function(mapNames) {
+						cameraMode = 1;
+						mapMode = 1;
+
+						cameraControls[cameraMode].enabled = false;
+						cameraControls[cameraMode].setTarget(0, 0, 0, false);
+						cameraControls[cameraMode].dollyTo(100, false);
+						cameraControls[cameraMode].rotateTo(degToRad(135), degToRad(55), false);
+						cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+						cameraControls[cameraMode].zoomTo(1, false);
+
+						const mapName = document.getElementById("mapName");
+						mapName.textContent = currentSceneName;
+						mapName.classList.toggle("hidden");
+						mapRotationBtn.classList.toggle("hidden");
+						mapBackBtn.classList.toggle("hidden");
+
+						createMapInfo(mapNames);
+					}).catch(function(error) {
+						console.log(error);
+					});
+
+					break;
+				case 1:
+					moveCameraTo(clickedMapObjName);
+					cameraMode = 1;
+					mapMode = 2;
+
+					const currentFloor = document.createElement("span");
+					currentFloor.id = "currentFloor";
+					currentFloor.textContent = clickedMapObjName;
+					const mapName = document.getElementById("mapName");
+					mapName.appendChild(currentFloor);
+
+					cameraControls[cameraMode].enabled = true;
+					createMapInfo(clickedMapObjName);
+					break;
+				case 2:
+					break;
+			}
 		}
 	}
+}
+
+// 交差したオブジェクトの配列から、クリックされたと見なされるオブジェクトの名前を返す関数
+function getClickedObjName(intersects) {
+	for (let intersect of intersects) {
+		let childObj = null;
+		let currentObj = intersect.object;
+		let parentObj = intersect.object.parent;
+		while (parentObj.name.normalize("NFKC") != currentSceneName) {
+			childObj = currentObj;
+			currentObj = parentObj;
+			parentObj = parentObj.parent;
+		}
+
+		if (currentObj.visible) {
+			if (mapMode == 2) {
+				return childObj.name.normalize("NFKC");
+			} else {
+				return currentObj.name.normalize("NFKC");
+			}
+		}
+	}
+	return null;
 }
 
 // 画面のリサイズ
@@ -342,16 +393,14 @@ function resize() {
 	renderer.setPixelRatio(window.devicePixelRatio);
 
 	// カメラのサイズの設定
-	if (cameraMode == 0) {
-		const aspect = rendererWidth / rendererHeight;
-		cameras[cameraMode].aspect = aspect;
-	} else {
-		cameras[cameraMode].left = -rendererWidth * cameraFrustumSize;
-		cameras[cameraMode].right = rendererWidth * cameraFrustumSize;
-		cameras[cameraMode].top = rendererHeight * cameraFrustumSize;
-		cameras[cameraMode].bottom = -rendererHeight * cameraFrustumSize;
-	}
-	cameras[cameraMode].updateProjectionMatrix();
+	cameras[0].aspect = rendererWidth / rendererHeight;
+	cameras[0].updateProjectionMatrix();
+
+	cameras[1].left = -rendererWidth * cameraFrustumSize;
+	cameras[1].right = rendererWidth * cameraFrustumSize;
+	cameras[1].top = rendererHeight * cameraFrustumSize;
+	cameras[1].bottom = -rendererHeight * cameraFrustumSize;
+	cameras[1].updateProjectionMatrix();
 }
 
 mapArea.addEventListener("pointerdown", getPointerdownCoord);
@@ -373,9 +422,65 @@ function isClick(currentX, currentY) {
 		return false;
 	}
 }
-/*
-const mapLeftRotationBtn = document.getElementById("mapLeftRotationBtn");
-mapLeftRotationBtn.addEventListener("click", function(event) {
-	
+
+// マップ一覧に戻るボタンの処理
+const mapBackBtn = document.getElementById("mapBackBtn");
+mapBackBtn.addEventListener("click", function(event) {
+	switch (mapMode) {
+		case 1:
+			switchScene("全体マップ").then(function(mapNames) {
+				cameraMode = 0;
+				mapMode = 0;
+
+				cameraControls[cameraMode].setTarget(0, 0, 0, false);
+				cameraControls[cameraMode].dollyTo(275, false);
+				cameraControls[cameraMode].rotateTo(degToRad(180), degToRad(55), false);
+				cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+				cameraControls[cameraMode].zoomTo(1, false);
+
+				const mapName = document.getElementById("mapName");
+				mapName.textContent = currentSceneName;
+				mapName.classList.toggle("hidden");
+				mapRotationBtn.classList.toggle("hidden");
+				mapBackBtn.classList.toggle("hidden");
+
+				createMapInfo(mapNames);
+			}).catch(function(error) {
+				console.log(error);
+			});
+
+			break;
+		case 2:
+			moveCameraTo();
+			cameraMode = 1;
+			mapMode = 1;
+
+			document.getElementById("currentFloor").remove();
+
+			cameraControls[cameraMode].enabled = false;
+			createMapInfo();
+			break;
+	}
 });
-*/
+
+// マップ回転ボタンの処理
+const mapRotationBtn = document.getElementById("mapRotationBtn");
+let rotationAngle = 0;
+mapRotationBtn.addEventListener("click", function(event) {
+	rotationAngle = (rotationAngle - 90) % 360;
+	console.log(rotationAngle);
+	cameraControls[cameraMode].rotateAzimuthTo(cameraControls[cameraMode].azimuthAngle + degToRad(-90), true);
+});
+
+// モバイル端末を判定する関数
+function isMobileDevice() {
+	if (window.matchMedia("(max-width: 767px)").matches) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function degToRad(angle) {
+	return angle * Math.PI / 180;
+}
