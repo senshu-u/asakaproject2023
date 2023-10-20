@@ -184,3 +184,8 @@ canvas {
 	top: 60px;
 	left: 0px;
 }
+.listimages{
+	width: 20px;
+	height: 20px;
+	padding-right: 3px;
+}
