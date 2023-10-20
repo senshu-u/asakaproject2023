@@ -170,6 +170,8 @@
 	top: 9%;
 }
 
+
+
 canvas {
 	display: block;
 }
@@ -181,7 +183,7 @@ canvas {
 	user-select: none;
 }
 
-#mapArea>div {
+#mapArea > div {
 	position: absolute;
 }
 
@@ -199,9 +201,29 @@ canvas {
 #mapName {
 	top: 60px;
 	left: 0px;
+	height: 48px;
+	font-size: 32px;
+	background-color: rgba(255, 255, 255, 0.8);
+	padding-left: 32px;
+	padding-right: 8px;
+	z-index: 1;
 }
-.listimages{
-	width: 20px;
-	height: 20px;
-	padding-right: 3px;
+
+#mapBackBtn {
+	position: absolute;
+	z-index: 1;
+	top: 60px;
+	left: 8px;
+}
+
+img {
+	vertical-align: bottom;
+}
+
+.hidden {
+	display: none;
+}
+
+#currentFloor::after {
+	content: "階";
 }
