@@ -6,18 +6,6 @@ import {MapInfoIcon} from "./mapInfoIcon.js";
 
 CameraControls.install({THREE: THREE});
 
-if ('serviceWorker' in navigator) {
-	window.addEventListener('load', () => {
-		navigator.serviceWorker.register('/service-worker.js')
-		navigator.serviceWorker.register('/asakaproject2023/service-worker.js')
-			.then(registration => {
-				console.log('Service Worker registered with scope:', registration.scope);
-			}, err => {
-				console.log('Service Worker registration failed:', err);
-			});
-	});
-}
-
 /*
 // アイコンのパスをまとめた連想配列
 const mapInfoIcons = {
