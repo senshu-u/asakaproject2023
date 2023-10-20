@@ -6,6 +6,7 @@ import {MapInfoIcon} from "./mapInfoIcon.js";
 
 CameraControls.install({THREE: THREE});
 
+/*
 // アイコンのパスをまとめた連想配列
 const mapInfoIcons = {
 	"男子トイレ": "data/icon/stairs.png",
@@ -15,6 +16,7 @@ const mapInfoIcons = {
 	"エレベーター": "data/icon/stairs.png",
 	"プリンター": "data/icon/stairs.png"
 };
+*/
 
 // レンダラーの作成
 const canvas = document.getElementById("canvas");
