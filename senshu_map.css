@@ -54,7 +54,7 @@
 			margin-right: 30px;
 		}
 		#drawer_input:checked ~ .nav_content {
-			left: 50%;
+			left: 65%;
 		}
 		
 	}
@@ -81,17 +81,17 @@
 
 /* ハンバーガーアイコンの設置スペース */
 .drawer_open {
-	margin: 0 0 0 ;
+  margin: 0 0 0 ;
   display: flex;
-	padding: 10px;
+  padding: 10px;
   height: 40px;
   width: 5%;
-	right: 100px;
+  right: 100px;
   justify-content: center;
   align-items: center;
   z-index: 100;/* 重なり順を一番上にする */
   cursor: pointer;
-	margin-left: 20px;
+  margin-left: 20px;
 }
 
 /* ハンバーガーメニューのアイコン */
