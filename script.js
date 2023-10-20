@@ -250,9 +250,18 @@ async function switchScene(mapName) {
 // 前回ハイライトされたオブジェクトを参照するための変数
 let highlightedObject = null;
 let originalColor = null;
-const searchBox = document.getElementById('searchBox');
-searchBox.addEventListener('input', function() {
-    const searchTerm = searchBox.value;
+
+// PCとモバイルで異なる要素を取得
+const searchBoxDesktop = document.getElementById('searchBox');
+const searchBoxMobile = document.getElementById('searchBoxMobile');
+
+// イベントリスナーを設定
+searchBoxDesktop.addEventListener('input', handleSearch);
+searchBoxMobile.addEventListener('input', handleSearch);
+
+// 検索ボックスに入力があったときに呼び出される共通の関数
+function handleSearch() {
+    const searchTerm = this.value; // thisはイベントが発火した要素を指す
     // 前回ハイライトされたオブジェクトのマテリアルを元に戻す
     if (highlightedObject && originalColor) {
         highlightedObject.material.color.copy(originalColor);
@@ -267,7 +276,7 @@ searchBox.addEventListener('input', function() {
             highlightedObject = object;
         }
     });
-});
+}
 
 // 引数の連想配列から3Dモデルを読み込む関数
 async function loadMap(maps) {
