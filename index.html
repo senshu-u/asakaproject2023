@@ -23,12 +23,11 @@
   <body> 
     <div id="headerArea">
       <img src="data/icon/parkingLot.png" alt="アイコン" class="images1">
-      <!--ハイライトのやつやるためにid加えた↓-->
       <input id="searchBox" class="searchBox" type="search" name="s" placeholder="部屋番号を入力">
       <div id="lightArea">
-       <input id="seach_input" class="seach_hidden" type="checkbox"><!--サーチアイコンにするためのチェックボックス-->
-      <label for="seach_input" >
-      <img src="data/icon/search.png" alt="検索アイコン" class="seachimge"></label>
+       <input id="search_input" class="search_hidden" type="checkbox"><!--サーチアイコンにするためのチェックボックス-->
+      <label for="search_input" >
+      <img src="data/icon/search.png" alt="検索アイコン" class="searchimge"></label>
       <img src="data/icon/routeguidance.png" alt="アイコンj" class="images2">
           <input id="drawer_input" class="drawer_hidden" type="checkbox">
           <label for="drawer_input" class="drawer_open"><span></span></label>
@@ -59,12 +58,12 @@
                 <img src="data/icon/printer.png" alt="検索アイコン" class="listimages">プリンター</label>
             </div>
             <div class="nav_item">
-              <input type="checkbox" class="nav_item" id="lestlist">
+              <input type="checkbox" class="nav_item" id="restlist">
               <label for="restlist">
                 <img src="data/icon/restarea.png" alt="検索アイコン" class="listimages">休憩所</label>
             </div>
           </div>
-          <div class =smartphone_seach>
+          <div class =smartphone_search>
             <input class="searchBox_sm" type="search" name="s" placeholder="部屋番号を入力">
             </div>
         </div>
@@ -84,7 +83,6 @@
       <canvas id="canvas"></canvas>
     </div>
     <div id="mapRotationBtn">
-       <!--回転させるために加えたid↓-->
       <img src="data/icon/rotation.png" alt="マップ左回転ボタン" height="100">
     </div>
   </body>
