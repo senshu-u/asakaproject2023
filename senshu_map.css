@@ -1,17 +1,18 @@
-	body {
+body {
 	margin: 0px;
 	padding: 0px;
 	background-color: aquamarine;
+	overflow: hidden;
 }
-#headerArea{
+#headerArea {
 	display: flex;
 	align-items: center;
 	height: 61px;
 	width: 100%;
 	background-color:white;
 	text-align:center
-	}
-#lightArea{
+}
+#lightArea {
 	display: flex;
 	align-items: center;
 
