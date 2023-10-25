@@ -41,7 +41,37 @@ export class MapInfoIcon {
 			"fileName": "vendingmachine.png",
 			"shouldShowMapObjName": false,
 			"filterItem": "自販機"
-		}
+		},
+		"情報コアゾーン": {
+			"fileName": "icc.png",
+			"shouldShowMapObjName": false,
+			"filterItem": null
+		},
+		"ソフトクリーム屋": {
+			"fileName": "ice.png",
+			"shouldShowMapObjName": false,
+			"filterItem": null
+		},
+		"バリアフリートイレ": {
+			"fileName": "barrierfreetoilet.png",
+			"shouldShowMapObjName": false,
+			"filterItem": null
+		},
+		"モスバーガー": {
+			"fileName": "mos.png",
+			"shouldShowMapObjName": false,
+			"filterItem": null
+		},
+		"休憩所": {
+			"fileName": "restarea.png",
+			"shouldShowMapObjName": false,
+			"filterItem": null
+		},
+		"モスバーガー": {
+			"fileName": "mos.png",
+			"shouldShowMapObjName": false,
+			"filterItem": null
+		},
 	}
 
 	iconsForBuilding = {
