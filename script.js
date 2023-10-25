@@ -555,7 +555,7 @@ window.addEventListener("resize", resize);
 function resize() {
 	// レンダラーのサイズの設定
 	rendererWidth = window.innerWidth;
-	rendererHeight = window.innerHeight;
+	rendererHeight = window.innerHeight - 61;
 	renderer.setSize(rendererWidth, rendererHeight);
 	// 解像度に合わせて3Dモデルをきれいに表示
 	renderer.setPixelRatio(window.devicePixelRatio);
