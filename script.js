@@ -156,8 +156,13 @@ function setMapInfoPosition() {
 		const mapInfo = document.querySelector(selector);
 		let x = (rendererWidth / 2) * (mapObjCoord.x + 1);
 		let y = (rendererHeight / 2) * -(mapObjCoord.y - 1);
-		x = x - mapInfo.getBoundingClientRect().width / 2;
-		y = y - mapInfo.getBoundingClientRect().height / 2;
+		if (mapInfo.classList.contains("buildingInfo")) {
+			x = x - mapInfo.getBoundingClientRect().width / 2;
+			y = y - (mapInfo.getBoundingClientRect().height + 6);
+		} else {
+			x = x - mapInfo.getBoundingClientRect().width / 2;
+			y = y - mapInfo.getBoundingClientRect().height / 2;
+		}
 		mapInfo.style.left = x + "px";
 		mapInfo.style.top = y + "px";
 		mapInfo.style.zIndex = layer++;
