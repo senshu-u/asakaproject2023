@@ -120,7 +120,7 @@
   
 /* メニューのデザイン*/
 .nav_content {
-  width: 40%;
+  width: 50%;
   height: 100%;
   position: fixed;
 	top: 8.5%;
@@ -144,7 +144,7 @@
 
 /* アイコンがクリックされたらメニューを表示 */
 #drawer_input:checked ~ .nav_content {
-	left: 60%;
+	left: 50%;
 }
 
 /*スマホver検索バーに関するデータ*/
