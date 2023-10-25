@@ -172,8 +172,13 @@
 
 
 
+img {
+	vertical-align: top;
+}
+
 canvas {
 	display: block;
+	z-index: 0;
 }
 
 #mapArea {
@@ -191,6 +196,35 @@ canvas {
 	white-space: nowrap;
 }
 
+.buildingInfo {
+	background-color: #FFFFFF;
+	padding: 4px;
+	border-radius: 4px;
+}
+
+.buildingInfo::after {
+	content: "";
+	position: absolute;
+	top: calc(100% - 4px);
+	left: calc(50% - 10px);
+	background-color: #FFFFFF;
+	width: 20px;
+	height: 10px;
+	clip-path: polygon(0 0, 50% 100%, 100% 0);
+}
+
+.buildingIconList img {
+	display: block;
+}
+
+.buildingIconList {
+	display: flex;
+}
+
+.mapInfo img {
+	vertical-align: text-bottom;
+}
+
 #mapRotationBtn {
 	position: absolute;
 	z-index: 1;
@@ -206,7 +240,7 @@ canvas {
 	background-color: rgba(255, 255, 255, 0.8);
 	padding-left: 32px;
 	padding-right: 8px;
-	z-index: 1;
+	z-index: 101;
 }
 
 #mapBackBtn {
@@ -216,19 +250,10 @@ canvas {
 	left: 8px;
 }
 
-img {
-	vertical-align: bottom;
-}
-
 .hidden {
 	display: none;
 }
 
 #currentFloor::after {
 	content: "階";
-}
-.listimages{
-	width: 50px;
-	height: 50px;
-	padding-right: 3px;
 }
