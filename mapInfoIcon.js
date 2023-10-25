@@ -1,11 +1,11 @@
 export class MapInfoIcon {
 	iconPath = "data/icon/";
 
-	mapInfoIcons = {
+	icons = {
 		"階段": {
 			"fileName": "stairs.png",
 			"shouldShowMapObjName": false,
-			"filterItem": "階段"
+			"filterItem": null
 		},
 		"シダックス": {
 			"fileName": "diningroom.png",
@@ -25,25 +25,30 @@ export class MapInfoIcon {
 		"エスカレーター": {
 			"fileName": "upEscalator.png",
 			"shouldShowMapObjName": false,
-			"filterItem": "エスカレーター"
+			"filterItem": null
 		},
 		"エレベーター": {
 			"fileName": "elevator.png",
 			"shouldShowMapObjName": false,
-			"filterItem": "エレベーター"
+			"filterItem": null
 		},
 		"プリンター": {
 			"fileName": "printer.png",
 			"shouldShowMapObjName": false,
 			"filterItem": "プリンター"
+		},
+		"自動販売機": {
+			"fileName": "vendingmachine.png",
+			"shouldShowMapObjName": false,
+			"filterItem": "自販機"
 		}
 	}
 
-	wholeMapInfoIcons = {
+	iconsForBuilding = {
 		"10号館": [
-			{"fileName": "restroom.png", "filterItem": "トイレ"},
-			{"fileName": "restroom.png", "filterItem": "食堂"},
-			{"fileName": "restroom.png", "filterItem": "プリンター"}
+			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
+			{"fileName": "diningroom.png", "filterItem": "食堂"},
+			{"fileName": "printer.png", "filterItem": "プリンター"}
 		]
 	}
 }
