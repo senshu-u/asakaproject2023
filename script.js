@@ -14,40 +14,18 @@ if ('serviceWorker' in navigator) {
 			});
 	});
 }
-CameraControls.install({THREE: THREE});
 
-/*
-// アイコンのパスをまとめた連想配列
-const mapInfoIcons = {
-	"男子トイレ": "data/icon/stairs.png",
-	"女子トイレ": "data/icon/stairs.png",
-	"階段": "data/icon/stairs.png",
-	"エスカレーター": "data/icon/stairs.png",
-	"エレベーター": "data/icon/stairs.png",
-	"プリンター": "data/icon/stairs.png"
-};
-*/
+CameraControls.install({THREE: THREE});
 
 // レンダラーの作成
 const canvas = document.getElementById("canvas");
 const renderer = new THREE.WebGLRenderer({
 	canvas: canvas
 });
-let rendererWidth;
-let rendererHeight;
-
-// シーンを格納する連想配列の作成
-let scenes = {};
-let currentSceneName;
-// シーンの作成と設定
-// const scene = new THREE.Scene();
-// scene.background = new THREE.Color(0xffffff);
+let rendererWidth = null;
+let rendererHeight = null;
 
 // カメラの作成と設定
-let cameraMode = 0;
-// cameraModeで透視投影カメラと平行投影カメラを切り替える
-// 透視投影カメラ: 0
-// 平行投影カメラ: 1
 const cameras = [
 	new THREE.PerspectiveCamera(),
 	new THREE.OrthographicCamera()
@@ -55,17 +33,17 @@ const cameras = [
 cameras[0].fov = 40;
 cameras[0].near = 0.1;
 cameras[0].far = 2000;
-// cameras[0].position.set(0, 150, -300);
 
-const cameraFrustumSize = 0.005;
 // 平行投影カメラの視錐台の大きさを決める倍率
 // この値をrendererの大きさにかけて平行投影カメラの視錐台の大きさを決めている
+const cameraFrustumSize = 0.005;
 cameras[1].near = 0.1;
 cameras[1].far = 2000;
-// cameras[1].position.set(0, 200, 0);
 
 // レンダラーとカメラのサイズの初期化
 resize();
+
+const mapArea = document.getElementById("mapArea");
 
 // camera-controlsの作成と設定
 const clock = new THREE.Clock();
@@ -79,31 +57,50 @@ cameraControls[0].mouseButtons.wheel = CameraControls.ACTION.DOLLY;
 cameraControls[0].mouseButtons.middle = CameraControls.ACTION.ROTATE;
 cameraControls[0].touches.one = CameraControls.ACTION.TOUCH_OFFSET;
 cameraControls[0].touches.two = CameraControls.ACTION.TOUCH_DOLLY_ROTATE;
+cameraControls[0].dollySpeed = 0.3;
 cameraControls[0].minDistance = 50;
 cameraControls[0].maxDistance = 300;
-cameraControls[0].maxPolarAngle = degToRad(80);
-cameraControls[0].setTarget(0, 0, 0, false);
-cameraControls[0].dollyTo(275, false);
-cameraControls[0].rotateTo(degToRad(180), degToRad(55), false);
-cameraControls[0].setFocalOffset(0, 0, 0, false);
-cameraControls[0].zoomTo(1, false);
+cameraControls[0].maxPolarAngle = THREE.MathUtils.degToRad(80);
 
 cameraControls[1].mouseButtons.left = CameraControls.ACTION.OFFSET;
 cameraControls[1].mouseButtons.right = CameraControls.ACTION.NONE;
 cameraControls[1].mouseButtons.wheel = CameraControls.ACTION.ZOOM;
 cameraControls[1].mouseButtons.middle = CameraControls.ACTION.NONE;
 cameraControls[1].touches.one = CameraControls.ACTION.TOUCH_OFFSET;
-cameraControls[1].touches.two = CameraControls.ACTION.TOUCH_DOLLY_ROTATE;
+cameraControls[1].touches.two = CameraControls.ACTION.TOUCH_ZOOM;
+cameraControls[1].dollySpeed = 3.0;
+cameraControls[1].minZoom = 1;
+cameraControls[1].maxZoom = 10;
 
+// cameraModeで透視投影カメラと平行投影カメラを切り替える
+// 透視投影カメラ: 0
+// 平行投影カメラ: 1
+let cameraMode = 0;
 
+// シーンを格納する連想配列の作成
+let scenes = {};
+// currentSceneNameにはレンダリング中のscene名が入る
+let currentSceneName = null;
+
+// mapModeには表示しているマップの状態を入れる
+// 全体マップ: 0
+// 館内マップ: 1
+// 各フロアマップ: 2
+let mapMode = 0;
 
 // 引数の名前の3Dモデルを読み込む関数
 // 3Dモデル読み込み後、教室名やアイコンなどを作る関数を実行
-// そのとき読み込んだ3Dモデルの名前を配列mapNamesとして渡す
-switchScene("全体マップ").then(function(mapNames) {
-	console.log(mapNames);
-	console.log(scenes);
-	createMapInfo("1");
+switchScene("全体マップ").then(function() {
+	cameraControls[cameraMode].setTarget(0, 0, 0, false);
+	cameraControls[cameraMode].dollyTo(275, false);
+	cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(180), THREE.MathUtils.degToRad(55), false);
+	cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+	cameraControls[cameraMode].zoomTo(1, false);
+
+	const mapName = document.getElementById("mapName");
+	mapName.textContent = currentSceneName;
+
+	createMapInfo(getMapsInCurrentScene());
 });
 
 // レンダーループ
@@ -113,13 +110,15 @@ renderer.setAnimationLoop(animation);
 function animation() {
 	// カメラの位置と向きを更新
 	const delta = clock.getDelta();
-	cameraControls[cameraMode].update(delta);
+	const hasControlsUpdated = cameraControls[cameraMode].update(delta);
 
 	// レンダリング
 	renderer.render(scenes[currentSceneName], cameras[cameraMode]);
 
-	// 教室名やアイコンなどをマップのオブジェクトに付ける関数
-	setMapInfoPos();
+	if (hasControlsUpdated) {
+		// 教室名やアイコンなどをマップのオブジェクトに付ける関数
+		setMapInfoPosition();
+	}
 	
 	// console.log(cameras[cameraMode].zoom);
 	// let cameraPosition = cameras[cameraMode].position.x + ", " + cameras[cameraMode].position.y + ", " + cameras[cameraMode].position.z;
@@ -127,58 +126,183 @@ function animation() {
 }
 
 // 教室名やアイコンなどをマップのオブジェクトに付ける関数
-function setMapInfoPos() {
+function setMapInfoPosition() {
+	let mapObjCoords = [];
+	// すべてのmapInfoの座標を取得する
 	for (let mapInfo of document.getElementsByClassName("mapInfo")) {
-		// 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
-		let [x, y] = getMapObjCoord(mapInfo.dataset.mapObj);
+		const mapObj = scenes[currentSceneName].getObjectByName(mapInfo.dataset.mapObj);
+		if (mapObj) {
+			// 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
+			let [x, y, z] = getMapObjectCoord(mapObj);
+			
+			let mapObjCoord = {
+				"name": mapObj.name,
+				"x": x,
+				"y": y,
+				"z": z
+			};
 
+			mapObjCoords.push(mapObjCoord);
+		}
+	}
+
+	mapObjCoords.sort(function(first, second) {
+		return second.z - first.z;
+	});
+
+	let layer = 1;
+	for (let mapObjCoord of mapObjCoords) {
+		const selector = '[data-map-obj="' + mapObjCoord.name + '"]';
+		const mapInfo = document.querySelector(selector);
+		let x = (rendererWidth / 2) * (mapObjCoord.x + 1);
+		let y = (rendererHeight / 2) * -(mapObjCoord.y - 1);
 		x = x - mapInfo.getBoundingClientRect().width / 2;
 		y = y - mapInfo.getBoundingClientRect().height / 2;
 		mapInfo.style.left = x + "px";
 		mapInfo.style.top = y + "px";
+		mapInfo.style.zIndex = layer++;
 	}
 }
 
 // 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
-function getMapObjCoord(mapObj) {
-	let target = scenes[currentSceneName].getObjectByName(mapObj);
+function getMapObjectCoord(target) {	
+	const targetWorldPosition = target.getWorldPosition(new THREE.Vector3());
+	const targetCanvasPosition = targetWorldPosition.project(cameras[cameraMode]);
 	
-	const targetWorldPos = target.getWorldPosition(new THREE.Vector3());
-	const targetCanvasPos = targetWorldPos.project(cameras[cameraMode]);
-	
-	const targetCanvasX = (rendererWidth / 2) * (targetCanvasPos.x + 1);
-	const targetCanvasY = (rendererHeight / 2) * -(targetCanvasPos.y - 1);
-	
-	return [targetCanvasX, targetCanvasY];
+	return [targetCanvasPosition.x, targetCanvasPosition.y, targetCanvasPosition.z];
 }
 
-let mapMode = 0;
 // 教室名やアイコンなどを作る関数
-function createMapInfo(mapNames) {
+function createMapInfo(maps) {
 	removeMapInfo();
 	const mapInfoIcon = new MapInfoIcon();
-	const mapInfoIcons = mapInfoIcon.mapInfoIcons;
+	const icons = mapInfoIcon.icons;
+	const iconsForBuilding = mapInfoIcon.iconsForBuilding;
 
 	switch (mapMode) {
 		case 0:
-			break;
-		case 1:
-			break;
-		case 2:
-			for (let mapObj of scenes[currentSceneName].getObjectByName(mapNames).children) {
-				if (mapObj.name != "object") {
-					const mapObjNameFirstWord = mapObj.name.substring(0, mapObj.name.indexOf("_"));
-					if (Object.keys(mapInfoIcons).includes(mapObjNameFirstWord)) {
+			for (let mapObj of maps[0].children) {
+				const mapObjName = mapObj.name.normalize("NFKC");
+				if (mapObjName != "object") {
+					const mapObjNameFirstWord = (function(text) {
+						if (text.includes("_")) {
+							return text.substring(0, text.indexOf("_"));
+						} else {
+							return text;
+						}
+					}(mapObjName));
+					
+					if (Object.keys(icons).includes(mapObjNameFirstWord)) {
 						// アイコンを作る
 						const mapInfo = document.createElement("div");
 						mapInfo.classList.add("mapInfo");
 						mapInfo.classList.add("icon");
 						mapInfo.dataset.mapObj = mapObj.name;
-						mapInfo.dataset.filterItem = mapInfoIcons[mapObjNameFirstWord]["filterItem"];
+						mapInfo.dataset.filterItem = icons[mapObjNameFirstWord]["filterItem"];
 
-						mapInfo.textContent = mapObjNameFirstWord;
+						if (icons[mapObjNameFirstWord]["shouldShowMapObjName"]) {
+							mapInfo.textContent = mapObjNameFirstWord;
+						}
 						const icon = document.createElement("img");
-						icon.src = mapInfoIcon.iconPath + mapInfoIcons[mapObjNameFirstWord]["fileName"];
+						icon.src = mapInfoIcon.iconPath + icons[mapObjNameFirstWord]["fileName"];
+						icon.alt = mapObjNameFirstWord;
+						icon.height = 20;
+
+						mapInfo.prepend(icon);
+						mapArea.append(mapInfo);
+					} else {
+						// 建物の情報を作る
+						const mapInfo = document.createElement("div");
+						mapInfo.classList.add("mapInfo");
+						mapInfo.classList.add("buildingInfo");
+						mapInfo.dataset.mapObj = mapObj.name;
+
+						const buildingName = document.createElement("div");
+						buildingName.classList.add("buildingName");
+						buildingName.textContent = mapObjName;
+
+						const buildingIconList = document.createElement("div");
+						buildingIconList.classList.add("buildingIconList");
+						if (Object.keys(iconsForBuilding).includes(mapObjName)) {
+							for (let iconForMapObjName of iconsForBuilding[mapObjName]) {
+								const icon = document.createElement("img");
+								icon.classList.add("icon");
+								icon.dataset.filterItem = iconForMapObjName["filterItem"];
+								icon.src = mapInfoIcon.iconPath + iconForMapObjName["fileName"];
+								icon.alt = iconForMapObjName["filterItem"];
+								icon.height = 20;
+								buildingIconList.append(icon);
+							}
+						}
+
+						mapInfo.append(buildingName, buildingIconList);
+						mapArea.append(mapInfo);
+					}
+				}
+			}
+			break;
+
+		case 1:
+			for (let map of maps) {
+				for (let mapObj of map.children) {
+					const mapObjName = mapObj.name.normalize("NFKC");
+					if (mapObjName != "object") {
+						const mapObjNameFirstWord = (function(text) {
+							if (text.includes("_")) {
+								return text.substring(0, text.indexOf("_"));
+							} else {
+								return text;
+							}
+						}(mapObjName));
+
+						if (Object.keys(icons).includes(mapObjNameFirstWord)) {
+							if (icons[mapObjNameFirstWord]["filterItem"]) {
+								// アイコンを作る
+								const mapInfo = document.createElement("div");
+								mapInfo.classList.add("mapInfo");
+								mapInfo.classList.add("icon");
+								mapInfo.dataset.mapObj = mapObj.name;
+								mapInfo.dataset.filterItem = icons[mapObjNameFirstWord]["filterItem"];
+
+								const icon = document.createElement("img");
+								icon.src = mapInfoIcon.iconPath + icons[mapObjNameFirstWord]["fileName"];
+								icon.alt = mapObjNameFirstWord;
+								icon.height = 20;
+
+								mapInfo.prepend(icon);
+								mapArea.append(mapInfo);
+							}
+						}
+					}
+				}
+			}
+			break;
+
+		case 2:
+			for (let mapObj of maps.children) {
+				const mapObjName = mapObj.name.normalize("NFKC");
+				if (mapObjName != "object") {
+					const mapObjNameFirstWord = (function(text) {
+						if (text.includes("_")) {
+							return text.substring(0, text.indexOf("_"));
+						} else {
+							return text;
+						}
+					}(mapObjName));
+
+					if (Object.keys(icons).includes(mapObjNameFirstWord)) {
+						// アイコンを作る
+						const mapInfo = document.createElement("div");
+						mapInfo.classList.add("mapInfo");
+						mapInfo.classList.add("icon");
+						mapInfo.dataset.mapObj = mapObj.name;
+						mapInfo.dataset.filterItem = icons[mapObjNameFirstWord]["filterItem"];
+
+						if (icons[mapObjNameFirstWord]["shouldShowMapObjName"]) {
+							mapInfo.textContent = mapObjNameFirstWord;
+						}
+						const icon = document.createElement("img");
+						icon.src = mapInfoIcon.iconPath + icons[mapObjNameFirstWord]["fileName"];
 						icon.alt = mapObjNameFirstWord;
 						icon.height = 20;
 
@@ -190,38 +314,43 @@ function createMapInfo(mapNames) {
 						mapInfo.classList.add("mapInfo");
 						mapInfo.classList.add("roomName");
 						mapInfo.dataset.mapObj = mapObj.name;
-						mapInfo.textContent = mapObj.name;
+						mapInfo.textContent = mapObjName;
 						mapArea.append(mapInfo);
 					}
 				}
 			}
 			break;
+
 	}
 }
 
+// すべてのマップ上の情報を削除する関数
 function removeMapInfo() {
 	while (document.getElementsByClassName("mapInfo")[0]) {
 		document.getElementsByClassName("mapInfo")[0].remove();
 	}
 }
 
-async function switchScene(mapName) {
-	let mapNames = [];
+function getMapsInCurrentScene() {
+	let maps = [];
+	for (let sceneChild of scenes[currentSceneName].children) {
+		if (!sceneChild.isLight) {
+			maps.push(sceneChild);
+		}
+	}
+	return maps;
+}
 
+async function switchScene(mapName) {
 	if (Object.keys(scenes).includes(mapName)) {
 		currentSceneName = mapName;
-		for (let sceneChild of scenes[currentSceneName].children) {
-			if (!sceneChild.isLight) {
-				mapNames.push(sceneChild.name);
-			}
-		}
-
 	} else {
 		const mapData = new MapData();
 		const extractedMaps = mapData.extractMapsByMapName(mapName);
 
 		if (Object.keys(extractedMaps).length > 0) {
 			currentSceneName = mapName;
+			// シーンの作成と設定
 			scenes[currentSceneName] = new THREE.Scene();
 			scenes[currentSceneName].name = mapName;
 			scenes[currentSceneName].background = new THREE.Color(0xffffff);
@@ -238,44 +367,11 @@ async function switchScene(mapName) {
 			backRightLight.position.set(1, 1, -1);
 			scenes[currentSceneName].add(backRightLight);
 			
-			mapNames = await loadMap(extractedMaps);
+			await loadMap(extractedMaps);
 		} else {
 			throw new Error(mapName + "のマップデータはありません");
 		}
 	}
-
-	return mapNames;
-}
-
-// 前回ハイライトされたオブジェクトを参照するための変数
-let highlightedObject = null;
-let originalColor = null;
-
-// PCとモバイルで異なる要素を取得
-const searchBoxDesktop = document.getElementById('searchBox');
-const searchBoxMobile = document.getElementById('searchBoxMobile');
-
-// イベントリスナーを設定
-searchBoxDesktop.addEventListener('input', handleSearch);
-searchBoxMobile.addEventListener('input', handleSearch);
-
-// 検索ボックスに入力があったときに呼び出される共通の関数
-function handleSearch() {
-    const searchTerm = this.value; // thisはイベントが発火した要素を指す
-    // 前回ハイライトされたオブジェクトのマテリアルを元に戻す
-    if (highlightedObject && originalColor) {
-        highlightedObject.material.color.copy(originalColor);
-        highlightedObject = null;
-        originalColor = null;
-    }
-    // シーン内のオブジェクトをループして一致するオブジェクトを探す
-    scenes[currentSceneName].traverse((object) => {
-        if (!highlightedObject && object.material && object.name === searchTerm) {
-            originalColor = object.material.color.clone();
-            object.material.color.set(0xff0000);  // ハイライトカラー（赤）に変更
-            highlightedObject = object;
-        }
-    });
 }
 
 // 引数の連想配列から3Dモデルを読み込む関数
@@ -283,7 +379,6 @@ async function loadMap(maps) {
 	const loader = new GLTFLoader();
 	const distance = 1.5;
 
-	let mapNames = [];
 	let count = 0;
 	for (let fileName in maps) {
 		const mapDataPath = maps[fileName]["dirPath"] + fileName;
@@ -291,53 +386,65 @@ async function loadMap(maps) {
 		const map = glb.scene;
 
 		// 読み込んだ3Dモデルに名前を付ける
-		if (maps[fileName]["floor"] == "") {
-			// 階のないマップの場合はマップ名をそのまま付ける
-			map.name = maps[fileName]["mapName"];
-		} else {
+		if (maps[fileName]["floor"]) {
 			// 階のあるマップの場合は階の名前を付ける
 			map.name = maps[fileName]["floor"];
+		} else {
+			// 階のないマップの場合はマップ名をそのまま付ける
+			map.name = maps[fileName]["mapName"];
 		}
-		mapNames.push(map.name);
 		map.position.set(0, count * distance, 0);
 
-		// console.log(map);
 		scenes[currentSceneName].add(map);
 		count++;
 	}
-
-	return mapNames;
 }
 
-function moveCameraTo(mapName = null) {
-	if (mapName) {
-		for (let sceneChild of scenes[currentSceneName].children) {
-			if (!(sceneChild.isLight || sceneChild.name == mapName)) {
-				sceneChild.visible = false;
+async function moveCameraTo(floorName = null) {
+	canControlMap = false;
+	if (floorName) {
+		let floorExists = false;
+		for (let map of getMapsInCurrentScene()) {
+			if (map.name == floorName) {
+				floorExists = true;
+				break;
 			}
 		}
-		cameraControls[cameraMode].rotateTo(degToRad(0), degToRad(0), true);
-		cameraControls[cameraMode].setFocalOffset(0, 0, 0, true);
-		cameraControls[cameraMode].zoomTo(1, true);
+		if (floorExists) {
+			for (let map of getMapsInCurrentScene()) {
+				if (map.name != floorName) {
+					map.visible = false;
+				}
+			}
+			cameraControls[cameraMode].setFocalOffset(0, 0, 0, true);
+			cameraControls[cameraMode].zoomTo(1, true);
+			await cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(0), THREE.MathUtils.degToRad(0), true);
+		} else {
+			throw new Error(floorName + "のマップデータはありません");
+		}
 
 	} else {
-		for (let sceneChild of scenes[currentSceneName].children) {
-			if (!sceneChild.visible) {
-				sceneChild.visible = true;
+		for (let map of getMapsInCurrentScene()) {
+			if (!map.visible) {
+				map.visible = true;
 			}
 		}
-		cameraControls[cameraMode].rotateTo(degToRad(135), degToRad(55), true);
 		cameraControls[cameraMode].setFocalOffset(0, 0, 0, true);
 		cameraControls[cameraMode].zoomTo(1, true);
+		await cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(135), THREE.MathUtils.degToRad(55), true);
+
 	}
+	canControlMap = true;
 }
 
 // 3Dモデルのクリックの設定
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
+let isTransitionedMap = true;
 
-function getClickedMapObj(event) {
-	if (isClick(event.clientX, event.clientY)) {
+function getClickedMapObject(event) {
+	if (isClick(event.clientX, event.clientY) && isTransitionedMap) {
+		isTransitionedMap = false;
 		const mapAreaOffset = mapArea.getBoundingClientRect();
 		// .setFromCamera()に必要な正規化デバイス座標に変換したマウスカーソルの座標の取得方法
 		// ブラウザウィンドウの左上を基準にマウスカーソルの座標を取得して、mapAreaの座標を引くことで、
@@ -348,80 +455,93 @@ function getClickedMapObj(event) {
 		pointer.x = (event.clientX - mapAreaOffset.left) / mapAreaOffset.width * 2 - 1;
 		pointer.y = (event.clientY - mapAreaOffset.top) / mapAreaOffset.height * -2 + 1;
 		raycaster.setFromCamera(pointer, cameras[cameraMode]);
-		// console.log(pointer);
 
 		const intersects = raycaster.intersectObjects(scenes[currentSceneName].children);
-		const clickedMapObjName = getClickedObjName(intersects);
+		const clickedMapObjName = (function() {
+			for (let intersect of intersects) {
+				let childObj = null;
+				let currentObj = intersect.object;
+				let parentObj = intersect.object.parent;
+				while (parentObj.name.normalize("NFKC") != currentSceneName) {
+					childObj = currentObj;
+					currentObj = parentObj;
+					parentObj = parentObj.parent;
+				}
+		
+				if (currentObj.visible) {
+					if (mapMode == 2) {
+						return childObj.name.normalize("NFKC");
+					} else {
+						return currentObj.name.normalize("NFKC");
+					}
+				}
+			}
+			return null;
+		}());
 		console.log(clickedMapObjName);
 
 		if (clickedMapObjName) {
 			switch (mapMode) {
 				case 0:
-					switchScene(clickedMapObjName).then(function(mapNames) {
+					removeMapInfo();
+					switchScene(clickedMapObjName).then(function() {
 						cameraMode = 1;
 						mapMode = 1;
 
 						cameraControls[cameraMode].enabled = false;
 						cameraControls[cameraMode].setTarget(0, 0, 0, false);
 						cameraControls[cameraMode].dollyTo(100, false);
-						cameraControls[cameraMode].rotateTo(degToRad(135), degToRad(55), false);
+						cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(135), THREE.MathUtils.degToRad(55), false);
 						cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
 						cameraControls[cameraMode].zoomTo(1, false);
 
 						const mapName = document.getElementById("mapName");
 						mapName.textContent = currentSceneName;
-						mapName.classList.toggle("hidden");
-						mapRotationBtn.classList.toggle("hidden");
-						mapBackBtn.classList.toggle("hidden");
+						mapName.classList.remove("hidden");
+						mapBackBtn.classList.remove("hidden");
 
-						createMapInfo(mapNames);
+						createMapInfo(getMapsInCurrentScene());
+						isTransitionedMap = true;
 					}).catch(function(error) {
 						console.log(error);
+						createMapInfo(getMapsInCurrentScene());
+						setMapInfoPosition();
+						isTransitionedMap = true;
 					});
 
 					break;
 				case 1:
-					moveCameraTo(clickedMapObjName);
-					cameraMode = 1;
-					mapMode = 2;
+					removeMapInfo();
+					moveCameraTo(clickedMapObjName).then(function() {
+						cameraMode = 1;
+						mapMode = 2;
 
-					const currentFloor = document.createElement("span");
-					currentFloor.id = "currentFloor";
-					currentFloor.textContent = clickedMapObjName;
-					const mapName = document.getElementById("mapName");
-					mapName.appendChild(currentFloor);
+						const currentFloor = document.createElement("span");
+						currentFloor.id = "currentFloor";
+						currentFloor.textContent = clickedMapObjName;
+						const mapName = document.getElementById("mapName");
+						mapName.append(currentFloor);
+						mapRotationBtn.classList.remove("hidden");
 
-					cameraControls[cameraMode].enabled = true;
-					createMapInfo(clickedMapObjName);
+						cameraControls[cameraMode].enabled = true;
+						createMapInfo(scenes[currentSceneName].getObjectByName(clickedMapObjName));
+						isTransitionedMap = true;
+					}).catch(function(error) {
+						console.log(error);
+						createMapInfo(getMapsInCurrentScene());
+						setMapInfoPosition();
+						isTransitionedMap = true;
+					});
+					
 					break;
 				case 2:
+					isTransitionedMap = true;
 					break;
 			}
+		} else {
+			isTransitionedMap = true;
 		}
 	}
-}
-
-// 交差したオブジェクトの配列から、クリックされたと見なされるオブジェクトの名前を返す関数
-function getClickedObjName(intersects) {
-	for (let intersect of intersects) {
-		let childObj = null;
-		let currentObj = intersect.object;
-		let parentObj = intersect.object.parent;
-		while (parentObj.name.normalize("NFKC") != currentSceneName) {
-			childObj = currentObj;
-			currentObj = parentObj;
-			parentObj = parentObj.parent;
-		}
-
-		if (currentObj.visible) {
-			if (mapMode == 2) {
-				return childObj.name.normalize("NFKC");
-			} else {
-				return currentObj.name.normalize("NFKC");
-			}
-		}
-	}
-	return null;
 }
 
 // 画面のリサイズ
@@ -444,12 +564,13 @@ function resize() {
 	cameras[1].top = rendererHeight * cameraFrustumSize;
 	cameras[1].bottom = -rendererHeight * cameraFrustumSize;
 	cameras[1].updateProjectionMatrix();
+	setMapInfoPosition();
 }
 
 mapArea.addEventListener("pointerdown", getPointerdownCoord);
-mapArea.addEventListener("pointerup", getClickedMapObj);
+mapArea.addEventListener("pointerup", getClickedMapObject);
 
-let prevX, prevY;
+let prevX = null, prevY = null;
 function getPointerdownCoord(event) {
 	prevX = event.clientX;
 	prevY = event.clientY;
@@ -469,50 +590,68 @@ function isClick(currentX, currentY) {
 // マップ一覧に戻るボタンの処理
 const mapBackBtn = document.getElementById("mapBackBtn");
 mapBackBtn.addEventListener("click", function(event) {
-	switch (mapMode) {
-		case 1:
-			switchScene("全体マップ").then(function(mapNames) {
-				cameraMode = 0;
-				mapMode = 0;
+	if (isTransitionedMap) {
+		isTransitionedMap = false;
+		switch (mapMode) {
+			case 1:
+				removeMapInfo();
+				switchScene("全体マップ").then(function() {
+					cameraMode = 0;
+					mapMode = 0;
 
-				cameraControls[cameraMode].setTarget(0, 0, 0, false);
-				cameraControls[cameraMode].dollyTo(275, false);
-				cameraControls[cameraMode].rotateTo(degToRad(180), degToRad(55), false);
-				cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
-				cameraControls[cameraMode].zoomTo(1, false);
+					cameraControls[cameraMode].setTarget(0, 0, 0, false);
+					cameraControls[cameraMode].dollyTo(275, false);
+					cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(180), THREE.MathUtils.degToRad(55), false);
+					cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+					cameraControls[cameraMode].zoomTo(1, false);
 
-				const mapName = document.getElementById("mapName");
-				mapName.textContent = currentSceneName;
-				mapName.classList.toggle("hidden");
-				mapRotationBtn.classList.toggle("hidden");
-				mapBackBtn.classList.toggle("hidden");
+					const mapName = document.getElementById("mapName");
+					mapName.textContent = currentSceneName;
+					mapName.classList.add("hidden");
+					mapBackBtn.classList.add("hidden");
 
-				createMapInfo(mapNames);
-			}).catch(function(error) {
-				console.log(error);
-			});
+					createMapInfo(getMapsInCurrentScene());
+					isTransitionedMap = true;
+				}).catch(function(error) {
+					console.log(error);
+					createMapInfo(getMapsInCurrentScene());
+					setMapInfoPosition();
+					isTransitionedMap = true;
+				});
+				break;
+			case 2:
+				removeMapInfo();
+				moveCameraTo().then(function() {
+					cameraMode = 1;
+					mapMode = 1;
 
-			break;
-		case 2:
-			moveCameraTo();
-			cameraMode = 1;
-			mapMode = 1;
+					document.getElementById("currentFloor").remove();
+					mapRotationBtn.classList.add("hidden");
 
-			document.getElementById("currentFloor").remove();
-
-			cameraControls[cameraMode].enabled = false;
-			createMapInfo();
-			break;
+					cameraControls[cameraMode].enabled = false;
+					createMapInfo(getMapsInCurrentScene());
+					isTransitionedMap = true;
+				});
+				break;
+		}
 	}
 });
 
 // マップ回転ボタンの処理
 const mapRotationBtn = document.getElementById("mapRotationBtn");
-let rotationAngle = 0;
-mapRotationBtn.addEventListener("click", function(event) {
-	rotationAngle = (rotationAngle - 90) % 360;
-	console.log(rotationAngle);
-	cameraControls[cameraMode].rotateAzimuthTo(cameraControls[cameraMode].azimuthAngle + degToRad(-90), true);
+let canControlMap = true;
+let mapAzimuthAngle = 0;
+mapRotationBtn.addEventListener("click", async function(event) {
+	if (canControlMap) {
+		canControlMap = false;
+		mapAzimuthAngle = Math.round(THREE.MathUtils.radToDeg(cameraControls[cameraMode].azimuthAngle) - 90);
+		await cameraControls[cameraMode].rotateAzimuthTo(THREE.MathUtils.degToRad(mapAzimuthAngle), true);
+		if (mapAzimuthAngle <= -360) {
+			mapAzimuthAngle = mapAzimuthAngle % 360;
+			await cameraControls[cameraMode].rotateAzimuthTo(THREE.MathUtils.degToRad(mapAzimuthAngle), false);
+		}
+		canControlMap = true;
+	}
 });
 
 // モバイル端末を判定する関数
@@ -524,6 +663,33 @@ function isMobileDevice() {
 	}
 }
 
-function degToRad(angle) {
-	return angle * Math.PI / 180;
+// 前回ハイライトされたオブジェクトを参照するための変数
+let highlightedObject = null;
+let originalColor = null;
+
+// PCとモバイルで異なる要素を取得
+const searchBoxDesktop = document.getElementById('searchBox');
+const searchBoxMobile = document.getElementById('searchBoxMobile');
+
+// イベントリスナーを設定
+searchBoxDesktop.addEventListener('input', handleSearch);
+searchBoxMobile.addEventListener('input', handleSearch);
+
+// 検索ボックスに入力があったときに呼び出される共通の関数
+function handleSearch() {
+	const searchTerm = this.value; // thisはイベントが発火した要素を指す
+	// 前回ハイライトされたオブジェクトのマテリアルを元に戻す
+	if (highlightedObject && originalColor) {
+			highlightedObject.material.color.copy(originalColor);
+			highlightedObject = null;
+			originalColor = null;
+	}
+	// シーン内のオブジェクトをループして一致するオブジェクトを探す
+	scenes[currentSceneName].traverse((object) => {
+			if (!highlightedObject && object.material && object.name === searchTerm) {
+					originalColor = object.material.color.clone();
+					object.material.color.set(0xff0000);  // ハイライトカラー（赤）に変更
+					highlightedObject = object;
+			}
+	});
 }
