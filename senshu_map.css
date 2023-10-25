@@ -233,7 +233,7 @@ canvas {
 }
 
 #mapName {
-	top: 60px;
+	top: 0px;
 	left: 0px;
 	height: 48px;
 	font-size: 32px;
