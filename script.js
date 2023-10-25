@@ -604,6 +604,7 @@ mapBackBtn.addEventListener("click", function(event) {
 					cameraMode = 0;
 					mapMode = 0;
 
+					cameraControls[cameraMode].enabled = true;
 					cameraControls[cameraMode].setTarget(0, 0, 0, false);
 					cameraControls[cameraMode].dollyTo(275, false);
 					cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(180), THREE.MathUtils.degToRad(55), false);
