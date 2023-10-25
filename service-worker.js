@@ -30,6 +30,7 @@ const urlsToCache = [
   '/data/icon/mos.png',
   '/data/icon/parkingLot.png',
   '/data/icon/pin.png',
+  '/data/parkingLot.png',
   '/data/icon/printer.png',
   '/data/icon/restarea.png',
   '/data/icon/resutaurant.png',
