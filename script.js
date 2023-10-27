@@ -699,3 +699,43 @@ function handleSearch() {
 			}
 	});
 }
+
+const topLogo = document.getElementById("toplogo");
+topLogo.addEventListener("click", function(event) {
+    if (isTransitionedMap) {
+        isTransitionedMap = false;
+        removeMapInfo();
+
+        // 前のシーンの3Dモデルを破棄するための処理
+        if (currentSceneName && scenes[currentSceneName]) {
+            for (let child of scenes[currentSceneName].children) {
+                child.visible = true; // 可視状態をリセット
+            }
+        }
+
+        switchScene("全体マップ").then(function() {
+            cameraMode = 0;
+            mapMode = 0;
+
+            cameraControls[cameraMode].enabled = true;
+            cameraControls[cameraMode].setTarget(0, 0, 0, false);
+            cameraControls[cameraMode].dollyTo(275, false);
+            cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(180), THREE.MathUtils.degToRad(55), false);
+            cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+            cameraControls[cameraMode].zoomTo(1, false);
+
+            const mapName = document.getElementById("mapName");
+            mapName.textContent = currentSceneName;
+            mapName.classList.add("hidden");
+            mapBackBtn.classList.add("hidden");
+
+            createMapInfo(getMapsInCurrentScene());
+            isTransitionedMap = true;
+        }).catch(function(error) {
+            console.log(error);
+            createMapInfo(getMapsInCurrentScene());
+            setMapInfoPosition();
+            isTransitionedMap = true;
+        });
+    }
+});
