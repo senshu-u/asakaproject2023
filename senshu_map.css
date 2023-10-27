@@ -239,7 +239,7 @@ canvas {
 }
 
 #mapName {
-	top: 0px;
+	top: 40px;
 	left: 0px;
 	height: 48px;
 	font-size: 32px;
@@ -253,7 +253,7 @@ canvas {
 #mapBackBtn {
 	position: absolute;
 	z-index: 1;
-	top: 60px;
+	top: 100px;
 	left: 8px;
 }
 
