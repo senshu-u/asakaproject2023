@@ -174,7 +174,7 @@ body {
 }
 /*検索アイコンを押したら検索バーが降りてくる*/
 #search_input:checked ~ .smartphone_search {
-	top: 61px;
+	top: 65px;
 }
 
 
