@@ -684,30 +684,37 @@ function isMobileDevice() {
 }
 
 // 前回ハイライトされたオブジェクトを参照するための変数
-let highlightedObject = null;
-let originalColor = null;
+let highlightedObjects = [];
+let originalColors = [];
+
 // PCとモバイルで異なる要素を取得
 const searchBoxDesktop = document.getElementById('searchBox');
 const searchBoxMobile = document.getElementById('searchBoxMobile');
+
 // イベントリスナーを設定
 searchBoxDesktop.addEventListener('input', handleSearch);
 searchBoxMobile.addEventListener('input', handleSearch);
+
 // 検索ボックスに入力があったときに呼び出される共通の関数
 function handleSearch() {
 	const searchTerm = this.value; // thisはイベントが発火した要素を指す
+	
 	// 前回ハイライトされたオブジェクトのマテリアルを元に戻す
-	if (highlightedObject && originalColor) {
-			highlightedObject.material.color.copy(originalColor);
-			highlightedObject = null;
-			originalColor = null;
-	}
+	highlightedObjects.forEach((object, index) => {
+		if (object && originalColors[index]) {
+			object.material.color.copy(originalColors[index]);
+		}
+	});
+	highlightedObjects = [];
+	originalColors = [];
+	
 	// シーン内のオブジェクトをループして一致するオブジェクトを探す
 	scenes[currentSceneName].traverse((object) => {
-			if (!highlightedObject && object.material && object.name === searchTerm) {
-					originalColor = object.material.color.clone();
-					object.material.color.set(0xff0000);  // ハイライトカラー（赤）に変更
-					highlightedObject = object;
-			}
+		if (object.material && object.name === searchTerm) {
+			originalColors.push(object.material.color.clone());
+			object.material.color.set(0xff0000);  // ハイライトカラー（赤）に変更
+			highlightedObjects.push(object);
+		}
 	});
 }
 
