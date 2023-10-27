@@ -4,6 +4,7 @@ import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
 import {MapData} from "./mapData.js";
 import {MapInfoIcon} from "./mapInfoIcon.js";
 
+/*
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
 		navigator.serviceWorker.register('/asakaproject2023/service-worker.js')
@@ -14,6 +15,7 @@ if ('serviceWorker' in navigator) {
 			});
 	});
 }
+*/
 
 CameraControls.install({THREE: THREE});
 
@@ -118,6 +120,14 @@ function animation() {
 	if (hasControlsUpdated) {
 		// 教室名やアイコンなどをマップのオブジェクトに付ける関数
 		setMapInfoPosition();
+	}
+	
+	if (primaryPointerId && mapMode == 1) {
+		const scale = 0.01;
+		const currentCameraPositionY = prevCameraPosition.y + scale * deltaPointerCoords[primaryPointerId]["y"];
+		const currentTargetPositionY = prevTargetPosition.y + scale * deltaPointerCoords[primaryPointerId]["y"];
+		cameraControls[cameraMode].setTarget(prevTargetPosition.x, currentTargetPositionY, prevTargetPosition.z, false);
+		cameraControls[cameraMode].setPosition(prevCameraPosition.x, currentCameraPositionY, prevCameraPosition.z, false);
 	}
 	
 	// console.log(cameras[cameraMode].zoom);
@@ -446,7 +456,6 @@ async function moveCameraTo(floorName = null) {
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 let isTransitionedMap = true;
-let pointerPrevCoords = {};
 
 function transitionMap(mapObjName) {
 	if (isTransitionedMap) {
@@ -539,114 +548,117 @@ function resize() {
 	setMapInfoPosition();
 }
 
-/*mapArea.addEventListener("pointerdown", handleMapAreaPointerdown);
-mapArea.addEventListener("pointermove", handleMapAreaPointermove);
-mapArea.addEventListener("pointerup", handleMapAreaPointerup);
-
-function handleMapAreaPointerdown(event) {
-	const pointerId = String(event.pointerId);
-	const pointerCoord = {
-		"x": event.clientX,
-		"y": event.clientY
-	};
-	pointerPrevCoords[pointerId] = pointerCoord;
-}
-
-function handleMapAreaPointermove(event) {
-	const pointerId = String(event.pointerId);
-	const scale = 0.0005;
-	
-	if (pointerPrevCoords[pointerId] && mapMode == 1) {
-		const deltaY = event.clientY - pointerPrevCoords[pointerId]["y"];
-		cameraControls[cameraMode].elevate(deltaY * scale, false);
-		console.log(deltaY * scale);
-	}
-}*/
-
-let isAnimating = false;
-
 mapArea.addEventListener("pointerdown", handleMapAreaPointerdown);
 mapArea.addEventListener("pointermove", handleMapAreaPointermove);
 mapArea.addEventListener("pointerup", handleMapAreaPointerup);
 
+let pointerdownCoords = {};
+let deltaPointerCoords = {};
+let primaryPointerId = null;
+let prevCameraPosition = new THREE.Vector3();
+let prevTargetPosition = new THREE.Vector3();
+
 function handleMapAreaPointerdown(event) {
-	const pointerId = String(event.pointerId);
-	const pointerCoord = {
-		"x": event.clientX,
-		"y": event.clientY
-	};
-	pointerPrevCoords[pointerId] = pointerCoord;
+	if (Object.keys(pointerdownCoords).length < 2) {
+		const pointerId = String(event.pointerId);
+		if (Object.keys(pointerdownCoords).length < 1) {
+			primaryPointerId = pointerId;
+			cameraControls[cameraMode].getPosition(prevCameraPosition, true);
+			cameraControls[cameraMode].getTarget(prevTargetPosition, true);
+			// console.log(prevCameraPosition);
+			// console.log(prevTargetPosition);
+		}
+		const pointerdownCoord = {
+			"x": event.clientX,
+			"y": event.clientY
+		};
+		const deltaPointerCoord = {
+			"x": 0,
+			"y": 0
+		}
+		pointerdownCoords[pointerId] = pointerdownCoord;
+		deltaPointerCoords[pointerId] = deltaPointerCoord;
+	}
 }
 
 function handleMapAreaPointermove(event) {
-	if (!isAnimating) {
-		requestAnimationFrame(() => {
-			isAnimating = false;
-			const pointerId = String(event.pointerId);
-			const scale = 0.0009;
-
-			if (pointerPrevCoords[pointerId] && mapMode == 1) {
-				const deltaY = event.clientY - pointerPrevCoords[pointerId]["y"];
-				cameraControls[cameraMode].elevate(deltaY * scale, false);
-			}
-		});
-		isAnimating = true;
+	const pointerId = String(event.pointerId);
+	if (pointerdownCoords[pointerId]) {
+		deltaPointerCoords[pointerId]["x"] = event.clientX - pointerdownCoords[pointerId]["x"];
+		deltaPointerCoords[pointerId]["y"] = event.clientY - pointerdownCoords[pointerId]["y"];
+		// pointerdownCoords[pointerId]["x"] = event.clientX;
+		// pointerdownCoords[pointerId]["y"] = event.clientY;
 	}
 }
+
+/*
+let isScrolled = false;
+let deltaScroll = null;
+function handleMapAreaPointermove(event) {
+	const pointerId = String(event.pointerId);
+	const scale = 0.0005;
+	if (isScrolled && pointerdownCoords[pointerId] && mapMode == 1) {
+		const deltaY = event.clientY - pointerdownCoords[pointerId]["y"];
+		deltaScroll = deltaY * scale;
+		isScrolled = false;
+	}
+}
+*/
 
 function handleMapAreaPointerup(event) {
 	const pointerId = String(event.pointerId);
-	const deltaX = event.clientX - pointerPrevCoords[pointerId]["x"];
-	const deltaY = event.clientY - pointerPrevCoords[pointerId]["y"];
+	// const deltaX = event.clientX - pointerdownCoords[pointerId]["x"];
+	// const deltaY = event.clientY - pointerdownCoords[pointerId]["y"];
 
-	if (Math.abs(deltaX) < 5 && Math.abs(deltaY) < 5) {
-		const mapAreaOffset = mapArea.getBoundingClientRect();
-		// .setFromCamera()に必要な正規化デバイス座標に変換したマウスカーソルの座標の取得方法
-		// ブラウザウィンドウの左上を基準にマウスカーソルの座標を取得して、mapAreaの座標を引くことで、
-		// mapAreaの左上を基準にしたマウスカーソルの座標を取得する
-		// 取得したmapArea上のマウスカーソルのx座標をmapAreaの幅で割る
-		// これにより、mapAreaの幅を0から1としたときのマウスカーソルのx座標を得られる
-		// これを2倍して1引くことで、-1から1の範囲でマウスカーソルのx座標を得られる
-		pointer.x = (event.clientX - mapAreaOffset.left) / mapAreaOffset.width * 2 - 1;
-		pointer.y = (event.clientY - mapAreaOffset.top) / mapAreaOffset.height * -2 + 1;
-		raycaster.setFromCamera(pointer, cameras[cameraMode]);
+	if (pointerdownCoords[pointerId]) {
+		if (Math.abs(deltaPointerCoords[pointerId]["x"]) < 5 && Math.abs(deltaPointerCoords[pointerId]["y"]) < 5) {
+			const mapAreaOffset = mapArea.getBoundingClientRect();
+			// .setFromCamera()に必要な正規化デバイス座標に変換したマウスカーソルの座標の取得方法
+			// ブラウザウィンドウの左上を基準にマウスカーソルの座標を取得して、mapAreaの座標を引くことで、
+			// mapAreaの左上を基準にしたマウスカーソルの座標を取得する
+			// 取得したmapArea上のマウスカーソルのx座標をmapAreaの幅で割る
+			// これにより、mapAreaの幅を0から1としたときのマウスカーソルのx座標を得られる
+			// これを2倍して1引くことで、-1から1の範囲でマウスカーソルのx座標を得られる
+			pointer.x = (event.clientX - mapAreaOffset.left) / mapAreaOffset.width * 2 - 1;
+			pointer.y = (event.clientY - mapAreaOffset.top) / mapAreaOffset.height * -2 + 1;
+			raycaster.setFromCamera(pointer, cameras[cameraMode]);
 
-		const intersects = raycaster.intersectObjects(scenes[currentSceneName].children);
-		const clickedMapObjName = (function() {
-			for (let intersect of intersects) {
-				let childObj = null;
-				let currentObj = intersect.object;
-				let parentObj = intersect.object.parent;
-				while (parentObj.name.normalize("NFKC") != currentSceneName) {
-					childObj = currentObj;
-					currentObj = parentObj;
-					parentObj = parentObj.parent;
-				}
-		
-				if (currentObj.visible) {
-					if (mapMode == 2) {
-						return childObj.name.normalize("NFKC");
-					} else {
-						return currentObj.name.normalize("NFKC");
+			const intersects = raycaster.intersectObjects(scenes[currentSceneName].children);
+			const clickedMapObjName = (function() {
+				for (let intersect of intersects) {
+					let childObj = null;
+					let currentObj = intersect.object;
+					let parentObj = intersect.object.parent;
+					while (parentObj.name.normalize("NFKC") != currentSceneName) {
+						childObj = currentObj;
+						currentObj = parentObj;
+						parentObj = parentObj.parent;
+					}
+			
+					if (currentObj.visible) {
+						if (mapMode == 2) {
+							return childObj.name.normalize("NFKC");
+						} else {
+							return currentObj.name.normalize("NFKC");
+						}
 					}
 				}
+				return null;
+			}());
+			console.log(clickedMapObjName);
+			transitionMap(clickedMapObjName);
+		}
+		delete pointerdownCoords[pointerId];
+		delete deltaPointerCoords[pointerId];
+
+		if (primaryPointerId == pointerId) {
+			if (Object.keys(pointerdownCoords).length < 1) {
+				primaryPointerId = null;
+			} else {
+				primaryPointerId = Object.keys(pointerdownCoords)[0];
 			}
-			return null;
-		}());
-		console.log(clickedMapObjName);
-		transitionMap(clickedMapObjName);
+		}
 	}
-
-	delete pointerPrevCoords[pointerId];
-}
-
-let prY = null;
-function scrollFloor(event) {
-	const val = 0.01;
-	const currentY = event.clientY;
-	const deltaY = currentY - prY;
-	prY = currentY;
-	cameraControls[cameraMode].elevate(deltaY * val, false);
 }
 
 // マップ一覧に戻るボタンの処理
@@ -726,6 +738,7 @@ function isMobileDevice() {
 	}
 }
 
+/*
 // 前回ハイライトされたオブジェクトを参照するための変数
 let highlightedObjects = [];
 let originalColors = [];
@@ -800,3 +813,4 @@ topLogo.addEventListener("click", function(event) {
 		});
 	}
 });
+*/
