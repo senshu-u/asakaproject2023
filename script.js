@@ -539,7 +539,7 @@ function resize() {
 	setMapInfoPosition();
 }
 
-mapArea.addEventListener("pointerdown", handleMapAreaPointerdown);
+/*mapArea.addEventListener("pointerdown", handleMapAreaPointerdown);
 mapArea.addEventListener("pointermove", handleMapAreaPointermove);
 mapArea.addEventListener("pointerup", handleMapAreaPointerup);
 
@@ -560,6 +560,37 @@ function handleMapAreaPointermove(event) {
 		const deltaY = event.clientY - pointerPrevCoords[pointerId]["y"];
 		cameraControls[cameraMode].elevate(deltaY * scale, false);
 		console.log(deltaY * scale);
+	}
+}*/
+
+let isAnimating = false;
+
+mapArea.addEventListener("pointerdown", handleMapAreaPointerdown);
+mapArea.addEventListener("pointermove", handleMapAreaPointermove);
+mapArea.addEventListener("pointerup", handleMapAreaPointerup);
+
+function handleMapAreaPointerdown(event) {
+	const pointerId = String(event.pointerId);
+	const pointerCoord = {
+		"x": event.clientX,
+		"y": event.clientY
+	};
+	pointerPrevCoords[pointerId] = pointerCoord;
+}
+
+function handleMapAreaPointermove(event) {
+	if (!isAnimating) {
+		requestAnimationFrame(() => {
+			isAnimating = false;
+			const pointerId = String(event.pointerId);
+			const scale = 0.0005;
+
+			if (pointerPrevCoords[pointerId] && mapMode == 1) {
+				const deltaY = event.clientY - pointerPrevCoords[pointerId]["y"];
+				cameraControls[cameraMode].elevate(deltaY * scale, false);
+			}
+		});
+		isAnimating = true;
 	}
 }
 
