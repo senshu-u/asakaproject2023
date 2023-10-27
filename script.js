@@ -4,7 +4,6 @@ import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
 import {MapData} from "./mapData.js";
 import {MapInfoIcon} from "./mapInfoIcon.js";
 
-/*
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
 		navigator.serviceWorker.register('/asakaproject2023/service-worker.js')
@@ -15,7 +14,6 @@ if ('serviceWorker' in navigator) {
 			});
 	});
 }
-*/
 
 CameraControls.install({THREE: THREE});
 
@@ -736,7 +734,6 @@ function isMobileDevice() {
 	}
 }
 
-/*
 // 前回ハイライトされたオブジェクトを参照するための変数
 let highlightedObjects = [];
 let originalColors = [];
@@ -811,4 +808,3 @@ topLogo.addEventListener("click", function(event) {
 		});
 	}
 });
-*/
