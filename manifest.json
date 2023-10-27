@@ -5,7 +5,7 @@
   "start_url": "/asakaproject2023/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "/asakaproject2023/data/logo/logo_36.png",
