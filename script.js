@@ -4,6 +4,7 @@ import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
 import {MapData} from "./mapData.js";
 import {MapInfoIcon} from "./mapInfoIcon.js";
 
+/*
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
 		navigator.serviceWorker.register('/asakaproject2023/service-worker.js')
@@ -14,6 +15,7 @@ if ('serviceWorker' in navigator) {
 			});
 	});
 }
+*/
 
 CameraControls.install({THREE: THREE});
 
@@ -549,6 +551,7 @@ function resize() {
 mapArea.addEventListener("pointerdown", handleMapAreaPointerdown);
 mapArea.addEventListener("pointermove", handleMapAreaPointermove);
 mapArea.addEventListener("pointerup", handleMapAreaPointerup);
+mapArea.addEventListener("pointercancel", handleMapAreaPointercancel);
 
 let pointerdownCoords = {};
 let deltaPointerCoords = {};
@@ -584,30 +587,11 @@ function handleMapAreaPointermove(event) {
 	if (pointerdownCoords[pointerId]) {
 		deltaPointerCoords[pointerId]["x"] = event.clientX - pointerdownCoords[pointerId]["x"];
 		deltaPointerCoords[pointerId]["y"] = event.clientY - pointerdownCoords[pointerId]["y"];
-		// pointerdownCoords[pointerId]["x"] = event.clientX;
-		// pointerdownCoords[pointerId]["y"] = event.clientY;
 	}
 }
-
-/*
-let isScrolled = false;
-let deltaScroll = null;
-function handleMapAreaPointermove(event) {
-	const pointerId = String(event.pointerId);
-	const scale = 0.0005;
-	if (isScrolled && pointerdownCoords[pointerId] && mapMode == 1) {
-		const deltaY = event.clientY - pointerdownCoords[pointerId]["y"];
-		deltaScroll = deltaY * scale;
-		isScrolled = false;
-	}
-}
-*/
 
 function handleMapAreaPointerup(event) {
 	const pointerId = String(event.pointerId);
-	// const deltaX = event.clientX - pointerdownCoords[pointerId]["x"];
-	// const deltaY = event.clientY - pointerdownCoords[pointerId]["y"];
-
 	if (pointerdownCoords[pointerId]) {
 		if (Math.abs(deltaPointerCoords[pointerId]["x"]) < 5 && Math.abs(deltaPointerCoords[pointerId]["y"]) < 5) {
 			const mapAreaOffset = mapArea.getBoundingClientRect();
@@ -646,6 +630,22 @@ function handleMapAreaPointerup(event) {
 			console.log(clickedMapObjName);
 			transitionMap(clickedMapObjName);
 		}
+		delete pointerdownCoords[pointerId];
+		delete deltaPointerCoords[pointerId];
+
+		if (primaryPointerId == pointerId) {
+			if (Object.keys(pointerdownCoords).length < 1) {
+				primaryPointerId = null;
+			} else {
+				primaryPointerId = Object.keys(pointerdownCoords)[0];
+			}
+		}
+	}
+}
+
+function handleMapAreaPointercancel(event) {
+	const pointerId = String(event.pointerId);
+	if (pointerdownCoords[pointerId]) {
 		delete pointerdownCoords[pointerId];
 		delete deltaPointerCoords[pointerId];
 
@@ -736,6 +736,7 @@ function isMobileDevice() {
 	}
 }
 
+/*
 // 前回ハイライトされたオブジェクトを参照するための変数
 let highlightedObjects = [];
 let originalColors = [];
@@ -810,3 +811,4 @@ topLogo.addEventListener("click", function(event) {
 		});
 	}
 });
+*/
