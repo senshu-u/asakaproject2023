@@ -583,7 +583,7 @@ function handleMapAreaPointermove(event) {
 		requestAnimationFrame(() => {
 			isAnimating = false;
 			const pointerId = String(event.pointerId);
-			const scale = 0.001;
+			const scale = 0.003;
 
 			if (pointerPrevCoords[pointerId] && mapMode == 1) {
 				const deltaY = event.clientY - pointerPrevCoords[pointerId]["y"];
