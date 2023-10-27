@@ -540,6 +540,7 @@ function resize() {
 }
 
 mapArea.addEventListener("pointerdown", handleMapAreaPointerdown);
+mapArea.addEventListener("pointermove", handleMapAreaPointermove);
 mapArea.addEventListener("pointerup", handleMapAreaPointerup);
 
 function handleMapAreaPointerdown(event) {
@@ -549,6 +550,17 @@ function handleMapAreaPointerdown(event) {
 		"y": event.clientY
 	};
 	pointerPrevCoords[pointerId] = pointerCoord;
+}
+
+function handleMapAreaPointermove(event) {
+	const pointerId = String(event.pointerId);
+	const scale = 0.0005;
+	
+	if (pointerPrevCoords[pointerId] && mapMode == 1) {
+		const deltaY = event.clientY - pointerPrevCoords[pointerId]["y"];
+		cameraControls[cameraMode].elevate(deltaY * scale, false);
+		console.log(deltaY * scale);
+	}
 }
 
 function handleMapAreaPointerup(event) {
