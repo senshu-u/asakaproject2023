@@ -57,7 +57,7 @@ cameraControls[0].mouseButtons.wheel = CameraControls.ACTION.DOLLY;
 cameraControls[0].mouseButtons.middle = CameraControls.ACTION.ROTATE;
 cameraControls[0].touches.one = CameraControls.ACTION.TOUCH_OFFSET;
 cameraControls[0].touches.two = CameraControls.ACTION.TOUCH_DOLLY_ROTATE;
-cameraControls[0].dollySpeed = 0.3;
+cameraControls[0].dollySpeed = 0.5;
 cameraControls[0].minDistance = 50;
 cameraControls[0].maxDistance = 300;
 cameraControls[0].maxPolarAngle = THREE.MathUtils.degToRad(80);
@@ -68,7 +68,7 @@ cameraControls[1].mouseButtons.wheel = CameraControls.ACTION.ZOOM;
 cameraControls[1].mouseButtons.middle = CameraControls.ACTION.NONE;
 cameraControls[1].touches.one = CameraControls.ACTION.TOUCH_OFFSET;
 cameraControls[1].touches.two = CameraControls.ACTION.TOUCH_ZOOM;
-cameraControls[1].dollySpeed = 3.0;
+cameraControls[1].dollySpeed = 5.0;
 cameraControls[1].minZoom = 1;
 cameraControls[1].maxZoom = 10;
 
