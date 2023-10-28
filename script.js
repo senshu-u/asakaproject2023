@@ -430,7 +430,7 @@ async function moveCameraTo(floorName = null) {
 				}
 			}
 			cameraControls[cameraMode].setFocalOffset(0, 0, 0, true);
-			cameraControls[cameraMode].zoomTo(1, true);
+			cameraControls[cameraMode].zoomTo(2, true);
 			await cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(0), THREE.MathUtils.degToRad(0), true);
 		} else {
 			throw new Error(floorName + "のマップデータはありません");
