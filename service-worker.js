@@ -2,7 +2,6 @@ const CACHE_NAME = 'my-site-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/style.css',
   '/senshu_map.css',
   '/script.js',
   '/camera-controls.module.js',
