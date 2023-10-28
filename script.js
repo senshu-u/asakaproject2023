@@ -558,7 +558,7 @@ let prevCameraPosition = new THREE.Vector3();
 let prevTargetPosition = new THREE.Vector3();
 
 function handleMapAreaPointerdown(event) {
-	if (Object.keys(pointerdownCoords).length < 2) {
+	if (Object.keys(pointerdownCoords).length < 1) {
 		const pointerId = String(event.pointerId);
 		if (Object.keys(pointerdownCoords).length < 1) {
 			primaryPointerId = pointerId;
