@@ -366,7 +366,7 @@ async function switchScene(mapName) {
 			// シーンの作成と設定
 			scenes[currentSceneName] = new THREE.Scene();
 			scenes[currentSceneName].name = mapName;
-			scenes[currentSceneName].background = new THREE.Color(0xffffff);
+			scenes[currentSceneName].background = new THREE.Color(0xfafafa);
 
 			// ライトの作成と設定
 			const ambientLight = new THREE.AmbientLight(0x808080, 0.8);
