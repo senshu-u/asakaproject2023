@@ -77,7 +77,7 @@ export class MapInfoIcon {
 			"shouldShowMapObjName": false,
 			"filterItem": null
 		},
-		"駐輪場": {
+		"駐車場": {
 			"fileName": "parkingLot.png",
 			"shouldShowMapObjName": false,
 			"filterItem": null
