@@ -187,7 +187,6 @@ function getMapObjectCoord(target) {
 
 // 教室名やアイコンなどを作る関数
 function createMapInfo(maps) {
-	removeMapInfo();
 	const mapInfoIcon = new MapInfoIcon();
 	const icons = mapInfoIcon.icons;
 	const iconsForBuilding = mapInfoIcon.iconsForBuilding;
@@ -238,13 +237,17 @@ function createMapInfo(maps) {
 						buildingIconList.classList.add("buildingIconList");
 						if (Object.keys(iconsForBuilding).includes(mapObjName)) {
 							for (let iconForMapObjName of iconsForBuilding[mapObjName]) {
+								const iconWrapper = document.createElement("div");
+								iconWrapper.classList.add("icon");
+								iconWrapper.dataset.filterItem = iconForMapObjName["filterItem"];
+
 								const icon = document.createElement("img");
-								icon.classList.add("icon");
-								icon.dataset.filterItem = iconForMapObjName["filterItem"];
 								icon.src = mapInfoIcon.iconPath + iconForMapObjName["fileName"];
 								icon.alt = iconForMapObjName["filterItem"];
 								icon.height = 20;
-								buildingIconList.append(icon);
+
+								iconWrapper.append(icon)
+								buildingIconList.append(iconWrapper);
 							}
 						}
 
