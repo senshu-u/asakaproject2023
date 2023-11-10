@@ -186,6 +186,10 @@ img {
 	vertical-align: top;
 }
 
+.icon img {
+	border-radius: 15%;
+}
+
 canvas {
 	display: block;
 	z-index: 0;
@@ -224,15 +228,11 @@ canvas {
 	clip-path: polygon(0 0, 50% 100%, 100% 0);
 }
 
-.buildingIconList img {
-	display: block;
-}
-
 .buildingIconList {
 	display: flex;
 }
 
-.mapInfo img {
+.mapInfo.icon img {
 	vertical-align: text-bottom;
 }
 
@@ -269,6 +269,7 @@ canvas {
 #currentFloor::after {
 	content: "階";
 }
+
 .listimages{
 	width: 50px;
 	height: 50px;
