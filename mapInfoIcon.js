@@ -85,10 +85,17 @@ export class MapInfoIcon {
 	}
 
 	iconsForBuilding = {
+		"1号館": [
+			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
+			{"fileName": "printer.png", "filterItem": "プリンター"}
+		],
+		"3号館": [
+			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
+		],
 		"10号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
 			{"fileName": "diningroom.png", "filterItem": "食堂"},
 			{"fileName": "printer.png", "filterItem": "プリンター"}
-		]
+		],
 	}
 }
