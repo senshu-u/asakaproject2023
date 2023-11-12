@@ -7,7 +7,7 @@ export class MapInfoIcon {
 			"shouldShowMapObjName": false,
 			"filterItem": null
 		},
-		"レストラン": {
+		"食堂": {
 			"fileName": "restaurant.png",
 			"shouldShowMapObjName": true,
 			"filterItem": "食堂"
@@ -23,7 +23,7 @@ export class MapInfoIcon {
 			"filterItem": "トイレ"
 		},
 		"エスカレーター": {
-			"fileName": "upEscalator.png",
+			"fileName": "escalator.png",
 			"shouldShowMapObjName": false,
 			"filterItem": null
 		},
