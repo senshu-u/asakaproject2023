@@ -8,7 +8,7 @@ export class MapInfoIcon {
 			"filterItem": null
 		},
 		"レストラン": {
-			"fileName": "diningroom.png",
+			"fileName": "restaurant.png",
 			"shouldShowMapObjName": true,
 			"filterItem": "食堂"
 		},
