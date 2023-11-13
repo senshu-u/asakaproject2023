@@ -94,7 +94,7 @@ export class MapInfoIcon {
 		],
 		"10号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
-			{"fileName": "diningroom.png", "filterItem": "食堂"},
+			{"fileName": "restaurant.png", "filterItem": "食堂"},
 			{"fileName": "printer.png", "filterItem": "プリンター"}
 		],
 	}
