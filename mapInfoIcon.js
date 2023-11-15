@@ -64,7 +64,7 @@ export class MapInfoIcon {
 		},
 		"喫煙所": {
 			"fileName": "Smoking_area.png",
-			"shouldShowMapObjName": true,
+			"shouldShowMapObjName": false,
 			"filterItem": "喫煙所"
 		},
 		"休憩所": {
