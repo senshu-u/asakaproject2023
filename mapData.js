@@ -8,7 +8,7 @@ export class MapData {
 		"wholeMap.glb": {
 			"dirPath": this.mapPath,
 			"mapName": "全体マップ",
-			"floor": "",
+			"floor": null,
 			"rooms": []
 		},
 		"1_B1.glb": {
