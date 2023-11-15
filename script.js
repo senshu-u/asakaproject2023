@@ -196,28 +196,22 @@ function createMapInfo(maps) {
 			for (let mapObj of maps[0].children) {
 				const mapObjName = mapObj.name.normalize("NFKC");
 				if (mapObjName != "object") {
-					const mapObjNameFirstWord = (function(text) {
-						if (text.includes("_")) {
-							return text.substring(0, text.indexOf("_"));
-						} else {
-							return text;
-						}
-					}(mapObjName));
+					const splitMapObjName = mapObjName.split("_");
 					
-					if (Object.keys(icons).includes(mapObjNameFirstWord)) {
+					if (Object.keys(icons).includes(splitMapObjName[0])) {
 						// アイコンを作る
 						const mapInfo = document.createElement("div");
 						mapInfo.classList.add("mapInfo");
 						mapInfo.classList.add("icon");
 						mapInfo.dataset.mapObj = mapObj.name;
-						mapInfo.dataset.filterItem = icons[mapObjNameFirstWord]["filterItem"];
+						mapInfo.dataset.filterItem = icons[splitMapObjName[0]]["filterItem"];
 
-						if (icons[mapObjNameFirstWord]["shouldShowMapObjName"]) {
-							mapInfo.textContent = mapObjNameFirstWord;
+						if (icons[splitMapObjName[0]]["shouldShowMapObjName"]) {
+							mapInfo.textContent = splitMapObjName[0];
 						}
 						const icon = document.createElement("img");
-						icon.src = mapInfoIcon.iconPath + icons[mapObjNameFirstWord]["fileName"];
-						icon.alt = mapObjNameFirstWord;
+						icon.src = mapInfoIcon.iconPath + icons[splitMapObjName[0]]["fileName"];
+						icon.alt = splitMapObjName[0];
 						icon.height = 20;
 
 						mapInfo.prepend(icon);
@@ -263,26 +257,20 @@ function createMapInfo(maps) {
 				for (let mapObj of map.children) {
 					const mapObjName = mapObj.name.normalize("NFKC");
 					if (mapObjName != "object") {
-						const mapObjNameFirstWord = (function(text) {
-							if (text.includes("_")) {
-								return text.substring(0, text.indexOf("_"));
-							} else {
-								return text;
-							}
-						}(mapObjName));
+						const splitMapObjName = mapObjName.split("_");
 
-						if (Object.keys(icons).includes(mapObjNameFirstWord)) {
-							if (icons[mapObjNameFirstWord]["filterItem"]) {
+						if (Object.keys(icons).includes(splitMapObjName[0])) {
+							if (icons[splitMapObjName[0]]["filterItem"]) {
 								// アイコンを作る
 								const mapInfo = document.createElement("div");
 								mapInfo.classList.add("mapInfo");
 								mapInfo.classList.add("icon");
 								mapInfo.dataset.mapObj = mapObj.name;
-								mapInfo.dataset.filterItem = icons[mapObjNameFirstWord]["filterItem"];
+								mapInfo.dataset.filterItem = icons[splitMapObjName[0]]["filterItem"];
 
 								const icon = document.createElement("img");
-								icon.src = mapInfoIcon.iconPath + icons[mapObjNameFirstWord]["fileName"];
-								icon.alt = mapObjNameFirstWord;
+								icon.src = mapInfoIcon.iconPath + icons[splitMapObjName[0]]["fileName"];
+								icon.alt = splitMapObjName[0];
 								icon.height = 20;
 
 								mapInfo.prepend(icon);
@@ -298,28 +286,22 @@ function createMapInfo(maps) {
 			for (let mapObj of maps.children) {
 				const mapObjName = mapObj.name.normalize("NFKC");
 				if (mapObjName != "object") {
-					const mapObjNameFirstWord = (function(text) {
-						if (text.includes("_")) {
-							return text.substring(0, text.indexOf("_"));
-						} else {
-							return text;
-						}
-					}(mapObjName));
+					const splitMapObjName = mapObjName.split("_");
 
-					if (Object.keys(icons).includes(mapObjNameFirstWord)) {
+					if (Object.keys(icons).includes(splitMapObjName[0])) {
 						// アイコンを作る
 						const mapInfo = document.createElement("div");
 						mapInfo.classList.add("mapInfo");
 						mapInfo.classList.add("icon");
 						mapInfo.dataset.mapObj = mapObj.name;
-						mapInfo.dataset.filterItem = icons[mapObjNameFirstWord]["filterItem"];
+						mapInfo.dataset.filterItem = icons[splitMapObjName[0]]["filterItem"];
 
-						if (icons[mapObjNameFirstWord]["shouldShowMapObjName"]) {
-							mapInfo.textContent = mapObjNameFirstWord;
+						if (icons[splitMapObjName[0]]["shouldShowMapObjName"]) {
+							mapInfo.textContent = splitMapObjName[0];
 						}
 						const icon = document.createElement("img");
-						icon.src = mapInfoIcon.iconPath + icons[mapObjNameFirstWord]["fileName"];
-						icon.alt = mapObjNameFirstWord;
+						icon.src = mapInfoIcon.iconPath + icons[splitMapObjName[0]]["fileName"];
+						icon.alt = splitMapObjName[0];
 						icon.height = 20;
 
 						mapInfo.prepend(icon);
