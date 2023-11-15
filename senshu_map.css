@@ -62,7 +62,7 @@ body {
 			cursor: pointer;
 			margin-right: 30px;
 		}
-		#drawer_input:checked ~ .nav_content {
+		#drawer_input:checked ~ #filterList  {
 			left: 65%;
 		}
 		
@@ -128,23 +128,24 @@ body {
 }
   
 /* メニューのデザイン*/
-.nav_content {
-  width: 55%;
-  height: 100%;
+#filterList {
+  width: 118px;
+  height: 731px;
   position: fixed;
-	top: 8.5%;
+	top: 76px;
 	left: 100%;
   z-index: 99;
-  background: #fefefe;
+  background: rgba(217,217,217,0.85);
   transition: .5s;
-	padding-top: 20px;
-	margin-bottom: 64px;
 	margin-top: 0px;
 }
 
-.nav_item{
-	margin: 10px;
-	padding: 10px;
+.filterItem{
+	margin: 0px;
+	padding: 0px;
+	display: flex;
+  align-items: center;
+	justify-content: center;
 }
 /* メニュー黒ポチを消す */
 .nav_list {
@@ -152,8 +153,8 @@ body {
 }
 
 /* アイコンがクリックされたらメニューを表示 */
-#drawer_input:checked ~ .nav_content {
-	left: 45%;
+#drawer_input:checked ~ #filterList  {
+	left: 281px;
 }
 
 /*スマホver検索バーに関するデータ*/
@@ -274,4 +275,12 @@ canvas {
 	width: 50px;
 	height: 50px;
 	padding-right: 3px;
+}
+.filter{
+	width: 31px;
+	height: 31px;
+	padding-left: 20px;
+}
+.itemName{
+	margin: 0px;
 }
