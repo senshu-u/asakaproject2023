@@ -267,7 +267,7 @@ canvas {
 }
 
 #currentFloor::after {
-	content: "階";
+	content: "F";
 }
 
 .listimages{
