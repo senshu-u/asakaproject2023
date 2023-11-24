@@ -1,14 +1,21 @@
 export class MapData {
 	mapPath = "data/map3DModel/";
-	building10MapPath = this.mapPath + "building10/";
-	building3MapPath = this.mapPath + "building3/";
 	building1MapPath = this.mapPath + "building1/";
+	building2MapPath = this.mapPath + "building2/";
+	building3MapPath = this.mapPath + "building3/";
+	building4MapPath = this.mapPath + "building4/";
+	building5MapPath = this.mapPath + "building5/";
+	building7MapPath = this.mapPath + "building7/";
+	building8MapPath = this.mapPath + "building8/";
+	building10MapPath = this.mapPath + "building10/";
+	GreentopMapPath = this.mapPath + "Greentop/";
+	LibraryMapPath = this.mapPath + "Library/";
 
 	maps = {
 		"wholeMap.glb": {
 			"dirPath": this.mapPath,
 			"mapName": "全体マップ",
-			"floor": null,
+			"floor": "",
 			"rooms": []
 		},
 		"1_B1.glb": {
@@ -39,6 +46,24 @@ export class MapData {
 			"dirPath": this.building1MapPath,
 			"mapName": "1号館",
 			"floor": "4",
+			"rooms": []
+		},
+		"2_B1.glb": {
+			"dirPath": this.building2MapPath,
+			"mapName": "2号館",
+			"floor": "B1",
+			"rooms": []
+		},
+		"2_1.glb": {
+			"dirPath": this.building2MapPath,
+			"mapName": "2号館",
+			"floor": "1",
+			"rooms": []
+		},
+		"2_2.glb": {
+			"dirPath": this.building2MapPath,
+			"mapName": "2号館",
+			"floor": "2",
 			"rooms": []
 		},
 		"3_1.glb": {
@@ -83,6 +108,108 @@ export class MapData {
 			"floor": "7",
 			"rooms": []
 		},
+		"4_1.glb": {
+			"dirPath": this.building4MapPath,
+			"mapName": "4号館",
+			"floor": "1",
+			"rooms": []
+		},
+		"4_2.glb": {
+			"dirPath": this.building4MapPath,
+			"mapName": "4号館",
+			"floor": "2",
+			"rooms": []
+		},
+		"4_3.glb": {
+			"dirPath": this.building4MapPath,
+			"mapName": "4号館",
+			"floor": "3",
+			"rooms": []
+		},
+		"4_4.glb": {
+			"dirPath": this.building4MapPath,
+			"mapName": "4号館",
+			"floor": "4",
+			"rooms": []
+		},
+		"4_5.glb": {
+			"dirPath": this.building4MapPath,
+			"mapName": "4号館",
+			"floor": "5",
+			"rooms": []
+		},
+		"5_1.glb": {
+			"dirPath": this.building5MapPath,
+			"mapName": "5号館",
+			"floor": "1",
+			"rooms": []
+		},
+		"5_2.glb": {
+			"dirPath": this.building5MapPath,
+			"mapName": "5号館",
+			"floor": "2",
+			"rooms": []
+		},
+		"5_3.glb": {
+			"dirPath": this.building5MapPath,
+			"mapName": "5号館",
+			"floor": "3",
+			"rooms": []
+		},
+		"7_B1.glb": {
+			"dirPath": this.building7MapPath,
+			"mapName": "7号館",
+			"floor": "B1",
+			"rooms": []
+		},
+		"7_1.glb": {
+			"dirPath": this.building7MapPath,
+			"mapName": "7号館",
+			"floor": "1",
+			"rooms": []
+		},
+		"7_2.glb": {
+			"dirPath": this.building7MapPath,
+			"mapName": "7号館",
+			"floor": "2",
+			"rooms": []
+		},
+		"7_3.glb": {
+			"dirPath": this.building7MapPath,
+			"mapName": "7号館",
+			"floor": "3",
+			"rooms": []
+		},
+		"8_1.glb": {
+			"dirPath": this.building8MapPath,
+			"mapName": "8号館",
+			"floor": "1",
+			"rooms": []
+		},
+		"8_2.glb": {
+			"dirPath": this.building8MapPath,
+			"mapName": "8号館",
+			"floor": "2",
+			"rooms": []
+		},
+		"8_3.glb": {
+			"dirPath": this.building8MapPath,
+			"mapName": "8号館",
+			"floor": "3",
+			"rooms": []
+		},
+		"8_4.glb": {
+			"dirPath": this.building8MapPath,
+			"mapName": "8号館",
+			"floor": "4",
+			"rooms": []
+		},
+		"8_5.glb": {
+			"dirPath": this.building8MapPath,
+			"mapName": "8号館",
+			"floor": "5",
+			"rooms": []
+		},
 		"10_1.glb": {
 			"dirPath": this.building10MapPath,
 			"mapName": "10号館",
@@ -118,7 +245,49 @@ export class MapData {
 			"mapName": "10号館",
 			"floor": "6",
 			"rooms": []
-		}
+		},
+		"G_B1.glb": {
+			"dirPath": this.GreentopMapPath,
+			"mapName": "グリーントップ",
+			"floor": "B1",
+			"rooms": []
+		},
+		"G_1.glb": {
+			"dirPath": this.GreentopMapPath,
+			"mapName": "グリーントップ",
+			"floor": "1",
+			"rooms": []
+		},
+		"L_1.glb": {
+			"dirPath": this.LibraryMapPath,
+			"mapName": "図書館別館",
+			"floor": "1",
+			"rooms": []
+		},
+		"L_2.glb": {
+			"dirPath": this.LibraryMapPath,
+			"mapName": "図書館別館",
+			"floor": "2",
+			"rooms": []
+		},
+		"L_3.glb": {
+			"dirPath": this.LibraryMapPath,
+			"mapName": "図書館別館",
+			"floor": "3",
+			"rooms": []
+		},
+		"L_4.glb": {
+			"dirPath": this.LibraryMapPath,
+			"mapName": "図書館別館",
+			"floor": "4",
+			"rooms": []
+		},
+		"L_5.glb": {
+			"dirPath": this.LibraryMapPath,
+			"mapName": "図書館別館",
+			"floor": "5",
+			"rooms": []
+		},
 	};
 
 	extractMapsByMapName(mapName) {
