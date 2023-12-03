@@ -104,23 +104,28 @@ export class MapInfoIcon {
 		},
 		"教務課": {
 			"fileName": "office.png",
-			"shouldShowMapObjName": false,
+			"shouldShowMapObjName": true,
+			"filterItem": "教務課"
+		},
+		"学生生活課": {
+			"fileName": "office.png",
+			"shouldShowMapObjName": true,
+			"filterItem": "教務課"
+		},
+		"保健室": {
+			"fileName": "office.png",
+			"shouldShowMapObjName": true,
+			"filterItem": "保健室"
+		},
+		"教務課第1事務室": {
+			"fileName": "office.png",
+			"shouldShowMapObjName": true,
 			"filterItem": "教務課"
 		},
 		"喫煙所": {
 			"fileName": "Smoking_area.png",
 			"shouldShowMapObjName": false,
 			"filterItem": "喫煙所"
-		},
-		"学生生活課": {
-			"fileName": "office.png",
-			"shouldShowMapObjName": false,
-			"filterItem": "喫煙所"
-		},
-		"保健室": {
-			"fileName": "office.png",
-			"shouldShowMapObjName": false,
-			"filterItem": "保健室"
 		},
 		"駐輪場": {
 			"fileName": "bicycleparkinglot.png",
