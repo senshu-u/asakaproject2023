@@ -3,7 +3,7 @@ body {
 	padding: 0px;
 	background-color: aquamarine;
 	overflow: hidden;
-	font-family:'BIZ UDPGothic', 'Inter',Verdana, Roboto, "Droid Sans", "游ゴシック", YuGothic, "メイリオ", Meiryo, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "ＭＳ Ｐゴシック", sans-serif;
+	font-family: 'BIZ UDPGothic', sans-serif;
 	font-weight: bold; /* 太字にする */
 	color: #484747; /* 文字の色を #484747 に設定 */
 }
