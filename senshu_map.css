@@ -3,17 +3,22 @@ body {
 	padding: 0px;
 	background-color: aquamarine;
 	overflow: hidden;
-	font-family: 'BIZ UDPGothic', sans-serif;
+	font-family: 'Inter',Verdana, Roboto, "Droid Sans", "游ゴシック", YuGothic, "メイリオ", Meiryo, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "ＭＳ Ｐゴシック", sans-serif;
 	font-weight: bold; /* 太字にする */
 	color: #484747; /* 文字の色を #484747 に設定 */
+	position: relative;
 }
 #headerArea {
 	display: flex;
 	align-items: center;
-	height: 61px;
+	justify-content: center;
+	height: 76px;
 	width: 100%;
 	background-color:white;
-	text-align:center
+	text-align:center;
+	box-shadow: 0px 2px 6px 1px  rgb(171, 170, 170);
+	z-index: 2;
+	position: relative;
 }
 #lightArea {
 	display: flex;
@@ -25,28 +30,87 @@ body {
 	.searchBox {
 		width: 600px;
 		margin:  0 auto;            /* 中央寄せ */
-	}
+		border-radius: 10px; /* ボックスの四つ角を丸くする */
+		border: none;
+			background-color: #eeeef0;
+			box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
+			position: relative;
+}
 	img.searchimge{
 		display: none;
 		width: 50px;
 		height: 50px;
 		padding-right: 5px;
 	}
+
+	/* アイコンがクリックされたらメニューを表示 */
+#drawer_input:checked ~ #filterList {
+	/*left: 65px;*/
+	right: 0%;
+}
+
+img.images1{
+	width: 41px;
+	height: 41px;
+	padding-left: 14px;
+	padding-right: 100px;
+}
+
+.filter{
+	width: 31px;
+	height: 31px;
+	padding-left: 20px;
+}
+/* メニューのデザイン*/
+#filterList {
+  width: 118px;
+  height: 731px;
+  position: fixed;
+	top: 76px;
+	/*left: 100%;*/
+	right: -20%;
+  z-index: 99;
+  background: rgba(217,217,217,0.85);
+  transition: .5s;
+	margin-top: 0px;
+}
 	@media (max-width: 767px) {
-		.listimages{
-	                width: 30%;
-	                height: 30%;
-	                padding-right: 3px;
-                }
+		#headerArea {
+			display: flex;
+			align-items: center;
+			height: 76px;
+			width: 100%;
+			background-color:white;
+			text-align:center;
+			box-shadow: 0px 2px 6px 1px  rgb(171, 170, 170);
+			z-index: 2;
+			position: relative;
+		}
 		.searchBox {
-			display: none;
+			width: 258px;
+			margin:  0px;      
+			border-radius: 10px; /* ボックスの四つ角を丸くする */
+			border: none;
+			background-color: #eeeef0;
+			box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
+		}
+		img.images1{
+			width: 41px;
+			height: 41px;
+			padding-left: 14px;
+			padding-right: 14px;
+		}
+		.listimages{
+	    width: 30%;
+	    height: 30%;
+	    padding-right: 3px;
 		}
 		img.searchimge{
 			display: inline;
 		}
 		#lightArea{
 			margin-left: auto; /* 右端に寄せる */
-			width: 40%;
+			width: 10%;
 			justify-content: center;
 		}
 		.drawer_open {
@@ -62,26 +126,33 @@ body {
 			cursor: pointer;
 			margin-right: 30px;
 		}
-		#drawer_input:checked ~ #filterList  {
-			left: 65%;
+		#filterList {
+			width: 118px;
+			height: 731px;
+			position: fixed;
+			top: 76px;
+			/*left: 100%;*/
+			right: -30%;
+			z-index: 99;
+			background: rgba(217,217,217,0.85);
+			transition: .5s;
+			margin-top: 0px;
+		}
+		#drawer_input:checked ~ #filterList {
+			/*left: 281px;*/
+			right: 0%;
 		}
 		
 	}
-	
-	.item{
+		.item{
 		margin: 10px;
 		padding: 10px;
-	}
-	img.images1{
-			width: 50px;
-			height: 50px;
-			margin-left: 20px;
-			margin-right: 20px;
 	}
 	img.images2{
 		width: 50px;
 		height: 50px;
 }
+
 
 	/*ハンバーガーアイコンに関するデータ*/
 .drawer_hidden {
@@ -126,20 +197,13 @@ body {
 .drawer_open span:after {
   top: 8px;
 }
-  
-/* メニューのデザイン*/
-#filterList {
-  width: 118px;
-  height: 731px;
-  position: fixed;
-	top: 76px;
-	left: 100%;
-  z-index: 99;
-  background: rgba(217,217,217,0.85);
-  transition: .5s;
-	margin-top: 0px;
+.filterItem{
+	margin: 0px;
+	padding: 0px;
+	display: flex;
+  align-items: center;
+	justify-content: center;
 }
-
 .filterItem{
 	margin: 0px;
 	padding: 0px;
@@ -151,38 +215,6 @@ body {
 .nav_list {
   list-style: none;
 }
-
-/* アイコンがクリックされたらメニューを表示 */
-#drawer_input:checked ~ #filterList  {
-	left: 281px;
-}
-
-/*スマホver検索バーに関するデータ*/
-
-.search_hidden {
-		display: none;	/* チェックボックスを非表示にする */
-}
-/*スマホ検索バーのdiv*/
-.smartphone_search{
-	width: 100%;
-        position: fixed;
-	top: -60%;
-        z-index: 99;
-        transition: top.5s;
-	left: 0px;
-}
-.searchBox_sm{
-	width: 80%;
-        height: 30px;
-	margin:  0 auto;   
-}
-/*検索アイコンを押したら検索バーが降りてくる*/
-#search_input:checked ~ .smartphone_search {
-	top: 61px;
-}
-
-
-
 img {
 	vertical-align: top;
 }
@@ -283,4 +315,24 @@ canvas {
 }
 .itemName{
 	margin: 0px;
+}
+.search_block{
+	display:inline-block;
+	position: relative;
+}
+.search_block::before{
+	content:"";
+	width: 19px;
+	height: 19px;
+	background:url(./data/icon/musi.png);
+	display: block;
+	position: absolute;
+	z-index: 5;
+	background-size: contain;
+	top: 2px;
+	left: 4px;
+}
+.search_block input{
+	top: 1px;
+	padding-left: 25px;
 }
