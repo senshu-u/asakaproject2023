@@ -26,54 +26,47 @@
   <body> 
     <div id="headerArea">
       <img id="toplogo" src="data/logo/logo_96.png" alt="アイコン" class="images1">
-      <input id="searchBox" class="searchBox" type="search" name="s" placeholder="部屋番号を入力">
-      <div id="lightArea">
-        <input id="search_input" class="search_hidden" type="checkbox"><!--サーチアイコンにするためのチェックボックス-->
-        <label for="search_input">
-          <img src="data/icon/search.png" alt="検索アイコン" class="searchimge">
-        </label>
-        <img src="data/icon/routeguidance.png" alt="アイコンj" class="images2">
-        <input id="drawer_input" class="drawer_hidden" type="checkbox">
-        <label for="drawer_input" class="drawer_open"><span></span></label>
-        <div id="filterList">
-          <div class="filterItem">
-            <input type="checkbox" class="nav_item" id="toilelist">
-            <label for="toilelist">
+      <div class="search_block">
+     <input class="searchBox" type="search" name="s" placeholder="教室名を入力"></div>
+          <input id="drawer_input" class="drawer_hidden" type="checkbox">
+          <label for="drawer_input">
+            <img src="data/icon/filter.png" alt="フィルター" class="filter">
+          </label>
+           <div id="filterList">
+            <div class="filterItem">
+              <input type="checkbox" class="nav_item" id="toilelist">
+             <label for="toilelist">
               <img src="data/icon/sharedtoilet.png" alt="トイレアイコン" class="listimages">
             </label>
             <p class="itemName">トイレ</p>
-          </div>
-          <div class="filterItem">
-            <input type="checkbox" class="nav_item" id="jihankilist">
-            <label for="jihankilist">
-              <img src="data/icon/vendingmachine.png" alt="検索アイコン" class="listimages">
-            </label>
-          </div>
-          <div class="filterItem">
-            <input type="checkbox" class="nav_item" id="smokelist">
-            <label for="smokelist">
-              <img src="data/icon/search.png" alt="検索アイコン" class="listimages">
-            </label>
-          </div>
-          <div class="filterItem">
-            <input type="checkbox" class="nav_item" id="eatlist">
-            <label for="eatlist">
-              <img src="data/icon/resutaurant.png" alt="検索アイコン" class="listimages">
-            </label>
-          </div>
-          <div class="filterItem">
-            <input type="checkbox" class="nav_item" id="printlist">
-            <label for="printlist">
-              <img src="data/icon/printer.png" alt="検索アイコン" class="listimages">
-            </label>
-          </div>
-          <div class="filterItem">
-            <input type="checkbox" class="nav_item" id="restlist">
-            <label for="restlist">
-              <img src="data/icon/restarea.png" alt="検索アイコン" class="listimages">
-            </label>
-          </div>
+            </div>
+            <div class="filterItem">
+              <input type="checkbox" class="nav_item" id="jihankilist">
+              <label for="jihankilist">
+                <img src="data/icon/vendingmachine.png" alt="検索アイコン" class="listimages"></label>
+            </div>
+            <div class="filterItem">
+              <input type="checkbox" class="nav_item" id="smokelist">
+              <label for="smokelist">
+                <img src="data/icon/search.png" alt="検索アイコン" class="listimages"></label>
+            </div>
+            <div class="filterItem">
+              <input type="checkbox" class="nav_item" id="eatlist">
+              <label for="eatlist">
+                <img src="data/icon/resutaurant.png" alt="検索アイコン" class="listimages"></label>
+            </div>
+            <div class="filterItem">
+              <input type="checkbox" class="nav_item" id="printlist">
+              <label for="printlist">
+                <img src="data/icon/printer.png" alt="検索アイコン" class="listimages"></label>
+            </div>
+            <div class="filterItem">
+              <input type="checkbox" class="nav_item" id="restlist">
+              <label for="restlist">
+                <img src="data/icon/restarea.png" alt="検索アイコン" class="listimages"></label>
+            </div>
         </div>
+    </div>
         <div class =smartphone_search>
           <!--↓ハイライト機能をモバイル表示に対応させるためのIDを設定しました。-->
           <input id="searchBoxMobile" class="searchBox_sm" type="search" name="s" placeholder="部屋番号を入力">
