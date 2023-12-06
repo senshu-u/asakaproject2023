@@ -29,6 +29,7 @@ body {
 }
 	.searchBox {
 		width: 600px;
+		height: 30px;
 		margin:  0 auto;            /* 中央寄せ */
 		border-radius: 10px; /* ボックスの四つ角を丸くする */
 		border: none;
@@ -92,6 +93,7 @@ img.images1{
 		}
 		.searchBox {
 			width: 258px;
+			height: 30px;
 			margin:  0px;      
 			border-radius: 10px; /* ボックスの四つ角を丸くする */
 			border: none;
