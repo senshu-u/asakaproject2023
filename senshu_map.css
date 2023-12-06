@@ -63,11 +63,11 @@ img.images1{
 }
 /* メニューのデザイン*/
 #filterList {
-  width: 35%;
+  width: 25%;
   height: 100%;
   position: fixed;
 	top: 76px;
-	right: -50%;
+	right: -35%;
   z-index: 99;
   background: rgba(217,217,217,0.85);
   transition: .5s;
