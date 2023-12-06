@@ -350,6 +350,7 @@ canvas {
 	list-style-type: none;
 }
 .li_Name{
-	list-style-type: none;
-	padding-right: 10px;
+	list-style-type: disc;
+	text-indent:-100px;
+	padding-left: 79px;
 }
