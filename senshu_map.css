@@ -63,8 +63,8 @@ img.images1{
 }
 /* メニューのデザイン*/
 #filterList {
-  width: 118px;
-  height: 731px;
+  width: 50%;
+  height: 100%;
   position: fixed;
 	top: 76px;
 	/*left: 100%;*/
@@ -73,6 +73,10 @@ img.images1{
   background: rgba(217,217,217,0.85);
   transition: .5s;
 	margin-top: 0px;
+}
+.listimages{
+	width: 60px;
+	height: 60px;
 }
 	@media (max-width: 767px) {
 		#headerArea {
@@ -128,7 +132,7 @@ img.images1{
 		}
 		#filterList {
 			width: 118px;
-			height: 731px;
+			height: 100%;
 			position: fixed;
 			top: 76px;
 			/*left: 100%;*/
@@ -335,4 +339,14 @@ canvas {
 .search_block input{
 	top: 1px;
 	padding-left: 25px;
+}
+.ul_list{
+	margin: 0px;
+}
+.SLD_Name{
+	list-style-type: none;
+}
+.li_Name{
+	list-style-type: disc;
+	padding-right: 10px;
 }
