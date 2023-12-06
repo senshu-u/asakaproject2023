@@ -76,6 +76,7 @@ img.images1{
 .listimages{
 	width: 60px;
 	height: 60px;
+	padding-top: 10px;
 }
 	@media (max-width: 767px) {
 		#headerArea {
