@@ -324,7 +324,7 @@ canvas {
 	content:"";
 	width: 19px;
 	height: 19px;
-	background:url(./data/icon/serch.png);
+	background:url(./data/icon/search.png);
 	display: block;
 	position: absolute;
 	z-index: 5;
