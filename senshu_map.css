@@ -319,6 +319,7 @@ canvas {
 }
 .itemName{
 	margin: 0px;
+	margin-left: 20px;
 }
 .search_block{
 	display:inline-block;
