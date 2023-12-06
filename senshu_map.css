@@ -67,8 +67,7 @@ img.images1{
   height: 100%;
   position: fixed;
 	top: 76px;
-	/*left: 100%;*/
-	right: -20%;
+	right: -50%;
   z-index: 99;
   background: rgba(217,217,217,0.85);
   transition: .5s;
