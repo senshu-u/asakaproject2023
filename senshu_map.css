@@ -336,7 +336,7 @@ canvas {
 	position: absolute;
 	z-index: 5;
 	background-size: contain;
-	top: 2px;
+	top: 7px;
 	left: 4px;
 }
 .search_block input{
