@@ -40,10 +40,11 @@ const cameraFrustumSize = 0.005;
 cameras[1].near = 0.1;
 cameras[1].far = 2000;
 
+const mapArea = document.getElementById("mapArea");
+const headerArea = document.getElementById("headerArea");
+
 // レンダラーとカメラのサイズの初期化
 resize();
-
-const mapArea = document.getElementById("mapArea");
 
 // camera-controlsの作成と設定
 const clock = new THREE.Clock();
@@ -51,6 +52,7 @@ const cameraControls = [
 	new CameraControls(cameras[0], mapArea),
 	new CameraControls(cameras[1], mapArea)
 ];
+
 cameraControls[0].mouseButtons.left = CameraControls.ACTION.OFFSET;
 cameraControls[0].mouseButtons.right = CameraControls.ACTION.ROTATE;
 cameraControls[0].mouseButtons.wheel = CameraControls.ACTION.DOLLY;
@@ -85,9 +87,10 @@ let currentSceneName = null;
 // mapModeには表示しているマップの状態を入れる
 // 全体マップ: 0
 // 館内マップ: 1
-// 各フロアマップ: 2
+// フロアマップ: 2
 let mapMode = 0;
 
+/*
 // 引数の名前の3Dモデルを読み込む関数
 // 3Dモデル読み込み後、教室名やアイコンなどを作る関数を実行
 switchScene("全体マップ").then(function() {
@@ -102,6 +105,7 @@ switchScene("全体マップ").then(function() {
 
 	createMapInfo(getMapsInCurrentScene());
 });
+*/
 
 // レンダーループ
 renderer.setAnimationLoop(animation);
@@ -160,7 +164,7 @@ function setMapInfoPosition() {
 
 	let layer = 1;
 	for (let mapObjCoord of mapObjCoords) {
-		const selector = '[data-map-obj="' + mapObjCoord.name + '"]';
+		const selector = "[data-map-obj=\"" + mapObjCoord.name + "\"]";
 		const mapInfo = document.querySelector(selector);
 		let x = (rendererWidth / 2) * (mapObjCoord.x + 1);
 		let y = (rendererHeight / 2) * -(mapObjCoord.y - 1);
@@ -180,9 +184,9 @@ function setMapInfoPosition() {
 // 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
 function getMapObjectCoord(target) {	
 	const targetWorldPosition = target.getWorldPosition(new THREE.Vector3());
-	const targetCanvasPosition = targetWorldPosition.project(cameras[cameraMode]);
+	const targetCameraNDC = targetWorldPosition.project(cameras[cameraMode]);
 	
-	return [targetCanvasPosition.x, targetCanvasPosition.y, targetCanvasPosition.z];
+	return [targetCameraNDC.x, targetCameraNDC.y, targetCameraNDC.z];
 }
 
 // 教室名やアイコンなどを作る関数
@@ -283,7 +287,7 @@ function createMapInfo(maps) {
 			break;
 
 		case 2:
-			for (let mapObj of maps.children) {
+			for (let mapObj of maps[0].children) {
 				const mapObjName = mapObj.name.normalize("NFKC");
 				if (mapObjName != "object") {
 					const splitMapObjName = mapObjName.split("_");
@@ -324,20 +328,28 @@ function createMapInfo(maps) {
 
 // すべてのマップ上の情報を削除する関数
 function removeMapInfo() {
-	while (document.getElementsByClassName("mapInfo")[0]) {
+	while (document.getElementsByClassName("mapInfo").length > 0) {
 		document.getElementsByClassName("mapInfo")[0].remove();
 	}
 }
 
-function getMapsInCurrentScene() {
+function getMapsInCurrentScene(mapName = null) {
 	let maps = [];
 	for (let sceneChild of scenes[currentSceneName].children) {
 		if (!sceneChild.isLight) {
-			maps.push(sceneChild);
+			if (typeof mapName == "string") {
+				if (sceneChild.name == mapName) {
+					maps.push(sceneChild);
+				}
+			} else {
+				maps.push(sceneChild);
+			}
 		}
 	}
 	return maps;
 }
+
+let floorPositionsY = {};
 
 async function switchScene(mapName) {
 	if (Object.keys(scenes).includes(mapName)) {
@@ -370,6 +382,12 @@ async function switchScene(mapName) {
 			throw new Error(mapName + "のマップデータはありません");
 		}
 	}
+	for (let key in floorPositionsY) {
+		delete floorPositionsY[key];
+	}
+	for (let map of getMapsInCurrentScene()) {
+		floorPositionsY[map.name] = map.position.y;
+	}
 }
 
 // 引数の連想配列から3Dモデルを読み込む関数
@@ -398,25 +416,19 @@ async function loadMap(maps) {
 	}
 }
 
-async function moveCameraTo(floorName = null) {
-	canControlMap = false;
+async function moveCameraTo(floorName = null, shouldAnimate = true) {
 	if (floorName) {
-		let floorExists = false;
-		for (let map of getMapsInCurrentScene()) {
-			if (map.name == floorName) {
-				floorExists = true;
-				break;
-			}
-		}
-		if (floorExists) {
+		if (Object.keys(floorPositionsY).includes(floorName)) {
 			for (let map of getMapsInCurrentScene()) {
-				if (map.name != floorName) {
+				if (map.name == floorName) {
+					map.visible = true;
+				} else {
 					map.visible = false;
 				}
 			}
-			cameraControls[cameraMode].setFocalOffset(0, 0, 0, true);
-			cameraControls[cameraMode].zoomTo(2, true);
-			await cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(0), THREE.MathUtils.degToRad(0), true);
+			cameraControls[cameraMode].setFocalOffset(0, 0, 0, shouldAnimate);
+			cameraControls[cameraMode].zoomTo(2, shouldAnimate);
+			await cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(0), THREE.MathUtils.degToRad(0), shouldAnimate);
 		} else {
 			throw new Error(floorName + "のマップデータはありません");
 		}
@@ -427,83 +439,275 @@ async function moveCameraTo(floorName = null) {
 				map.visible = true;
 			}
 		}
-		cameraControls[cameraMode].setFocalOffset(0, 0, 0, true);
-		cameraControls[cameraMode].zoomTo(1, true);
-		await cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(135), THREE.MathUtils.degToRad(55), true);
-
+		cameraControls[cameraMode].setFocalOffset(0, 0, 0, shouldAnimate);
+		cameraControls[cameraMode].zoomTo(1, shouldAnimate);
+		await cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(135), THREE.MathUtils.degToRad(55), shouldAnimate);
 	}
-	canControlMap = true;
 }
 
 // 3Dモデルのクリックの設定
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 let isTransitionedMap = true;
+const mapNav = document.getElementById("mapNav");
+mapNav.addEventListener("click", function(event) {
+	if (event.target.classList.contains("mapName") && !event.target.classList.contains("current")) {
+		transitionMap(event.target.textContent);
+	}
+});
 
-function transitionMap(mapObjName) {
-	if (isTransitionedMap) {
-		isTransitionedMap = false;
+transitionMap("全体マップ");
 
-		if (mapObjName) {
-			switch (mapMode) {
+function updateMapNav(prevMapMode, mapName) {
+	const mapNameElement = document.createElement("div");
+	mapNameElement.classList.add("mapName");
+	mapNameElement.textContent = mapName;
+	const separatorElement = document.createElement("div");
+	separatorElement.classList.add("separator");
+	separatorElement.textContent = "/";
+
+	switch (mapMode) {
+		case 0:
+			while (mapNav.children.length > 0) {
+				mapNav.lastElementChild.remove();
+			}
+			mapNav.append(mapNameElement);
+			mapNav.style.top = "0px";
+			break;
+
+		case 1:
+			switch (prevMapMode) {
 				case 0:
-					removeMapInfo();
-					switchScene(mapObjName).then(function() {
-						cameraMode = 1;
-						mapMode = 1;
-
-						cameraControls[cameraMode].enabled = false;
-						cameraControls[cameraMode].setTarget(0, 0, 0, false);
-						cameraControls[cameraMode].dollyTo(100, false);
-						cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(135), THREE.MathUtils.degToRad(55), false);
-						cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
-						cameraControls[cameraMode].zoomTo(1, false);
-
-						const mapName = document.getElementById("mapName");
-						mapName.textContent = currentSceneName;
-						mapName.classList.remove("hidden");
-						mapBackBtn.classList.remove("hidden");
-
-						createMapInfo(getMapsInCurrentScene());
-						isTransitionedMap = true;
-					}).catch(function(error) {
-						console.log(error);
-						createMapInfo(getMapsInCurrentScene());
-						setMapInfoPosition();
-						isTransitionedMap = true;
-					});
-
+					mapNav.append(separatorElement, mapNameElement);
 					break;
+
 				case 1:
-					removeMapInfo();
-					moveCameraTo(mapObjName).then(function() {
-						cameraMode = 1;
-						mapMode = 2;
-
-						const currentFloor = document.createElement("span");
-						currentFloor.id = "currentFloor";
-						currentFloor.textContent = mapObjName;
-						const mapName = document.getElementById("mapName");
-						mapName.append(currentFloor);
-						mapRotationBtn.classList.remove("hidden");
-
-						cameraControls[cameraMode].enabled = true;
-						createMapInfo(scenes[currentSceneName].getObjectByName(mapObjName));
-						isTransitionedMap = true;
-					}).catch(function(error) {
-						console.log(error);
-						createMapInfo(getMapsInCurrentScene());
-						setMapInfoPosition();
-						isTransitionedMap = true;
-					});
-					
+					for (let count = 0; count < prevMapMode; count++) {
+						mapNav.lastElementChild.remove();
+					}
+					mapNav.append(mapNameElement);
 					break;
+
 				case 2:
-					isTransitionedMap = true;
+					for (let count = 0; count < prevMapMode; count++) {
+						mapNav.lastElementChild.remove();
+					}
 					break;
 			}
-		} else {
-			isTransitionedMap = true;
+			mapNav.style.top = headerArea.getBoundingClientRect().height + "px";
+			break;
+
+		case 2:
+			mapNameElement.classList.add("floor");
+			mapNav.append(separatorElement, mapNameElement);
+			mapNav.style.top = headerArea.getBoundingClientRect().height + "px";
+			break;
+	}
+
+	for (let i = 0; i < mapNav.children.length; i++) {
+		mapNav.children[i].classList.toggle("current", i == mapNav.children.length - 1);
+	}
+}
+
+function transitionMap(mapName) {
+	if (isTransitionedMap) {
+		if (mapName) {
+			isTransitionedMap = false;
+			cameraControls[cameraMode].enabled = false;
+			removeMapInfo();
+			let prevMapMode = mapMode;
+
+			switch (mapMode) {
+				case 0:
+					switchScene(mapName).then(function() {
+						if (mapName == "全体マップ") {
+							// 全体マップから全体マップに
+							cameraMode = 0;
+							mapMode = 0;
+
+							cameraControls[cameraMode].enabled = true;
+							cameraControls[cameraMode].setTarget(0, 0, 0, false);
+							cameraControls[cameraMode].dollyTo(275, false);
+							cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(180), THREE.MathUtils.degToRad(55), false);
+							cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+							cameraControls[cameraMode].zoomTo(1, false);
+
+							updateMapNav(prevMapMode, mapName);
+							mapRotationBtn.classList.add("hidden");
+						} else {
+							// 全体マップから館内マップに
+							cameraMode = 1;
+							mapMode = 1;
+
+							cameraControls[cameraMode].enabled = false;
+							cameraControls[cameraMode].setTarget(0, 0, 0, false);
+							cameraControls[cameraMode].dollyTo(100, false);
+							cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(135), THREE.MathUtils.degToRad(55), false);
+							cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+							cameraControls[cameraMode].zoomTo(1, false);
+
+							for (let map of getMapsInCurrentScene()) {
+								if (!map.visible) {
+									map.visible = true;
+								}
+							}
+
+							updateMapNav(prevMapMode, mapName);
+							mapRotationBtn.classList.add("hidden");
+						}
+						createMapInfo(getMapsInCurrentScene());
+						setMapInfoPosition();
+						isTransitionedMap = true;
+					}).catch(function(error) {
+						console.log(error);
+						createMapInfo(getMapsInCurrentScene());
+						setMapInfoPosition();
+						cameraControls[cameraMode].enabled = true;
+						isTransitionedMap = true;
+					});
+					break;
+
+				case 1:
+					if (Object.keys(floorPositionsY).includes(mapName)) {
+						moveCameraTo(mapName).then(function() {
+							// 館内マップからフロアマップに
+							cameraMode = 1;
+							mapMode = 2;
+
+							cameraControls[cameraMode].enabled = true;
+
+							updateMapNav(prevMapMode, mapName);
+							mapRotationBtn.classList.remove("hidden");
+
+							createMapInfo(getMapsInCurrentScene(mapName));
+							setMapInfoPosition();
+							isTransitionedMap = true;
+						}).catch(function(error) {
+							console.log(error);
+							createMapInfo(getMapsInCurrentScene());
+							setMapInfoPosition();
+							isTransitionedMap = true;
+						});
+					} else {
+						switchScene(mapName).then(function() {
+							if (mapName == "全体マップ") {
+								// 館内マップから全体マップに
+								cameraMode = 0;
+								mapMode = 0;
+
+								cameraControls[cameraMode].enabled = true;
+								cameraControls[cameraMode].setTarget(0, 0, 0, false);
+								cameraControls[cameraMode].dollyTo(275, false);
+								cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(180), THREE.MathUtils.degToRad(55), false);
+								cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+								cameraControls[cameraMode].zoomTo(1, false);
+
+								updateMapNav(prevMapMode, mapName);
+								mapRotationBtn.classList.add("hidden");
+							} else {
+								// 館内マップから別の館内マップに
+								cameraMode = 1;
+								mapMode = 1;
+
+								cameraControls[cameraMode].enabled = false;
+								cameraControls[cameraMode].setTarget(0, 0, 0, false);
+								cameraControls[cameraMode].dollyTo(100, false);
+								cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(135), THREE.MathUtils.degToRad(55), false);
+								cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+								cameraControls[cameraMode].zoomTo(1, false);
+
+								for (let map of getMapsInCurrentScene()) {
+									if (!map.visible) {
+										map.visible = true;
+									}
+								}
+
+								updateMapNav(prevMapMode, mapName);
+								mapRotationBtn.classList.add("hidden");
+							}
+							createMapInfo(getMapsInCurrentScene());
+							setMapInfoPosition();
+							isTransitionedMap = true;
+						}).catch(function(error) {
+							console.log(error);
+							createMapInfo(getMapsInCurrentScene());
+							setMapInfoPosition();
+							cameraControls[cameraMode].enabled = false;
+							isTransitionedMap = true;
+						});
+					}
+					break;
+					
+				case 2:
+					if (mapName == currentSceneName) {
+						moveCameraTo().then(function() {
+							// フロアマップから館内マップに
+							cameraMode = 1;
+							mapMode = 1;
+
+							cameraControls[cameraMode].enabled = false;
+
+							updateMapNav(prevMapMode, mapName);
+							mapRotationBtn.classList.add("hidden");
+
+							createMapInfo(getMapsInCurrentScene());
+							setMapInfoPosition();
+							isTransitionedMap = true;
+						});
+					} else {
+						switchScene(mapName).then(function() {
+							if (mapName == "全体マップ") {
+								// フロアマップから全体マップに
+								cameraMode = 0;
+								mapMode = 0;
+
+								cameraControls[cameraMode].enabled = true;
+								cameraControls[cameraMode].setTarget(0, 0, 0, false);
+								cameraControls[cameraMode].dollyTo(275, false);
+								cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(180), THREE.MathUtils.degToRad(55), false);
+								cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+								cameraControls[cameraMode].zoomTo(1, false);
+
+								updateMapNav(prevMapMode, mapName);
+								mapRotationBtn.classList.add("hidden");
+							} else {
+								// フロアマップから別の館内マップに
+								cameraMode = 1;
+								mapMode = 1;
+
+								cameraControls[cameraMode].enabled = false;
+								cameraControls[cameraMode].setTarget(0, 0, 0, false);
+								cameraControls[cameraMode].dollyTo(100, false);
+								cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(135), THREE.MathUtils.degToRad(55), false);
+								cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+								cameraControls[cameraMode].zoomTo(1, false);
+
+								for (let map of getMapsInCurrentScene()) {
+									if (!map.visible) {
+										map.visible = true;
+									}
+								}
+
+								updateMapNav(prevMapMode, mapName);
+								prevMapMode = mapMode;
+								updateMapNav(prevMapMode, mapName);
+								mapRotationBtn.classList.add("hidden");
+							}
+							createMapInfo(getMapsInCurrentScene());
+							setMapInfoPosition();
+							isTransitionedMap = true;
+						}).catch(function(error) {
+							console.log(error);
+							const currentFloorName = document.querySelector("#mapNav .floor").textContent;
+							console.log(currentFloorName);
+							createMapInfo(getMapsInCurrentScene(currentFloorName));
+							setMapInfoPosition();
+							cameraControls[cameraMode].enabled = true;
+							isTransitionedMap = true;
+						});
+					}
+					break;
+			}
 		}
 	}
 }
@@ -514,7 +718,7 @@ window.addEventListener("resize", resize);
 function resize() {
 	// レンダラーのサイズの設定
 	rendererWidth = window.innerWidth;
-	rendererHeight = window.innerHeight;
+	rendererHeight = window.innerHeight - headerArea.getBoundingClientRect().height;
 	renderer.setSize(rendererWidth, rendererHeight);
 	// 解像度に合わせて3Dモデルをきれいに表示
 	renderer.setPixelRatio(window.devicePixelRatio);
@@ -577,6 +781,8 @@ function handleMapAreaPointerup(event) {
 	const pointerId = String(event.pointerId);
 	if (pointerdownCoords[pointerId]) {
 		if (Math.abs(deltaPointerCoords[pointerId]["x"]) < 5 && Math.abs(deltaPointerCoords[pointerId]["y"]) < 5) {
+			console.log(event.target);
+
 			const mapAreaOffset = mapArea.getBoundingClientRect();
 			// .setFromCamera()に必要な正規化デバイス座標に変換したマウスカーソルの座標の取得方法
 			// ブラウザウィンドウの左上を基準にマウスカーソルの座標を取得して、mapAreaの座標を引くことで、
@@ -642,71 +848,19 @@ function handleMapAreaPointercancel(event) {
 	}
 }
 
-// マップ一覧に戻るボタンの処理
-const mapBackBtn = document.getElementById("mapBackBtn");
-mapBackBtn.addEventListener("click", function(event) {
-	if (isTransitionedMap) {
-		isTransitionedMap = false;
-		switch (mapMode) {
-			case 1:
-				removeMapInfo();
-				switchScene("全体マップ").then(function() {
-					cameraMode = 0;
-					mapMode = 0;
-
-					cameraControls[cameraMode].enabled = true;
-					cameraControls[cameraMode].setTarget(0, 0, 0, false);
-					cameraControls[cameraMode].dollyTo(275, false);
-					cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(180), THREE.MathUtils.degToRad(55), false);
-					cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
-					cameraControls[cameraMode].zoomTo(1, false);
-
-					const mapName = document.getElementById("mapName");
-					mapName.textContent = currentSceneName;
-					mapName.classList.add("hidden");
-					mapBackBtn.classList.add("hidden");
-
-					createMapInfo(getMapsInCurrentScene());
-					isTransitionedMap = true;
-				}).catch(function(error) {
-					console.log(error);
-					createMapInfo(getMapsInCurrentScene());
-					setMapInfoPosition();
-					isTransitionedMap = true;
-				});
-				break;
-			case 2:
-				removeMapInfo();
-				moveCameraTo().then(function() {
-					cameraMode = 1;
-					mapMode = 1;
-
-					document.getElementById("currentFloor").remove();
-					mapRotationBtn.classList.add("hidden");
-
-					cameraControls[cameraMode].enabled = false;
-					createMapInfo(getMapsInCurrentScene());
-					isTransitionedMap = true;
-				});
-				break;
-		}
-	}
-});
-
 // マップ回転ボタンの処理
 const mapRotationBtn = document.getElementById("mapRotationBtn");
-let canControlMap = true;
 let mapAzimuthAngle = 0;
 mapRotationBtn.addEventListener("click", async function(event) {
-	if (canControlMap) {
-		canControlMap = false;
+	if (isTransitionedMap) {
+		isTransitionedMap = false;
 		mapAzimuthAngle = Math.round(THREE.MathUtils.radToDeg(cameraControls[cameraMode].azimuthAngle) - 90);
 		await cameraControls[cameraMode].rotateAzimuthTo(THREE.MathUtils.degToRad(mapAzimuthAngle), true);
 		if (mapAzimuthAngle <= -360) {
 			mapAzimuthAngle = mapAzimuthAngle % 360;
 			await cameraControls[cameraMode].rotateAzimuthTo(THREE.MathUtils.degToRad(mapAzimuthAngle), false);
 		}
-		canControlMap = true;
+		isTransitionedMap = true;
 	}
 });
 
@@ -753,43 +907,3 @@ function handleSearch() {
 		}
 	});
 }
-
-const topLogo = document.getElementById("toplogo");
-topLogo.addEventListener("click", function(event) {
-	if (isTransitionedMap) {
-		isTransitionedMap = false;
-		removeMapInfo();
-
-		// 前のシーンの3Dモデルを破棄するための処理
-		if (currentSceneName && scenes[currentSceneName]) {
-			for (let child of scenes[currentSceneName].children) {
-				child.visible = true; // 可視状態をリセット
-			}
-		}
-
-		switchScene("全体マップ").then(function() {
-			cameraMode = 0;
-			mapMode = 0;
-
-			cameraControls[cameraMode].enabled = true;
-			cameraControls[cameraMode].setTarget(0, 0, 0, false);
-			cameraControls[cameraMode].dollyTo(275, false);
-			cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(180), THREE.MathUtils.degToRad(55), false);
-			cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
-			cameraControls[cameraMode].zoomTo(1, false);
-
-			const mapName = document.getElementById("mapName");
-			mapName.textContent = currentSceneName;
-			mapName.classList.add("hidden");
-			mapBackBtn.classList.add("hidden");
-
-			createMapInfo(getMapsInCurrentScene());
-			isTransitionedMap = true;
-		}).catch(function(error) {
-			console.log(error);
-			createMapInfo(getMapsInCurrentScene());
-			setMapInfoPosition();
-			isTransitionedMap = true;
-		});
-	}
-});
