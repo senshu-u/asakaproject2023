@@ -225,6 +225,50 @@ img.images1{
 .nav_list {
   list-style: none;
 }
+
+.filter{
+	width: 31px;
+	height: 31px;
+	padding-left: 20px;
+}
+.itemName{
+	margin: 0px;
+	margin-left: 20px;
+}
+.search_block{
+	display:inline-block;
+	position: relative;
+}
+.search_block::before{
+	content:"";
+	width: 19px;
+	height: 19px;
+	background:url(./data/icon/search.png);
+	display: block;
+	position: absolute;
+	z-index: 5;
+	background-size: contain;
+	top: 7px;
+	left: 4px;
+}
+.search_block input{
+	top: 1px;
+	padding-left: 25px;
+}
+.ul_list{
+	margin: 0px;
+}
+.SLD_Name{
+	list-style-type: none;
+}
+.li_Name{
+	list-style-type: disc;
+	text-indent:-100px;
+	padding-left: 79px;
+}
+
+
+
 img {
 	vertical-align: top;
 }
@@ -286,70 +330,42 @@ canvas {
 	left: 0px;
 }
 
-#mapName {
-	top: 31px;
-	left: 0px;
-	height: 48px;
-	font-size: 32px;
-	line-height: 1.5;
-	background-color: rgba(255, 255, 255, 0.8);
-	padding-left: 32px;
-	padding-right: 8px;
-	z-index: 101;
-}
-
-#mapBackBtn {
-	position: absolute;
-	z-index: 1;
-	top: 91px;
-	left: 8px;
-}
-
 .hidden {
 	display: none;
 }
 
-#currentFloor::after {
-	content: "F";
-}
-.filter{
-	width: 31px;
-	height: 31px;
-	padding-left: 20px;
-}
-.itemName{
-	margin: 0px;
-	margin-left: 20px;
-}
-.search_block{
-	display:inline-block;
-	position: relative;
-}
-.search_block::before{
-	content:"";
-	width: 19px;
-	height: 19px;
-	background:url(./data/icon/search.png);
-	display: block;
+#mapNav {
+	width: calc(100% - 32px);
 	position: absolute;
-	z-index: 5;
-	background-size: contain;
-	top: 7px;
-	left: 4px;
-}
-.search_block input{
-	top: 1px;
-	padding-left: 25px;
-}
-.ul_list{
-	margin: 0px;
-}
-.SLD_Name{
-	list-style-type: none;
-}
-.li_Name{
-	list-style-type: disc;
-	text-indent:-100px;
-	padding-left: 79px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	background-color: #D9D6CE;
+	z-index: 1;
+	padding: 0px 16px;
+	font-weight: normal;
+	font-size: 1rem;
+	line-height: 2;
+	white-space: nowrap;
+	transition: all 0.5s;
+	top: 0px;
+	user-select: none;
 }
 
+.mapName {
+	cursor: pointer;
+}
+
+.separator {
+	margin: 0px 8px;
+}
+
+.mapName.current {
+	font-size: 1.25rem;
+	font-weight: bold;
+	cursor: auto;
+}
+
+.floor::after {
+	content: "F";
+}
