@@ -8,6 +8,7 @@ body {
 	color: #484747; /* 文字の色を #484747 に設定 */
 	position: relative;
 	height: 100svh;
+	overflow: hidden;
 }
 #headerArea {
 	display: flex;
