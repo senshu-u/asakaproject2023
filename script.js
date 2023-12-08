@@ -199,9 +199,9 @@ function createMapInfo(maps) {
 		case 0:
 			for (let mapObj of maps[0].children) {
 				const mapObjName = mapObj.name.normalize("NFKC");
-				if (mapObjName != "object") {
-					const splitMapObjName = mapObjName.split("_");
-					
+				const splitMapObjName = mapObjName.split("_");
+
+				if (splitMapObjName[0] != "object") {
 					if (Object.keys(icons).includes(splitMapObjName[0])) {
 						// アイコンを作る
 						const mapInfo = document.createElement("div");
@@ -227,9 +227,9 @@ function createMapInfo(maps) {
 						mapInfo.classList.add("buildingInfo");
 						mapInfo.dataset.mapObj = mapObj.name;
 
-						const buildingName = document.createElement("div");
-						buildingName.classList.add("buildingName");
-						buildingName.textContent = mapObjName;
+						const name = document.createElement("div");
+						name.classList.add("name");
+						name.textContent = splitMapObjName[0];
 
 						const buildingIconList = document.createElement("div");
 						buildingIconList.classList.add("buildingIconList");
@@ -249,7 +249,7 @@ function createMapInfo(maps) {
 							}
 						}
 
-						mapInfo.append(buildingName, buildingIconList);
+						mapInfo.append(name, buildingIconList);
 						mapArea.append(mapInfo);
 					}
 				}
@@ -260,9 +260,9 @@ function createMapInfo(maps) {
 			for (let map of maps) {
 				for (let mapObj of map.children) {
 					const mapObjName = mapObj.name.normalize("NFKC");
-					if (mapObjName != "object") {
-						const splitMapObjName = mapObjName.split("_");
+					const splitMapObjName = mapObjName.split("_");
 
+					if (splitMapObjName[0] != "object") {
 						if (Object.keys(icons).includes(splitMapObjName[0])) {
 							if (icons[splitMapObjName[0]]["filterItem"]) {
 								// アイコンを作る
@@ -289,9 +289,9 @@ function createMapInfo(maps) {
 		case 2:
 			for (let mapObj of maps[0].children) {
 				const mapObjName = mapObj.name.normalize("NFKC");
-				if (mapObjName != "object") {
-					const splitMapObjName = mapObjName.split("_");
+				const splitMapObjName = mapObjName.split("_");
 
+				if (splitMapObjName[0] != "object") {
 					if (splitMapObjName[0] == "transitionTo") {
 						const mapInfo = document.createElement("div");
 						mapInfo.classList.add("mapInfo");
@@ -306,7 +306,7 @@ function createMapInfo(maps) {
 							for (let i = 1; i <= 2; i++) {
 								const destinationName = document.createElement("div");
 								destinationName.textContent = splitMapObjName[i];
-								destinationName.classList.toggle("floor", i == 2);
+								if (i == 2) destinationName.classList.add("floor");
 								mapInfo.append(destinationName);
 							}
 							mapInfo.dataset.destination = splitMapObjName[1] + "_" + splitMapObjName[2];
@@ -334,9 +334,9 @@ function createMapInfo(maps) {
 						// 教室名を作る
 						const mapInfo = document.createElement("div");
 						mapInfo.classList.add("mapInfo");
-						mapInfo.classList.add("roomName");
+						mapInfo.classList.add("name");
 						mapInfo.dataset.mapObj = mapObj.name;
-						mapInfo.textContent = mapObjName;
+						mapInfo.textContent = splitMapObjName[0];
 						mapArea.append(mapInfo);
 					}
 				}
