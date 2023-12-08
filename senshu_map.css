@@ -325,6 +325,10 @@ canvas {
 	clip-path: polygon(0 0, 50% 100%, 100% 0);
 }
 
+.buildingName {
+	line-height: 1.5;
+}
+
 .buildingIconList {
 	display: flex;
 }
@@ -382,6 +386,11 @@ canvas {
 .floor::after {
 	content: "F";
 }
+
+.destinationName .floor::after {
+	content: "Fへ";
+}
+
 .nav_item{
 	accent-color: #117132;
 }
