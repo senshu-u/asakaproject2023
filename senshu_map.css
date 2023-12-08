@@ -258,11 +258,11 @@ img.images1{
 	z-index: 5;
 	background-size: contain;
 	top: 7px;
-	left: 4px;
+	left: 8px;
 }
 .search_block input{
 	top: 1px;
-	padding-left: 25px;
+	padding-left: 30px;
 }
 .ul_list{
 	margin: 0px;
