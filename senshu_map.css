@@ -359,6 +359,7 @@ canvas {
 
 .mapName {
 	cursor: pointer;
+	color: #757575;
 }
 
 .separator {
@@ -369,6 +370,7 @@ canvas {
 	font-size: 1.25rem;
 	font-weight: bold;
 	cursor: auto;
+	color: #3F3F3F;
 }
 
 .floor::after {
