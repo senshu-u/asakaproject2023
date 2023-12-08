@@ -84,7 +84,7 @@ img.images1{
 	padding-right: 3px;
 	padding-bottom: 10px;
 	padding-left: 5px;
-	padding-top:5px
+	padding-top:7px
 }
 @media(max-height: 840px) {
 	.listimages{
@@ -93,7 +93,7 @@ img.images1{
 		padding-right: 3px;
 	        padding-bottom: 10px;
 	        padding-left: 5px;
-		padding-top:5px
+		padding-top:7px
 	}
 }
 	@media (max-width: 767px) {
@@ -129,7 +129,7 @@ img.images1{
 	    padding-right: 3px;
 	    padding-bottom: 10px;
 	    padding-left: 5px;
-	    padding-top:5px
+	    padding-top:7px
 		}
 		img.searchimge{
 			display: inline;
