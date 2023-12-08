@@ -251,8 +251,8 @@ img.images1{
 }
 .search_block::before{
 	content:"";
-	width: 19px;
-	height: 19px;
+	width: 18px;
+	height: 18px;
 	background:url(./data/icon/search.png);
 	display: block;
 	position: absolute;
