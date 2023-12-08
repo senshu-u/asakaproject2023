@@ -60,7 +60,8 @@ img.images1{
 .filter{
 	width: 31px;
 	height: 31px;
-	padding-left: 20px;
+	padding-left: 14px;
+	padding-right: 14px;
 }
 /* メニューのデザイン*/
 #filterList {
@@ -233,12 +234,6 @@ img.images1{
 /* メニュー黒ポチを消す */
 .nav_list {
   list-style: none;
-}
-
-.filter{
-	width: 31px;
-	height: 31px;
-	padding-left: 20px;
 }
 .itemName{
 	margin: 0px;
