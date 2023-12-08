@@ -207,7 +207,7 @@ export class MapData {
 		"8_5.glb": {
 			"dirPath": this.building8MapPath,
 			"mapName": "8号館",
-			"floor": "5",
+			"floor": "R",
 			"rooms": []
 		},
 		"10_1.glb": {
