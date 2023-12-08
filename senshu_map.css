@@ -355,11 +355,11 @@ canvas {
 	top: 0px;
 	user-select: none;
 	box-shadow: 0px 2px 6px 1px rgb(170, 170, 170);
+	color: #757575;
 }
 
 .mapName {
 	cursor: pointer;
-	color: #757575;
 }
 
 .separator {
