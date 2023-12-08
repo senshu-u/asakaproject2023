@@ -292,7 +292,27 @@ function createMapInfo(maps) {
 				if (mapObjName != "object") {
 					const splitMapObjName = mapObjName.split("_");
 
-					if (Object.keys(icons).includes(splitMapObjName[0])) {
+					if (splitMapObjName[0] == "transitionTo") {
+						const mapInfo = document.createElement("div");
+						mapInfo.classList.add("mapInfo");
+						mapInfo.classList.add("destinationName");
+						mapInfo.dataset.mapObj = mapObj.name;
+						if (splitMapObjName[1] == "全体マップ") {
+							const destinationName = document.createElement("div");
+							destinationName.textContent = "出入口";
+							mapInfo.append(destinationName);
+							mapInfo.dataset.destination = splitMapObjName[1];
+						} else {
+							for (let i = 1; i <= 2; i++) {
+								const destinationName = document.createElement("div");
+								destinationName.textContent = splitMapObjName[i];
+								destinationName.classList.toggle("floor", i == 2);
+								mapInfo.append(destinationName);
+							}
+							mapInfo.dataset.destination = splitMapObjName[1] + "_" + splitMapObjName[2];
+						}
+						mapArea.append(mapInfo);
+					} else if (Object.keys(icons).includes(splitMapObjName[0])) {
 						// アイコンを作る
 						const mapInfo = document.createElement("div");
 						mapInfo.classList.add("mapInfo");
@@ -363,7 +383,7 @@ async function switchScene(mapName) {
 			// シーンの作成と設定
 			scenes[currentSceneName] = new THREE.Scene();
 			scenes[currentSceneName].name = mapName;
-			scenes[currentSceneName].background = new THREE.Color(0xfafafa);
+			scenes[currentSceneName].background = new THREE.Color(0x999a9c);
 
 			// ライトの作成と設定
 			const ambientLight = new THREE.AmbientLight(0x808080, 0.8);
@@ -781,7 +801,22 @@ function handleMapAreaPointerup(event) {
 	const pointerId = String(event.pointerId);
 	if (pointerdownCoords[pointerId]) {
 		if (Math.abs(deltaPointerCoords[pointerId]["x"]) < 5 && Math.abs(deltaPointerCoords[pointerId]["y"]) < 5) {
-			console.log(event.target);
+			// console.log(event.target);
+			const clickedMapInfo = (function() {
+				let childElement = null;
+				let currentElement = event.target;
+				while (currentElement != mapArea) {
+					childElement = currentElement;
+					currentElement = currentElement.parentElement;
+					// console.log(childElement, currentElement);
+				}
+				if (childElement.classList.contains("mapInfo")) {
+					return childElement;
+				} else {
+					return null;
+				}
+			}());
+			console.log(clickedMapInfo);
 
 			const mapAreaOffset = mapArea.getBoundingClientRect();
 			// .setFromCamera()に必要な正規化デバイス座標に変換したマウスカーソルの座標の取得方法
