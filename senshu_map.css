@@ -81,17 +81,15 @@ img.images1{
 .listimages{
 	width: 60px;
 	height: 60px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 5px;
+	border-radius: 7px;
+	padding: 0;
 }
 @media(max-height: 840px) {
 	.listimages{
 		width: 50px;
 		height: 50px;
-		padding-top: 10px;
-		padding-bottom: 10px;
-		padding-left: 5px;
+		border-radius: 7px;
+		padding: 0;
 	}
 }
 	@media (max-width: 767px) {
@@ -124,9 +122,8 @@ img.images1{
 		.listimages{
 	    width: 50px;
 	    height: 50px;
-	    padding-right: 3px;
-	    padding-bottom: 10px;
-	    padding-left: 5px;
+	    border-radius: 7px;
+	    padding: 0;
 		}
 		img.searchimge{
 			display: inline;
@@ -225,14 +222,7 @@ img.images1{
 }
 .filterItem{
 	margin: 0px;
-	padding: 0px;
-	display: flex;
-  align-items: center;
-	justify-content: center;
-}
-.filterItem{
-	margin: 0px;
-	padding: 0px;
+	padding: 10px;
 	display: flex;
   align-items: center;
 	justify-content: center;
