@@ -379,3 +379,6 @@ canvas {
 .floor::after {
 	content: "F";
 }
+.nav_item{
+	accent-color: #82B887;
+}
