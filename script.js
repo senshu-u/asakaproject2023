@@ -908,37 +908,151 @@ function isMobileDevice() {
 	}
 }
 
-// 前回ハイライトされたオブジェクトを参照するための変数
+// 点滅するオブジェクトを管理するための変数
+let isBlinking = false;
+const blinkFrequency = 500; // 点滅の間隔（ミリ秒）
+
+// 前回ハイライトされたオブジェクトを参照するための配列
 let highlightedObjects = [];
 let originalColors = [];
 
-// PCとモバイルで異なる要素を取得
+// 要素を取得
 const searchBoxDesktop = document.getElementById('searchBox');
-const searchBoxMobile = document.getElementById('searchBoxMobile');
 
 // イベントリスナーを設定
 searchBoxDesktop.addEventListener('input', handleSearch);
-searchBoxMobile.addEventListener('input', handleSearch);
 
 // 検索ボックスに入力があったときに呼び出される共通の関数
 function handleSearch() {
-	const searchTerm = this.value; // thisはイベントが発火した要素を指す
-	
+	// 検索用語を取得し、全角文字が含まれていれば半角に変換
+	const searchTerm = this.value.normalize('NFKC');
+
 	// 前回ハイライトされたオブジェクトのマテリアルを元に戻す
 	highlightedObjects.forEach((object, index) => {
 		if (object && originalColors[index]) {
-			object.material.color.copy(originalColors[index]);
+			let objectMaterials = Array.isArray(object.material) ? object.material : [object.material];
+			objectMaterials.forEach((material, materialIndex) => {
+				if (originalColors[index][materialIndex]) {
+					material.color.copy(originalColors[index][materialIndex]);
+				}
+			});
 		}
 	});
 	highlightedObjects = [];
 	originalColors = [];
-	
+
 	// シーン内のオブジェクトをループして一致するオブジェクトを探す
 	scenes[currentSceneName].traverse((object) => {
-		if (object.material && object.name === searchTerm) {
-			originalColors.push(object.material.color.clone());
-			object.material.color.set(0xff0000);  // ハイライトカラー（赤）に変更
-			highlightedObjects.push(object);
+		if (object.name === searchTerm) {
+
+			if (!object.material) {
+			} else {
+				let objectMaterials = Array.isArray(object.material) ? object.material : [object.material];
+				let originalMaterialColors = objectMaterials.map(material => {
+					return material && material.color ? material.color.clone() : null;
+				});
+
+				originalColors.push(originalMaterialColors);
+
+				objectMaterials.forEach(material => {
+					if (material && material.color) {
+						material.color.set(0xff0000);  // ハイライトカラー（赤）に変更
+					}
+				});
+
+				highlightedObjects.push(object);
+			}
+		}
+	});
+
+	if (highlightedObjects.length > 0) {
+		startBlinking();
+	} else {
+		stopBlinking();
+	}
+}
+
+// 点滅を開始する関数
+function startBlinking() {
+	if (isBlinking) return; // 既に点滅している場合は何もしない
+	isBlinking = true;
+	blinkObjects();
+}
+
+// 点滅を停止する関数
+function stopBlinking() {
+	isBlinking = false;
+	// 元の色に戻す
+	highlightedObjects.forEach((object, index) => {
+		if (object && originalColors[index]) {
+			let objectMaterials = Array.isArray(object.material) ? object.material : [object.material];
+			objectMaterials.forEach((material, matIndex) => {
+				material.color.copy(originalColors[index][matIndex]);
+			});
 		}
 	});
 }
+
+// オブジェクトを点滅させる関数
+function blinkObjects() {
+	if (!isBlinking) return; // 点滅が停止していれば何もしない
+
+	// 現在の時間を取得
+	const time = Date.now();
+
+	// 各ハイライトされたオブジェクトに対して点滅処理
+	highlightedObjects.forEach((object, index) => {
+		if (object && originalColors[index]) {
+			let objectMaterials = Array.isArray(object.material) ? object.material : [object.material];
+
+			// 現在の時間で色を切り替える
+			const isOn = Math.floor(time / blinkFrequency) % 2 === 0;
+			objectMaterials.forEach((material, matIndex) => {
+				material.color.copy(isOn ? new THREE.Color(0xff0000) : originalColors[index][matIndex]);
+			});
+		}
+	});
+
+	// 次のフレームで点滅を更新
+	requestAnimationFrame(blinkObjects);
+}
+
+const topLogo = document.getElementById("toplogo");
+topLogo.addEventListener("click", function (event) {
+	if (isTransitionedMap) {
+		isTransitionedMap = false;
+		removeMapInfo();
+
+		// 前のシーンの3Dモデルを破棄するための処理
+		if (currentSceneName && scenes[currentSceneName]) {
+			for (let child of scenes[currentSceneName].children) {
+				child.visible = true; // 可視状態をリセット
+			}
+		}
+
+		switchScene("全体マップ").then(function () {
+			cameraMode = 0;
+			mapMode = 0;
+
+			cameraControls[cameraMode].enabled = true;
+			cameraControls[cameraMode].setTarget(0, 0, 0, false);
+			cameraControls[cameraMode].dollyTo(275, false);
+			cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(180), THREE.MathUtils.degToRad(55), false);
+			cameraControls[cameraMode].setFocalOffset(0, 0, 0, false);
+			cameraControls[cameraMode].zoomTo(1, false);
+
+			const mapName = document.getElementById("mapName");
+			mapName.textContent = currentSceneName;
+			mapName.classList.add("hidden");
+			mapBackBtn.classList.add("hidden");
+
+			createMapInfo(getMapsInCurrentScene());
+			isTransitionedMap = true;
+		}).catch(function (error) {
+			console.log(error);
+			createMapInfo(getMapsInCurrentScene());
+			setMapInfoPosition();
+			isTransitionedMap = true;
+		});
+	}
+});
