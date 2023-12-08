@@ -387,6 +387,11 @@ canvas {
 	content: "Fへ";
 }
 
+.destinationName {
+	background-color: rgba(217, 217, 217, 0.85);
+	padding: 4px;
+}
+
 .nav_item{
 	accent-color: #117132;
 }
