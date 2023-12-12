@@ -126,48 +126,50 @@ function animation() {
 
 // 教室名やアイコンなどをマップのオブジェクトに付ける関数
 function setMapInfoPosition() {
-	let mapObjCoords = [];
-	const currentMapName = document.querySelector("#mapNav .current").textContent;
+	if (document.querySelector("#mapNav .current")) {
+		const currentMapName = document.querySelector("#mapNav .current").textContent;
+		let mapObjCoords = [];
 
-	// すべてのmapInfoの座標を取得する
-	for (let mapInfo of document.getElementsByClassName("mapInfo")) {
-		const mapObj = scenes[currentSceneName].getObjectByName(currentMapName).getObjectByName(mapInfo.dataset.mapObj);
-		if (mapObj) {
-			// 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
-			let [x, y, z] = getMapObjectCoord(mapObj);
-			
-			let mapObjCoord = {
-				"name": mapObj.name,
-				"x": x,
-				"y": y,
-				"z": z
-			};
+		// すべてのmapInfoの座標を取得する
+		for (let mapInfo of document.getElementsByClassName("mapInfo")) {
+			const mapObj = scenes[currentSceneName].getObjectByName(currentMapName).getObjectByName(mapInfo.dataset.mapObj);
+			if (mapObj) {
+				// 引数の名前のオブジェクトのcanvas上のx座標とy座標を返す関数
+				let [x, y, z] = getMapObjectCoord(mapObj);
+				
+				let mapObjCoord = {
+					"name": mapObj.name,
+					"x": x,
+					"y": y,
+					"z": z
+				};
 
-			mapObjCoords.push(mapObjCoord);
+				mapObjCoords.push(mapObjCoord);
+			}
 		}
-	}
 
-	mapObjCoords.sort(function(first, second) {
-		return second.z - first.z;
-	});
+		mapObjCoords.sort(function(first, second) {
+			return second.z - first.z;
+		});
 
-	let layer = 1;
-	for (let mapObjCoord of mapObjCoords) {
-		const selector = "[data-map-obj=\"" + mapObjCoord.name + "\"]";
-		const mapInfo = document.querySelector(selector);
-		mapInfo.classList.toggle("hidden", mapObjCoord.z >= 1);
-		let x = (rendererWidth / 2) * (mapObjCoord.x + 1);
-		let y = (rendererHeight / 2) * -(mapObjCoord.y - 1);
-		if (mapInfo.classList.contains("buildingInfo")) {
-			x = x - mapInfo.getBoundingClientRect().width / 2;
-			y = y - (mapInfo.getBoundingClientRect().height + 6);
-		} else {
-			x = x - mapInfo.getBoundingClientRect().width / 2;
-			y = y - mapInfo.getBoundingClientRect().height / 2;
+		let layer = 1;
+		for (let mapObjCoord of mapObjCoords) {
+			const selector = "[data-map-obj=\"" + mapObjCoord.name + "\"]";
+			const mapInfo = document.querySelector(selector);
+			mapInfo.classList.toggle("hidden", mapObjCoord.z >= 1);
+			let x = (rendererWidth / 2) * (mapObjCoord.x + 1);
+			let y = (rendererHeight / 2) * -(mapObjCoord.y - 1);
+			if (mapInfo.classList.contains("buildingInfo")) {
+				x = x - mapInfo.getBoundingClientRect().width / 2;
+				y = y - (mapInfo.getBoundingClientRect().height + 6);
+			} else {
+				x = x - mapInfo.getBoundingClientRect().width / 2;
+				y = y - mapInfo.getBoundingClientRect().height / 2;
+			}
+			mapInfo.style.left = x + "px";
+			mapInfo.style.top = y + "px";
+			mapInfo.style.zIndex = layer++;
 		}
-		mapInfo.style.left = x + "px";
-		mapInfo.style.top = y + "px";
-		mapInfo.style.zIndex = layer++;
 	}
 }
 
