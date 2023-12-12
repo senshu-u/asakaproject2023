@@ -7,15 +7,17 @@ export class MapData {
 	building5MapPath = this.mapPath + "building5/";
 	building7MapPath = this.mapPath + "building7/";
 	building8MapPath = this.mapPath + "building8/";
+	building9MapPath = this.mapPath + "building9/";
 	building10MapPath = this.mapPath + "building10/";
 	GreentopMapPath = this.mapPath + "Greentop/";
 	LibraryMapPath = this.mapPath + "Library/";
+	gymMapPath = this.mapPath + "gym/";
 
 	maps = {
 		"wholeMap.glb": {
 			"dirPath": this.mapPath,
 			"mapName": "全体マップ",
-			"floor": null,
+			"floor": "",
 			"rooms": []
 		},
 		"1_B1.glb": {
@@ -207,7 +209,55 @@ export class MapData {
 		"8_5.glb": {
 			"dirPath": this.building8MapPath,
 			"mapName": "8号館",
-			"floor": "R",
+			"floor": "5",
+			"rooms": []
+		},
+		"9_1.glb": {
+			"dirPath": this.building9MapPath,
+			"mapName": "9号館",
+			"floor": "1",
+			"rooms": []
+		},
+		"9_2.glb": {
+			"dirPath": this.building9MapPath,
+			"mapName": "9号館",
+			"floor": "2",
+			"rooms": []
+		},
+		"9_3.glb": {
+			"dirPath": this.building9MapPath,
+			"mapName": "9号館",
+			"floor": "3",
+			"rooms": []
+		},
+		"9_M3.glb": {
+			"dirPath": this.building9MapPath,
+			"mapName": "9号館",
+			"floor": "M3",
+			"rooms": []
+		},
+		"9_4.glb": {
+			"dirPath": this.building9MapPath,
+			"mapName": "9号館",
+			"floor": "4",
+			"rooms": []
+		},
+		"9_6.glb": {
+			"dirPath": this.building9MapPath,
+			"mapName": "9号館",
+			"floor": "6",
+			"rooms": []
+		},
+		"9_7.glb": {
+			"dirPath": this.building9MapPath,
+			"mapName": "9号館",
+			"floor": "7",
+			"rooms": []
+		},
+		"9_8.glb": {
+			"dirPath": this.building9MapPath,
+			"mapName": "9号館",
+			"floor": "8",
 			"rooms": []
 		},
 		"10_1.glb": {
@@ -286,6 +336,30 @@ export class MapData {
 			"dirPath": this.LibraryMapPath,
 			"mapName": "図書館別館",
 			"floor": "5",
+			"rooms": []
+		},
+		"S_B1.glb": {
+			"dirPath": this.gymMapPath,
+			"mapName": "総合体育館",
+			"floor": "B1",
+			"rooms": []
+		},
+		"S_1.glb": {
+			"dirPath": this.gymMapPath,
+			"mapName": "総合体育館",
+			"floor": "1",
+			"rooms": []
+		},
+		"S_2.glb": {
+			"dirPath": this.gymMapPath,
+			"mapName": "総合体育館",
+			"floor": "2",
+			"rooms": []
+		},
+		"S_3.glb": {
+			"dirPath": this.gymMapPath,
+			"mapName": "総合体育館",
+			"floor": "3",
 			"rooms": []
 		},
 	};
