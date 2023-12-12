@@ -163,6 +163,9 @@ export class MapInfoIcon {
 		"8号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
 		],
+		"9号館": [
+			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
+		],
 		"10号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
 			{"fileName": "restaurant.png", "filterItem": "食堂"},
@@ -173,6 +176,9 @@ export class MapInfoIcon {
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
 		],
 		"図書館別館": [
+			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
+		],
+		"総合体育館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
 		]
 	}
