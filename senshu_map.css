@@ -81,10 +81,9 @@ img.images1{
 .listimages{
 	width: 60px;
 	height: 60px;
-	padding-right: 3px;
-	padding-bottom: 10px;
-	padding-left: 5px;
-	padding-top:7px
+	border-radius: 7px;
+	padding: 0;
+	margin-left: 5px;
 }
 .itemName_last{
 	margin: 0px;
