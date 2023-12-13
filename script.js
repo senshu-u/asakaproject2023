@@ -908,65 +908,157 @@ const blinkFrequency = 500; // 点滅の間隔（ミリ秒）
 let highlightedObjects = [];
 let originalColors = [];
 
-// 要素を取得
-const searchBoxDesktop = document.getElementById('searchBox');
+document.addEventListener('DOMContentLoaded', function () {
+	const searchBoxDesktop = document.getElementById('searchBox');
+	searchBoxDesktop.addEventListener('input', handleSearch);
+});
 
-// イベントリスナーを設定
-searchBoxDesktop.addEventListener('input', handleSearch);
+let currentSearchTerm = ""; // グローバル変数
 
-// 検索ボックスに入力があったときに呼び出される共通の関数
+function onMapChange() {
+	if (currentSearchTerm) {
+		highlightSearchTerm(currentSearchTerm);
+	}
+}
+
+// 検索用語に基づいてハイライトする関数
+function highlightSearchTerm(searchTerm) {
+	resetHighlightedObjects();
+
+	//完全一致
+	// シーン内のオブジェクトをループして一致するオブジェクトを探す
+	/*let foundObject = false;
+	scenes[currentSceneName].traverse((object) => {
+		let objectName = object.name.toLowerCase();
+		if (objectName.includes('_')) {
+			objectName = objectName.split('_')[0]; // '_'の前の部分を取得
+		}
+		if (objectName.includes('(')) {
+			objectName = objectName.split('(')[0]; // '('の前の部分を取得
+		}
+
+		if (objectName === searchTerm.toLowerCase() || object.name.toLowerCase() === searchTerm.toLowerCase()) {
+			highlightObject(object);
+			foundObject = true;
+		}
+	});
+
+	// データ構造を参照する処理
+	if (!foundObject) {
+		for (const [building, rooms] of Object.entries(buildingRooms)) {
+			if (rooms.map(room => room.toLowerCase()).includes(searchTerm.toLowerCase())) {
+				scenes[currentSceneName].traverse((object) => {
+					if (object.name.toLowerCase() === building.toLowerCase()) {
+						highlightObject(object);
+					}
+				});
+			}
+		}
+	}*/
+
+
+	//部分一致
+	// シーン内のオブジェクトをループして一致するオブジェクトを探す
+	let foundObject = false;
+	scenes[currentSceneName].traverse((object) => {
+		let objectName = object.name.toLowerCase();
+		if (objectName.includes('_')) {
+			objectName = objectName.split('_')[0]; // '_'の前の部分を取得
+		}
+		if (objectName.includes('(')) {
+			objectName = objectName.split('(')[0]; // '('の前の部分を取得
+		}
+
+		if (objectName.replace(/\./g, '').includes(searchTerm.toLowerCase()) && !object.name.includes("object")) {
+			highlightObject(object);
+			foundObject = true;
+		}
+	});
+
+	// データ構造を参照する処理
+	if (!foundObject) {
+		for (const [building, rooms] of Object.entries(buildingRooms)) {
+			if (rooms.some(room => room.toLowerCase().includes(searchTerm.toLowerCase()))) {
+				scenes[currentSceneName].traverse((object) => {
+					if (object.name.toLowerCase() === building.toLowerCase()) {
+						highlightObject(object);
+					}
+				});
+			}
+		}
+	}
+	startOrStopBlinking();
+}
+
+// 名前に基づいてオブジェクトをハイライトする関数
+function highlightObjectByName(name) {
+	scenes[currentSceneName].traverse((object) => {
+		if (object.name === name) {
+			highlightObject(object);
+		}
+	});
+}
+
+// 検索ボックスのイベントハンドラー
 function handleSearch() {
-	// 検索用語を取得し、全角文字が含まれていれば半角に変換
-	const searchTerm = this.value.normalize('NFKC');
+	const searchTerm = this.value.normalize('NFKC').toLowerCase();
+	currentSearchTerm = searchTerm;
+	if (!searchTerm) {
+		resetHighlightedObjects();
+		return;
+	}
+	highlightSearchTerm(searchTerm);
+}
 
-	// 前回ハイライトされたオブジェクトのマテリアルを元に戻す
+//ハイライトされたオブジェクトをリセットする関数
+function resetHighlightedObjects() {
 	highlightedObjects.forEach((object, index) => {
 		if (object && originalColors[index]) {
-			let objectMaterials = Array.isArray(object.material) ? object.material : [object.material];
-			objectMaterials.forEach((material, materialIndex) => {
-				if (originalColors[index][materialIndex]) {
-					material.color.copy(originalColors[index][materialIndex]);
-				}
-			});
+			resetObjectColor(object, index);
 		}
 	});
 	highlightedObjects = [];
 	originalColors = [];
+}
 
-	// シーン内のオブジェクトをループして一致するオブジェクトを探す
-	scenes[currentSceneName].traverse((object) => {
-		if (object.name === searchTerm) {
+function highlightObject(object) {
+	let objectMaterials = Array.isArray(object.material) ? object.material : [object.material];
+	let originalMaterialColors = objectMaterials.map(material => material && material.color ? material.color.clone() : null);
 
-			if (!object.material) {
-			} else {
-				let objectMaterials = Array.isArray(object.material) ? object.material : [object.material];
-				let originalMaterialColors = objectMaterials.map(material => {
-					return material && material.color ? material.color.clone() : null;
-				});
+	originalColors.push(originalMaterialColors);
 
-				originalColors.push(originalMaterialColors);
-
-				objectMaterials.forEach(material => {
-					if (material && material.color) {
-						material.color.set(0xff0000);  // ハイライトカラー（赤）に変更
-					}
-				});
-
-				highlightedObjects.push(object);
-			}
+	objectMaterials.forEach(material => {
+		if (material && material.color) {
+			material.color.set(0xff0000); // ハイライトカラー（赤）に変更
 		}
 	});
 
-	if (highlightedObjects.length > 0) {
+	if (!highlightedObjects.includes(object)) {
+		highlightedObjects.push(object);
+	}
+}
+
+// オブジェクトの色をリセットする関数
+function resetObjectColor(object, index) {
+	let objectMaterials = Array.isArray(object.material) ? object.material : [object.material];
+	objectMaterials.forEach((material, materialIndex) => {
+		if (originalColors[index][materialIndex]) {
+			material.color.copy(originalColors[index][materialIndex]);
+		}
+	});
+}
+
+// 点滅を開始または停止する関数
+function startOrStopBlinking() {
+	if (highlightedObjects.length > 0 && !isBlinking) {
 		startBlinking();
-	} else {
+	} else if (highlightedObjects.length === 0 && isBlinking) {
 		stopBlinking();
 	}
 }
 
-// 点滅を開始する関数
+//点滅を開始する関数
 function startBlinking() {
-	if (isBlinking) return; // 既に点滅している場合は何もしない
 	isBlinking = true;
 	blinkObjects();
 }
@@ -974,37 +1066,23 @@ function startBlinking() {
 // 点滅を停止する関数
 function stopBlinking() {
 	isBlinking = false;
-	// 元の色に戻す
-	highlightedObjects.forEach((object, index) => {
-		if (object && originalColors[index]) {
-			let objectMaterials = Array.isArray(object.material) ? object.material : [object.material];
-			objectMaterials.forEach((material, matIndex) => {
-				material.color.copy(originalColors[index][matIndex]);
-			});
-		}
-	});
 }
 
 // オブジェクトを点滅させる関数
 function blinkObjects() {
-	if (!isBlinking) return; // 点滅が停止していれば何もしない
-
-	// 現在の時間を取得
+	if (!isBlinking) return;
 	const time = Date.now();
-
-	// 各ハイライトされたオブジェクトに対して点滅処理
 	highlightedObjects.forEach((object, index) => {
-		if (object && originalColors[index]) {
+		if (object && originalColors[index] && object.material) {
 			let objectMaterials = Array.isArray(object.material) ? object.material : [object.material];
-
-			// 現在の時間で色を切り替える
 			const isOn = Math.floor(time / blinkFrequency) % 2 === 0;
 			objectMaterials.forEach((material, matIndex) => {
-				material.color.copy(isOn ? new THREE.Color(0xff0000) : originalColors[index][matIndex]);
+				if (material && material.color && originalColors[index][matIndex]) {
+					material.color.copy(isOn ? new THREE.Color(0xff0000) : originalColors[index][matIndex]);
+				}
 			});
 		}
 	});
 
-	// 次のフレームで点滅を更新
 	requestAnimationFrame(blinkObjects);
 }
