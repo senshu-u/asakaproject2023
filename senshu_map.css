@@ -171,6 +171,40 @@ img.images1{
 		}
 		
 	}
+@media(max-width: 530px) {
+		.searchBox {
+			width: 300px;
+			height: 30px;
+			margin:  0px;      
+			border-radius: 10px; /* ボックスの四つ角を丸くする */
+			border: none;
+			background-color: #eeeef0;
+			box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
+		}
+	}
+	@media(max-width: 419px) {
+		.searchBox {
+			width: 200px;
+			height: 30px;
+			margin:  0px;      
+			border-radius: 10px; /* ボックスの四つ角を丸くする */
+			border: none;
+			background-color: #eeeef0;
+			box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
+		}
+		#filterList {
+			width: 30%;
+			height: 100%;
+			position: fixed;
+			top: 76px;
+			right: -40%;
+			z-index: 99;
+			background: rgba(217,217,217,0.85);
+			transition: .5s;
+			margin-top: 0px;
+			overflow: scroll;
+		}
+	}
 		.item{
 		margin: 10px;
 		padding: 10px;
