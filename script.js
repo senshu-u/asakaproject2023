@@ -3,6 +3,7 @@ import CameraControls from "camera-controls";
 import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
 import {MapData} from "./mapData.js";
 import {MapInfoIcon} from "./mapInfoIcon.js";
+import {buildingRooms} from "./building.js";
 
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
@@ -337,6 +338,7 @@ function createMapInfo(maps) {
 			}
 			break;
 	}
+	onMapChange();
 	setMapInfoPosition();
 }
 
