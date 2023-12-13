@@ -86,6 +86,11 @@ img.images1{
 	padding-left: 5px;
 	padding-top:7px
 }
+.itemName_last{
+	margin: 0px;
+	margin-left: 20px;
+	margin-bottom: 60px;
+}
 @media(max-height: 840px) {
 	.listimages{
 		width: 50px;
