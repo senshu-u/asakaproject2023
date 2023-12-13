@@ -112,14 +112,13 @@ img.images1{
 			position: relative;
 		}
 		.searchBox {
-			width: 258px;
+			width: 400px;
 			height: 30px;
 			margin:  0px;      
 			border-radius: 10px; /* ボックスの四つ角を丸くする */
 			border: none;
 			background-color: #eeeef0;
 			box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
-				font-size: 16px;Ï
 		}
 		img.images1{
 			width: 41px;
@@ -128,10 +127,10 @@ img.images1{
 			padding-right: 14px;
 		}
 		.listimages{
-	        width: 50px;
-	        height: 50px;
-		border-radius: 7px;
-		padding: 0;
+	    width: 50px;
+	    height: 50px;
+			border-radius: 7px;
+			padding: 0;
 		}
 		img.searchimge{
 			display: inline;
@@ -171,7 +170,7 @@ img.images1{
 		}
 		
 	}
-@media(max-width: 530px) {
+	@media(max-width: 530px) {
 		.searchBox {
 			width: 300px;
 			height: 30px;
