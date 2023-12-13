@@ -110,7 +110,7 @@ function animation() {
 		// 教室名やアイコンなどをマップのオブジェクトに付ける関数
 		setMapInfoPosition();
 	}
-	/*
+	
 	if (primaryPointerId && mapMode == 1) {
 		const scale = 0.01;
 		const currentCameraPositionY = prevCameraPosition.y + scale * deltaPointerCoords[primaryPointerId]["y"];
@@ -118,7 +118,7 @@ function animation() {
 		cameraControls[cameraMode].setTarget(prevTargetPosition.x, currentTargetPositionY, prevTargetPosition.z, false);
 		cameraControls[cameraMode].setPosition(prevCameraPosition.x, currentCameraPositionY, prevCameraPosition.z, false);
 	}
-	*/
+	
 	// console.log(cameras[cameraMode].zoom);
 	// let cameraPosition = cameras[cameraMode].position.x + ", " + cameras[cameraMode].position.y + ", " + cameras[cameraMode].position.z;
 	// document.getElementById("mapName").textContent = cameraPosition;
@@ -558,8 +558,7 @@ async function transitionMap(mapNames) {
 							cameraMode = 1;
 							mapMode = 1;
 
-							cameraControls[cameraMode].enabled = true;
-							// cameraControls[cameraMode].enabled = false;
+							cameraControls[cameraMode].enabled = false;
 							cameraControls[cameraMode].setTarget(0, 0, 0, false);
 							cameraControls[cameraMode].dollyTo(100, false);
 							cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(135), THREE.MathUtils.degToRad(55), false);
