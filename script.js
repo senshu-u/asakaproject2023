@@ -990,15 +990,6 @@ function highlightSearchTerm(searchTerm) {
 	startOrStopBlinking();
 }
 
-// 名前に基づいてオブジェクトをハイライトする関数
-function highlightObjectByName(name) {
-	scenes[currentSceneName].traverse((object) => {
-		if (object.name === name) {
-			highlightObject(object);
-		}
-	});
-}
-
 // 検索ボックスのイベントハンドラー
 function handleSearch() {
 	const searchTerm = this.value.normalize('NFKC').toLowerCase();
