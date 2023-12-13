@@ -558,7 +558,8 @@ async function transitionMap(mapNames) {
 							cameraMode = 1;
 							mapMode = 1;
 
-							cameraControls[cameraMode].enabled = false;
+							cameraControls[cameraMode].enabled = true;
+							// cameraControls[cameraMode].enabled = false;
 							cameraControls[cameraMode].setTarget(0, 0, 0, false);
 							cameraControls[cameraMode].dollyTo(100, false);
 							cameraControls[cameraMode].rotateTo(THREE.MathUtils.degToRad(135), THREE.MathUtils.degToRad(55), false);
