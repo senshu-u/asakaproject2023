@@ -1,4 +1,4 @@
-body {
+xbody {
 	margin: 0px;
 	padding: 0px;
 	background-color: rgb(255, 255, 255);
@@ -89,7 +89,7 @@ img.images1{
 .itemName_last{
 	margin: 0px;
 	margin-left: 20px;
-	margin-bottom: 60px;
+	margin-bottom: 100px;
 }
 @media(max-height: 840px) {
 	.listimages{
