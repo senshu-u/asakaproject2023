@@ -10,6 +10,11 @@ body {
 	height: 100svh;
 	overflow: hidden;
 }
+
+#toplogo {
+    object-fit: contain; /* 画像のアスペクト比を保ちながら、指定した幅と高さに合わせる */
+}
+
 #headerArea {
 	display: flex;
 	align-items: center;
