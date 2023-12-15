@@ -152,7 +152,7 @@ export class MapInfoIcon {
 		"4号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
 			{"fileName": "Smoking_area.png", "filterItem": "喫煙所"},
-			{"fileName": "office.png", "filterItem": "教務課"},
+			{"fileName": "office.png", "filterItem": "学生生活課・教務課・保健室"},
 		],
 		"5号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
