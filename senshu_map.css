@@ -347,7 +347,7 @@ canvas {
 }
 
 .building.destinationName {
-	background-color: #FFFFFF;
+	background-color: #EFF8FE;
 	padding: 4px;
 	border-radius: 4px;
 }
@@ -357,7 +357,7 @@ canvas {
 	position: absolute;
 	top: calc(100% - 4px);
 	left: calc(50% - 10px);
-	background-color: #FFFFFF;
+	background-color: #EFF8FE;
 	width: 20px;
 	height: 10px;
 	clip-path: polygon(0 0, 50% 100%, 100% 0);
