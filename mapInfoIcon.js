@@ -40,13 +40,13 @@ export class MapInfoIcon {
 		"自動販売機": {
 			"fileName": "vendingmachine.png",
 			"shouldShowMapObjName": false,
-			"filterItem": "自販機"
+			"filterItem": "自動販売機"
 		},
-		//"情報コアゾーン": {
-		//	"fileName": "icc.png",
-		//	"shouldShowMapObjName": true,
-		//	"filterItem": null
-		//},
+		/*"情報コアゾーン": {
+			"fileName": "icc.png",
+			"shouldShowMapObjName": true,
+			"filterItem": null
+		},*/
 		"ソフトクリーム屋": {
 			"fileName": "ice.png",
 			"shouldShowMapObjName": false,
@@ -91,11 +91,6 @@ export class MapInfoIcon {
 			"fileName": "mos.png",
 			"shouldShowMapObjName": false,
 			"filterItem": null
-		},
-		"喫煙所": {
-			"fileName": "Smoking_area.png",
-			"shouldShowMapObjName": false,
-			"filterItem": "喫煙所"
 		},
 		"図書館": {
 			"fileName": "library.png",
@@ -142,17 +137,22 @@ export class MapInfoIcon {
 	iconsForBuilding = {
 		"1号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
-			{"fileName": "printer.png", "filterItem": "プリンター"}
+			{"fileName": "printer.png", "filterItem": "プリンター"},
 		],
 		"2号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
-			{"fileName": "printer.png", "filterItem": "プリンター"}
+			{"fileName": "printer.png", "filterItem": "プリンター"},
+			{"fileName": "restarea.png", "filterItem": "休憩所"},
 		],
 		"3号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
+			{"fileName": "vendingmachine.png", "filterItem": "自動販売機"},
+			{"fileName": "restarea.png", "filterItem": "休憩所"},
 		],
 		"4号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
+			{"fileName": "Smoking_area.png", "filterItem": "喫煙所"},
+			{"fileName": "office.png", "filterItem": "教務課"},
 		],
 		"5号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
@@ -165,21 +165,31 @@ export class MapInfoIcon {
 		],
 		"9号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
+			{"fileName": "restaurant.png", "filterItem": "食堂"},
+			{"fileName": "library.png", "filterItem": "図書館"},
+			{"fileName": "vendingmachine.png", "filterItem": "自動販売機"},
+			{"fileName": "Smoking_area.png", "filterItem": "喫煙所"},
+			{"fileName": "printer.png", "filterItem": "プリンター"},
+			{"fileName": "restarea.png", "filterItem": "休憩所"},
 		],
 		"10号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
 			{"fileName": "restaurant.png", "filterItem": "食堂"},
 			{"fileName": "printer.png", "filterItem": "プリンター"},
-			{"fileName": "Smoking_area.png", "filterItem": "喫煙所"}
+			{"fileName": "Smoking_area.png", "filterItem": "喫煙所"},
+			{"fileName": "vendingmachine.png", "filterItem": "自動販売機"},
+			{"fileName": "restarea.png", "filterItem": "休憩所"},
 		],
 		"グリーントップ": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
 		],
 		"図書館別館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
+			{"fileName": "restarea.png", "filterItem": "休憩所"},
 		],
 		"総合体育館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
+			{"fileName": "vendingmachine.png", "filterItem": "自動販売機"},
 		]
 	}
 }
