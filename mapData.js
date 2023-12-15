@@ -17,7 +17,7 @@ export class MapData {
 		"wholeMap.glb": {
 			"dirPath": this.mapPath,
 			"mapName": "全体マップ",
-			"floor": null,
+			"floor": "",
 			"rooms": []
 		},
 		"1_B1.glb": {
@@ -240,6 +240,12 @@ export class MapData {
 			"dirPath": this.building9MapPath,
 			"mapName": "9号館",
 			"floor": "4",
+			"rooms": []
+		},
+		"9_5.glb": {
+			"dirPath": this.building9MapPath,
+			"mapName": "9号館",
+			"floor": "5",
 			"rooms": []
 		},
 		"9_6.glb": {
