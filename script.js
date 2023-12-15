@@ -351,6 +351,7 @@ function createMapInfo(maps) {
 			break;
 	}
 	onMapChange();
+	filterMapInfoIcon();
 	setMapInfoPosition();
 }
 
