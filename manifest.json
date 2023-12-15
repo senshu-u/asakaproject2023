@@ -1,6 +1,6 @@
 {
-  "name": "UniMap",
-  "short_name": "UniMap",
+  "name": "Uni Map",
+  "short_name": "Uni Map",
   "description": "Description of your PWA app.",
   "start_url": "/asakaproject2023/",
   "display": "standalone",
