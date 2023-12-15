@@ -886,6 +886,23 @@ function isMobileDevice() {
 	}
 }
 
+function logMapObjectNames(maps) {
+    let objectNames = []; // 名前を格納するための配列を初期化
+    maps.forEach(map => {
+        map.children.forEach(obj => {
+            let mapObjName = obj.name.normalize("NFKC"); // letで宣言
+            if (!mapObjName.includes("object") && !mapObjName.includes("transition") && (!mapObjName.includes("_"))) {
+                if (mapObjName.includes("_")) {
+                    mapObjName = mapObjName.split("_")[0];
+                }
+                objectNames.push(mapObjName); // 条件を満たす名前を配列に追加
+            }
+        });
+    });
+    console.log(objectNames); // 配列をコンソールに出力
+    return objectNames; // 必要に応じて配列を返す
+}
+
 // 点滅するオブジェクトを管理するための変数
 let isBlinking = false;
 const blinkFrequency = 500; // 点滅の間隔（ミリ秒）
