@@ -112,10 +112,10 @@ function animation() {
 		setMapInfoPosition();
 	}
 	
-	if (primaryPointerId && mapMode == 1) {
+	if (pointerId && mapMode == 1) {
 		const scale = 0.01;
-		const currentCameraPositionY = prevCameraPosition.y + scale * deltaPointerCoords[primaryPointerId]["y"];
-		const currentTargetPositionY = prevTargetPosition.y + scale * deltaPointerCoords[primaryPointerId]["y"];
+		const currentCameraPositionY = prevCameraPosition.y + scale * deltaPointerCoord["y"];
+		const currentTargetPositionY = prevTargetPosition.y + scale * deltaPointerCoord["y"];
 		cameraControls[cameraMode].setTarget(prevTargetPosition.x, currentTargetPositionY, prevTargetPosition.z, false);
 		cameraControls[cameraMode].setPosition(prevCameraPosition.x, currentCameraPositionY, prevCameraPosition.z, false);
 	}
@@ -160,9 +160,12 @@ function setMapInfoPosition() {
 			mapInfo.classList.toggle("hidden", mapObjCoord.z >= 1);
 			let x = (rendererWidth / 2) * (mapObjCoord.x + 1);
 			let y = (rendererHeight / 2) * -(mapObjCoord.y - 1);
-			if (mapInfo.classList.contains("buildingInfo")) {
+			if (mapInfo.classList.contains("building")) {
 				x = x - mapInfo.getBoundingClientRect().width / 2;
 				y = y - (mapInfo.getBoundingClientRect().height + 6);
+			} else if (mapInfo.classList.contains("floor")) {
+				x = 16;
+				y = y - mapInfo.getBoundingClientRect().height / 2;
 			} else {
 				x = x - mapInfo.getBoundingClientRect().width / 2;
 				y = y - mapInfo.getBoundingClientRect().height / 2;
@@ -217,7 +220,7 @@ function createMapInfo(maps) {
 						// 建物の情報を作る
 						const mapInfo = document.createElement("div");
 						mapInfo.classList.add("mapInfo");
-						mapInfo.classList.add("buildingInfo");
+						mapInfo.classList.add("building");
 						mapInfo.classList.add("destinationName");
 						mapInfo.dataset.mapObj = mapObj.name;
 						mapInfo.dataset.destination = mapObjName;
@@ -253,6 +256,15 @@ function createMapInfo(maps) {
 
 		case 1:
 			for (let map of maps) {
+				const mapInfo = document.createElement("div");
+				mapInfo.classList.add("mapInfo");
+				mapInfo.classList.add("destinationName");
+				mapInfo.classList.add("floor");
+				mapInfo.dataset.mapObj = map.name;
+				mapInfo.dataset.destination = map.name;
+				mapInfo.textContent = map.name;
+				mapArea.append(mapInfo);
+
 				for (let mapObj of map.children) {
 					const mapObjName = mapObj.name.normalize("NFKC");
 					const splitMapObjName = mapObjName.split("_");
@@ -748,47 +760,38 @@ mapArea.addEventListener("pointermove", handleMapAreaPointermove);
 mapArea.addEventListener("pointerup", handleMapAreaPointerup);
 mapArea.addEventListener("pointercancel", handleMapAreaPointercancel);
 
-let pointerdownCoords = {};
-let deltaPointerCoords = {};
-let primaryPointerId = null;
+let pointerdownCoord = {};
+let deltaPointerCoord = {};
+let pointerId = null;
 let prevCameraPosition = new THREE.Vector3();
 let prevTargetPosition = new THREE.Vector3();
 
 function handleMapAreaPointerdown(event) {
-	if (Object.keys(pointerdownCoords).length < 1) {
-		const pointerId = String(event.pointerId);
-		if (Object.keys(pointerdownCoords).length < 1) {
-			primaryPointerId = pointerId;
-			cameraControls[cameraMode].getPosition(prevCameraPosition, true);
-			cameraControls[cameraMode].getTarget(prevTargetPosition, true);
-			// console.log(prevCameraPosition);
-			// console.log(prevTargetPosition);
-		}
-		const pointerdownCoord = {
-			"x": event.clientX,
-			"y": event.clientY
-		};
-		const deltaPointerCoord = {
-			"x": 0,
-			"y": 0
-		}
-		pointerdownCoords[pointerId] = pointerdownCoord;
-		deltaPointerCoords[pointerId] = deltaPointerCoord;
+	if (!pointerId) {
+		pointerId = event.pointerId;
+		cameraControls[cameraMode].getPosition(prevCameraPosition, true);
+		cameraControls[cameraMode].getTarget(prevTargetPosition, true);
+		// console.log(prevCameraPosition);
+		// console.log(prevTargetPosition);
+
+		pointerdownCoord["x"] = event.clientX;
+		pointerdownCoord["y"] = event.clientY;
+
+		deltaPointerCoord["x"] = 0;
+		deltaPointerCoord["y"] = 0;
 	}
 }
 
 function handleMapAreaPointermove(event) {
-	const pointerId = String(event.pointerId);
-	if (pointerdownCoords[pointerId]) {
-		deltaPointerCoords[pointerId]["x"] = event.clientX - pointerdownCoords[pointerId]["x"];
-		deltaPointerCoords[pointerId]["y"] = event.clientY - pointerdownCoords[pointerId]["y"];
+	if (pointerId == event.pointerId) {
+		deltaPointerCoord["x"] = event.clientX - pointerdownCoord["x"];
+		deltaPointerCoord["y"] = event.clientY - pointerdownCoord["y"];
 	}
 }
 
 function handleMapAreaPointerup(event) {
-	const pointerId = String(event.pointerId);
-	if (pointerdownCoords[pointerId]) {
-		if (Math.abs(deltaPointerCoords[pointerId]["x"]) < 5 && Math.abs(deltaPointerCoords[pointerId]["y"]) < 5) {
+	if (pointerId == event.pointerId) {
+		if (Math.abs(deltaPointerCoord["x"]) < 5 && Math.abs(deltaPointerCoord["y"]) < 5) {
 			const clickedMapInfo = (function() {
 				let childElement = null;
 				let currentElement = event.target;
@@ -808,6 +811,7 @@ function handleMapAreaPointerup(event) {
 				const destinationName = clickedMapInfo.dataset.destination;
 				const splitDestinationName = destinationName.split("_");
 				transitionMap(splitDestinationName);
+				console.log(scenes[currentSceneName]);
 
 			} else {
 				const mapAreaOffset = mapArea.getBoundingClientRect();
@@ -847,33 +851,13 @@ function handleMapAreaPointerup(event) {
 				transitionMap(clickedMapObjName);
 			}
 		}
-
-		delete pointerdownCoords[pointerId];
-		delete deltaPointerCoords[pointerId];
-
-		if (primaryPointerId == pointerId) {
-			if (Object.keys(pointerdownCoords).length < 1) {
-				primaryPointerId = null;
-			} else {
-				primaryPointerId = Object.keys(pointerdownCoords)[0];
-			}
-		}
+		pointerId = null;
 	}
 }
 
 function handleMapAreaPointercancel(event) {
-	const pointerId = String(event.pointerId);
-	if (pointerdownCoords[pointerId]) {
-		delete pointerdownCoords[pointerId];
-		delete deltaPointerCoords[pointerId];
-
-		if (primaryPointerId == pointerId) {
-			if (Object.keys(pointerdownCoords).length < 1) {
-				primaryPointerId = null;
-			} else {
-				primaryPointerId = Object.keys(pointerdownCoords)[0];
-			}
-		}
+	if (pointerId == event.pointerId) {
+		pointerId = null;
 	}
 }
 
