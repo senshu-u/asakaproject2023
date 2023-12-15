@@ -91,7 +91,7 @@ img.images1{
 	padding: 0;
 	margin-left: 5px;
 }
-.itemName_last{
+.itemName:last-child {
 	margin: 0px;
 	margin-left: 20px;
 	margin-bottom: 100px;
