@@ -183,7 +183,7 @@ img.images1{
 	}
 	@media(max-width: 419px) {
 		.searchBox {
-			width: 230px;
+			width: 240px;
 			height: 30px;
 			margin:  0px;      
 			border-radius: 10px; /* ボックスの四つ角を丸くする */
