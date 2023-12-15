@@ -346,13 +346,13 @@ canvas {
 	white-space: nowrap;
 }
 
-.buildingInfo.destinationName {
+.building.destinationName {
 	background-color: #FFFFFF;
 	padding: 4px;
 	border-radius: 4px;
 }
 
-.buildingInfo::after {
+.building::after {
 	content: "";
 	position: absolute;
 	top: calc(100% - 4px);
@@ -363,7 +363,7 @@ canvas {
 	clip-path: polygon(0 0, 50% 100%, 100% 0);
 }
 
-.buildingInfo .name {
+.building .name {
 	line-height: 1.5;
 }
 
