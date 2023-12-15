@@ -886,6 +886,25 @@ function isMobileDevice() {
 	}
 }
 
+function filterMapInfoIcon() {
+	const checkboxes = filterList.querySelectorAll("[type=\"checkbox\"]");
+	const itemNames = filterList.getElementsByClassName("itemName");
+	for (let i = 0; i < checkboxes.length; i++) {
+		const selector = "[data-filter-item=\"" + itemNames[i].textContent + "\"]";
+		const mapInfoIcons = document.querySelectorAll(selector);
+
+		for (let mapInfoIcon of mapInfoIcons) {
+			mapInfoIcon.classList.toggle("hidden", !checkboxes[i].checked);
+		}
+	}
+}
+
+const filterList = document.getElementById("filterList");
+filterList.addEventListener("change", function(event) {
+	filterMapInfoIcon();
+	setMapInfoPosition();
+});
+
 function logMapObjectNames(maps) {
     let objectNames = []; // 名前を格納するための配列を初期化
     maps.forEach(map => {
