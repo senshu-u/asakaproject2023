@@ -174,6 +174,7 @@ function setMapInfoPosition() {
 			mapInfo.style.top = y + "px";
 			mapInfo.style.zIndex = layer++;
 		}
+		filterMapInfoIcon();
 	}
 }
 
