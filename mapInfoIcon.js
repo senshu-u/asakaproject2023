@@ -12,6 +12,11 @@ export class MapInfoIcon {
 			"shouldShowMapObjName": true,
 			"filterItem": "食堂"
 		},
+		"レストラン": {
+			"fileName": "restaurant.png",
+			"shouldShowMapObjName": true,
+			"filterItem": "食堂"
+		},
 		"男子トイレ": {
 			"fileName": "menRestroom.png",
 			"shouldShowMapObjName": false,
@@ -100,22 +105,22 @@ export class MapInfoIcon {
 		"教務課": {
 			"fileName": "office.png",
 			"shouldShowMapObjName": true,
-			"filterItem": "学生生活課・教務課・保健室"
+			"filterItem": "教務課"
 		},
 		"学生生活課": {
 			"fileName": "office.png",
 			"shouldShowMapObjName": true,
-			"filterItem": "学生生活課・教務課・保健室"
+			"filterItem": "教務課"
 		},
 		"保健室": {
 			"fileName": "office.png",
 			"shouldShowMapObjName": true,
-			"filterItem": "学生生活課・教務課・保健室"
+			"filterItem": "保健室"
 		},
 		"教務課第1事務室": {
 			"fileName": "office.png",
 			"shouldShowMapObjName": true,
-			"filterItem": "学生生活課・教務課・保健室"
+			"filterItem": "教務課"
 		},
 		"喫煙所": {
 			"fileName": "Smoking_area.png",
@@ -152,7 +157,7 @@ export class MapInfoIcon {
 		"4号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
 			{"fileName": "Smoking_area.png", "filterItem": "喫煙所"},
-			{"fileName": "office.png", "filterItem": "学生生活課・教務課・保健室"},
+			{"fileName": "office.png", "filterItem": "教務課"},
 		],
 		"5号館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
@@ -190,6 +195,8 @@ export class MapInfoIcon {
 		"総合体育館": [
 			{"fileName": "sharedtoilet.png", "filterItem": "トイレ"},
 			{"fileName": "vendingmachine.png", "filterItem": "自動販売機"},
-		]
+		],
+		"食堂館": [
+			{"fileName": "restaurant.png", "filterItem": "食堂"},		]
 	}
 }
