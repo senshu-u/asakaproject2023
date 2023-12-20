@@ -4,15 +4,18 @@ body {
 	background-color: rgb(255, 255, 255);
 	overflow: hidden;
 	font-family: 'BIZ UDPGothic', sans-serif;
-	font-weight: bold; /* 太字にする */
-	color: #484747; /* 文字の色を #484747 に設定 */
+	font-weight: bold;
+	/* 太字にする */
+	color: #484747;
+	/* 文字の色を #484747 に設定 */
 	position: relative;
 	height: 100svh;
 	overflow: hidden;
 }
 
 #toplogo {
-    object-fit: contain; /* 画像のアスペクト比を保ちながら、指定した幅と高さに合わせる */
+	object-fit: contain;
+	/* 画像のアスペクト比を保ちながら、指定した幅と高さに合わせる */
 }
 
 #headerArea {
@@ -21,282 +24,318 @@ body {
 	justify-content: center;
 	height: 76px;
 	width: 100%;
-	background-color:white;
-	text-align:center;
-	box-shadow: 0px 2px 6px 1px  rgb(171, 170, 170);
+	background-color: white;
+	text-align: center;
+	box-shadow: 0px 2px 6px 1px rgb(171, 170, 170);
 	z-index: 2;
 	position: relative;
 }
+
 #lightArea {
 	display: flex;
 	align-items: center;
 	width: 18%;
 	justify-content: center;
 }
-	.searchBox {
-		width: 600px;
-		height: 30px;
-		margin:  0 auto;            /* 中央寄せ */
-		border-radius: 10px; /* ボックスの四つ角を丸くする */
-		border: none;
-			background-color: #eeeef0;
-			box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
-			position: relative;
-		font-size: 16px;Ï
-		
-}
-	img.searchimge{
-		display: none;
-		width: 50px;
-		height: 50px;
-		padding-right: 5px;
-	}
 
-	/* アイコンがクリックされたらメニューを表示 */
-#drawer_input:checked ~ #filterList {
+.searchBox {
+	width: 600px;
+	height: 30px;
+	margin: 0 auto;
+	/* 中央寄せ */
+	border-radius: 10px;
+	/* ボックスの四つ角を丸くする */
+	border: none;
+	background-color: #eeeef0;
+	box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
+	position: relative;
+	font-size: 16px;
+}
+
+img.searchimge {
+	display: none;
+	width: 50px;
+	height: 50px;
+	padding-right: 5px;
+}
+
+/* アイコンがクリックされたらメニューを表示 */
+#drawer_input:checked~#filterList {
 	/*left: 65px;*/
 	right: 0%;
 }
 
-img.images1{
+img.images1 {
 	width: 41px;
 	height: 41px;
 	padding-left: 14px;
 	padding-right: 14px;
 }
 
-.filter{
+.filter {
 	width: 31px;
 	height: 31px;
 	padding-left: 14px;
 	padding-right: 14px;
 }
+
 /* メニューのデザイン*/
 #filterList {
-  width: 25%;
-  height: 100%;
-  position: fixed;
+	width: 25%;
+	height: 100%;
+	position: fixed;
 	top: 76px;
 	right: -35%;
-  z-index: 99;
-  background: rgba(217,217,217,0.85);
-  transition: .5s;
+	z-index: 99;
+	background: rgba(217, 217, 217, 0.85);
+	transition: .5s;
 	margin-top: 0px;
 	overflow: scroll;
 }
-.listimages{
+
+.listimages {
 	width: 60px;
 	height: 60px;
 	border-radius: 7px;
 	padding: 0;
 	margin-left: 5px;
 }
+
 .itemName:last-child {
 	margin: 0px;
 	margin-left: 20px;
 	margin-bottom: 100px;
 }
+
 @media(max-height: 840px) {
-	.listimages{
+	.listimages {
 		width: 50px;
 		height: 50px;
 		border-radius: 7px;
 		padding: 0;
 	}
 }
-	@media (max-width: 767px) {
-		#headerArea {
-			display: flex;
-			align-items: center;
-			height: 76px;
-			width: 100%;
-			background-color:white;
-			text-align:center;
-			box-shadow: 0px 2px 6px 1px  rgb(171, 170, 170);
-			z-index: 2;
-			position: relative;
-		}
-		.searchBox {
-			width: 600px;
-			height: 30px;
-			margin:  0px;      
-			border-radius: 10px; /* ボックスの四つ角を丸くする */
-			border: none;
-			background-color: #eeeef0;
-			box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
-		}
-		img.images1{
-			width: 41px;
-			height: 41px;
-			padding-left: 14px;
-			padding-right: 14px;
-		}
-		.listimages{
-	    width: 50px;
-	    height: 50px;
-			border-radius: 7px;
-			padding: 0;
-		}
-		img.searchimge{
-			display: inline;
-		}
-		#lightArea{
-			margin-left: auto; /* 右端に寄せる */
-			width: 10%;
-			justify-content: center;
-		}
-		.drawer_open {
-			margin: 0 0 0 ;
-			display: flex;
-			padding: 10px;
-			height: 40px;
-			width: 5%;
-			right: 100px;
-			justify-content: center;
-			align-items: center;
-			z-index: 100;/* 重なり順を一番上にする */
-			cursor: pointer;
-			margin-right: 30px;
-		}
-		#filterList {
-			width: 118px;
-			height: 100%;
-			position: fixed;
-			top: 76px;
-			right: -30%;
-			z-index: 99;
-			background: rgba(217,217,217,0.85);
-			transition: .5s;
-			margin-top: 0px;
-			overflow: scroll;
-		}
-		#drawer_input:checked ~ #filterList {
-			right: 0%;
-		}
-		
+
+@media (max-width: 767px) {
+	#headerArea {
+		display: flex;
+		align-items: center;
+		height: 76px;
+		width: 100%;
+		background-color: white;
+		text-align: center;
+		box-shadow: 0px 2px 6px 1px rgb(171, 170, 170);
+		z-index: 2;
+		position: relative;
 	}
-	@media(max-width: 530px) {
-		.searchBox {
-			width: 300px;
-			height: 30px;
-			margin:  0px;      
-			border-radius: 10px; /* ボックスの四つ角を丸くする */
-			border: none;
-			background-color: #eeeef0;
-			box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
-		}
+
+	.searchBox {
+		width: 600px;
+		height: 30px;
+		margin: 0px;
+		border-radius: 10px;
+		/* ボックスの四つ角を丸くする */
+		border: none;
+		background-color: #eeeef0;
+		box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
 	}
-	@media(max-width: 419px) {
-		.searchBox {
-			width: 240px;
-			height: 30px;
-			margin:  0px;      
-			border-radius: 10px; /* ボックスの四つ角を丸くする */
-			border: none;
-			background-color: #eeeef0;
-			box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
-		}
-		#filterList {
-			width: 30%;
-			height: 100%;
-			position: fixed;
-			top: 76px;
-			right: -40%;
-			z-index: 99;
-			background: rgba(217,217,217,0.85);
-			transition: .5s;
-			margin-top: 0px;
-			overflow: scroll;
-		}
-		.filter{
-			width: 31px;
-			height: 31px;
-			padding-left: 20px;
-		}
-		img.images1{
-			width: 41px;
-			height: 41px;
-			padding-left: 14px;
-			padding-right: 24px;
-		}
+
+	img.images1 {
+		width: 41px;
+		height: 41px;
+		padding-left: 14px;
+		padding-right: 14px;
 	}
-		.item{
-		margin: 10px;
-		padding: 10px;
-	}
-	img.images2{
+
+	.listimages {
 		width: 50px;
 		height: 50px;
+		border-radius: 7px;
+		padding: 0;
+	}
+
+	img.searchimge {
+		display: inline;
+	}
+
+	#lightArea {
+		margin-left: auto;
+		/* 右端に寄せる */
+		width: 10%;
+		justify-content: center;
+	}
+
+	.drawer_open {
+		margin: 0 0 0;
+		display: flex;
+		padding: 10px;
+		height: 40px;
+		width: 5%;
+		right: 100px;
+		justify-content: center;
+		align-items: center;
+		z-index: 100;
+		/* 重なり順を一番上にする */
+		cursor: pointer;
+		margin-right: 30px;
+	}
+
+	#filterList {
+		width: 118px;
+		height: 100%;
+		position: fixed;
+		top: 76px;
+		right: -30%;
+		z-index: 99;
+		background: rgba(217, 217, 217, 0.85);
+		transition: .5s;
+		margin-top: 0px;
+		overflow: scroll;
+	}
+
+	#drawer_input:checked~#filterList {
+		right: 0%;
+	}
+
+}
+
+@media(max-width: 530px) {
+	.searchBox {
+		width: 300px;
+		height: 30px;
+		margin: 0px;
+		border-radius: 10px;
+		/* ボックスの四つ角を丸くする */
+		border: none;
+		background-color: #eeeef0;
+		box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
+	}
+}
+
+@media(max-width: 419px) {
+	.searchBox {
+		width: 240px;
+		height: 30px;
+		margin: 0px;
+		border-radius: 10px;
+		/* ボックスの四つ角を丸くする */
+		border: none;
+		background-color: #eeeef0;
+		box-shadow: 2px 2px 6px 1px rgb(171, 170, 170);
+	}
+
+	#filterList {
+		width: 30%;
+		height: 100%;
+		position: fixed;
+		top: 76px;
+		right: -40%;
+		z-index: 99;
+		background: rgba(217, 217, 217, 0.85);
+		transition: .5s;
+		margin-top: 0px;
+		overflow: scroll;
+	}
+
+	.filter {
+		width: 31px;
+		height: 31px;
+		padding-left: 20px;
+	}
+
+	img.images1 {
+		width: 41px;
+		height: 41px;
+		padding-left: 14px;
+		padding-right: 24px;
+	}
+}
+
+.item {
+	margin: 10px;
+	padding: 10px;
+}
+
+img.images2 {
+	width: 50px;
+	height: 50px;
 }
 
 
-	/*ハンバーガーアイコンに関するデータ*/
+/*ハンバーガーアイコンに関するデータ*/
 .drawer_hidden {
-  display: none;	/* チェックボックスを非表示にする */
+	display: none;
+	/* チェックボックスを非表示にする */
 }
 
 /* ハンバーガーアイコンの設置スペース */
 .drawer_open {
-  margin: 0 0 0 ;
-  display: flex;
-  padding: 10px;
-  height: 40px;
-  width: 5%;
-  right: 100px;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;/* 重なり順を一番上にする */
-  cursor: pointer;
-  margin-left: 5px;
+	margin: 0 0 0;
+	display: flex;
+	padding: 10px;
+	height: 40px;
+	width: 5%;
+	right: 100px;
+	justify-content: center;
+	align-items: center;
+	z-index: 100;
+	/* 重なり順を一番上にする */
+	cursor: pointer;
+	margin-left: 5px;
 }
 
 /* ハンバーガーメニューのアイコン */
 .drawer_open span,
 .drawer_open span:before,
 .drawer_open span:after {
-  content: '';
-  display: block;
-  height: 4px;
-  width: 27px;
-  border-radius: 3px;
-  background: #333;
-  transition: 0.5s;
-  position: absolute;
+	content: '';
+	display: block;
+	height: 4px;
+	width: 27px;
+	border-radius: 3px;
+	background: #333;
+	transition: 0.5s;
+	position: absolute;
 }
 
 /* 三本線の一番上の棒の位置調整 */
 .drawer_open span:before {
-  bottom: 8px;
+	bottom: 8px;
 }
 
 /* 三本線の一番下の棒の位置調整 */
 .drawer_open span:after {
-  top: 8px;
+	top: 8px;
 }
-.filterItem{
+
+.filterItem {
 	margin: 0px;
 	padding: 10px;
 	display: flex;
-        align-items: center;
+	align-items: center;
 	justify-content: center;
 }
+
 /* メニュー黒ポチを消す */
 .nav_list {
-  list-style: none;
+	list-style: none;
 }
-.itemName{
+
+.itemName {
 	margin: 0px;
 	margin-left: 20px;
 }
-.search_block{
-	display:inline-block;
+
+.search_block {
+	display: inline-block;
 	position: relative;
 }
-.search_block::before{
-	content:"";
+
+.search_block::before {
+	content: "";
 	width: 17px;
 	height: 17px;
-	background:url(./data/icon/search.png);
+	background: url(./data/icon/search.png);
 	display: block;
 	position: absolute;
 	z-index: 5;
@@ -304,19 +343,23 @@ img.images1{
 	top: 7px;
 	left: 8px;
 }
-.search_block input{
+
+.search_block input {
 	top: 1px;
 	padding-left: 35px;
 }
-.ul_list{
+
+.ul_list {
 	margin: 0px;
 }
-.SLD_Name{
+
+.SLD_Name {
 	list-style-type: none;
 }
-.li_Name{
+
+.li_Name {
 	list-style-type: disc;
-	text-indent:-100px;
+	text-indent: -100px;
 	padding-left: 79px;
 }
 
@@ -343,7 +386,7 @@ canvas {
 	touch-action: none;
 }
 
-#mapArea > div {
+#mapArea>div {
 	position: absolute;
 }
 
@@ -446,6 +489,6 @@ canvas {
 	padding: 4px;
 }
 
-.nav_item{
+.nav_item {
 	accent-color: #117132;
 }
