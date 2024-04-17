@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width">
-    <title>Uni Map</title>
-    <link rel="stylesheet" href="senshu_map.css" />
-    <link rel="manifest" href="/asakaproject2023/manifest.json">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@700&display=swap" rel="stylesheet">
-    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-    <script type="importmap">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width">
+  <title>Uni Map</title>
+  <link rel="stylesheet" href="senshu_map.css" />
+  <link rel="manifest" href="/asakaproject2023/manifest.json">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@700&display=swap" rel="stylesheet">
+  <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+  <script type="importmap">
         {
           "imports": {
             "three": "https://unpkg.com/three@0.154.0/build/three.module.js",
@@ -20,96 +21,99 @@
           }
         }
       </script>
-    <script src="script.js" type="module"></script>
-  </head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1JW65P59R0"></script>
-  <script>
+  <script src="script.js" type="module"></script>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1JW65P59R0"></script>
+<script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  function gtag() { dataLayer.push(arguments); }
   gtag('js', new Date());
-  
+
   gtag('config', 'G-1JW65P59R0');
-  </script>
-  <body>
+</script>
+
+<body>
   <div id="headerArea">
-      <img id="toplogo" src="data/logo/logo.png" alt="アイコン" class="images1">
-      <div class="search_block">
-      <input class="searchBox" id="searchBox" type="search" name="s" placeholder="教室名を入力"></div>
-      <input id="drawer_input" class="drawer_hidden" type="checkbox">
-      <label for="drawer_input">
-        <img src="data/icon/filter.png" alt="フィルター" class="filter">
-      </label>
-        <div id="filterList">
-          <div class="filterItem">
-          <input type="checkbox" class="nav_item" id="toilelist" checked>
-          <label for="toilelist">
-            <img src="data/icon/sharedtoilet.png" alt="トイレアイコン" class="listimages">
-          </label>
-        </div>
-        <p class="itemName">トイレ</p>
-        <div class="filterItem">
-          <input type="checkbox" class="nav_item" id="printlist" checked>
-          <label for="printlist">
-            <img src="data/icon/printer.png" alt="検索アイコン" class="listimages">
-          </label>
-        </div>
-        <p class="itemName">プリンター</p>
-        <div class="filterItem">
-          <input type="checkbox" class="nav_item" id="librarylist" checked>
-          <label for="librarylist">
-            <img src="data/icon/library.png" alt="検索アイコン" class="listimages">
-          </label>
-        </div>
-        <p class="itemName">図書館</p>
-        <div class="filterItem">
-          <input type="checkbox" class="nav_item" id="officelist" checked>
-          <label for="officelist">
-            <img src="data/icon/office.png" alt="検索アイコン" class="listimages">
-          </label>
-        </div>
-        <p class="itemName">学生生活課<br>・教務課<br>・保健室</p>
-        <div class="filterItem">
-          <input type="checkbox" class="nav_item" id="jihankilist" checked>
-          <label for="jihankilist">
-            <img src="data/icon/vendingmachine.png" alt="検索アイコン" class="listimages">
-          </label>
-        </div>
-        <p class="itemName">自動販売機</p>
-        <div class="filterItem">
-          <input type="checkbox" class="nav_item" id="smokelist" checked>
-          <label for="smokelist">
-            <img src="data/icon/diningroom.png" alt="検索アイコン" class="listimages">
-          </label>
-        </div>
-        <p class="itemName">食堂</p>
-        <div class="filterItem">
-          <input type="checkbox" class="nav_item" id="eatlist" checked>
-          <label for="eatlist">
-            <img src="data/icon/Smoking_area.png" alt="検索アイコン" class="listimages">
-          </label>
-        </div>
-        <p class="itemName">喫煙所</p>
-        <div class="filterItem">
-          <input type="checkbox" class="nav_item" id="restlist" checked>
-          <label for="restlist">
-            <img src="data/icon/restarea.png" alt="検索アイコン" class="listimages">
-          </label>
-        </div>
-        <p class="itemName">休憩所</p>
+    <img id="toplogo" src="data/logo/logo.png" alt="アイコン" class="images1">
+    <div class="search_block">
+      <input class="searchBox" id="searchBox" type="search" name="s" placeholder="教室名を入力">
+    </div>
+    <input id="drawer_input" class="drawer_hidden" type="checkbox">
+    <label for="drawer_input">
+      <img src="data/icon/filter.png" alt="フィルター" class="filter">
+    </label>
+    <div id="filterList">
+      <div class="filterItem">
+        <input type="checkbox" class="nav_item" id="toilelist" checked>
+        <label for="toilelist">
+          <img src="data/icon/sharedtoilet.png" alt="トイレアイコン" class="listimages">
+        </label>
       </div>
-    </div>
-    <div id="mapNav"></div>
-    <div id="mapArea">
-      <div id="floorsNav" class="hidden">
-        <div id="topFloor"></div>
-        <div id="selectedFloor"></div>
-        <div id="bottomFloor"></div>
+      <p class="itemName">トイレ</p>
+      <div class="filterItem">
+        <input type="checkbox" class="nav_item" id="printlist" checked>
+        <label for="printlist">
+          <img src="data/icon/printer.png" alt="検索アイコン" class="listimages">
+        </label>
       </div>
-      <canvas id="canvas"></canvas>
+      <p class="itemName">プリンター</p>
+      <div class="filterItem">
+        <input type="checkbox" class="nav_item" id="librarylist" checked>
+        <label for="librarylist">
+          <img src="data/icon/library.png" alt="検索アイコン" class="listimages">
+        </label>
+      </div>
+      <p class="itemName">図書館</p>
+      <div class="filterItem">
+        <input type="checkbox" class="nav_item" id="officelist" checked>
+        <label for="officelist">
+          <img src="data/icon/office.png" alt="検索アイコン" class="listimages">
+        </label>
+      </div>
+      <p class="itemName">学生生活課<br>・教務課<br>・保健室</p>
+      <div class="filterItem">
+        <input type="checkbox" class="nav_item" id="jihankilist" checked>
+        <label for="jihankilist">
+          <img src="data/icon/vendingmachine.png" alt="検索アイコン" class="listimages">
+        </label>
+      </div>
+      <p class="itemName">自動販売機</p>
+      <div class="filterItem">
+        <input type="checkbox" class="nav_item" id="smokelist" checked>
+        <label for="smokelist">
+          <img src="data/icon/diningroom.png" alt="検索アイコン" class="listimages">
+        </label>
+      </div>
+      <p class="itemName">食堂</p>
+      <div class="filterItem">
+        <input type="checkbox" class="nav_item" id="eatlist" checked>
+        <label for="eatlist">
+          <img src="data/icon/Smoking_area.png" alt="検索アイコン" class="listimages">
+        </label>
+      </div>
+      <p class="itemName">喫煙所</p>
+      <div class="filterItem">
+        <input type="checkbox" class="nav_item" id="restlist" checked>
+        <label for="restlist">
+          <img src="data/icon/restarea.png" alt="検索アイコン" class="listimages">
+        </label>
+      </div>
+      <p class="itemName">休憩所</p>
     </div>
-    <div id="mapRotationBtn" class="hidden">
-      <img src="data/icon/rotation.png" alt="マップ左回転ボタン" height="80">
+  </div>
+  <div id="mapNav"></div>
+  <div id="mapArea">
+    <div id="floorsNav" class="hidden">
+      <div id="topFloor"></div>
+      <div id="selectedFloor"></div>
+      <div id="bottomFloor"></div>
     </div>
-  </body>
+    <canvas id="canvas"></canvas>
+  </div>
+  <div id="mapRotationBtn" class="hidden">
+    <img src="data/icon/rotation.png" alt="マップ左回転ボタン" height="80">
+  </div>
+</body>
+
 </html>
