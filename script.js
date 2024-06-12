@@ -499,7 +499,7 @@ function updateMapNav(prevMapMode, mapName) {
 				mapNav.lastElementChild.remove();
 			}
 			mapNav.append(mapNameElement);
-			mapNav.style.top = "0px";
+			mapNav.style.top = -headerArea.getBoundingClientRect().height + "px";
 			break;
 
 		case 1:
@@ -521,13 +521,13 @@ function updateMapNav(prevMapMode, mapName) {
 					}
 					break;
 			}
-			mapNav.style.top = headerArea.getBoundingClientRect().height + "px";
+			mapNav.style.top = "0px";
 			break;
 
 		case 2:
 			mapNameElement.classList.add("floor");
 			mapNav.append(separatorElement, mapNameElement);
-			mapNav.style.top = headerArea.getBoundingClientRect().height + "px";
+			mapNav.style.top = "0px";
 			break;
 	}
 
@@ -739,8 +739,9 @@ window.addEventListener("resize", resize);
 
 function resize() {
 	// レンダラーのサイズの設定
+	const headerHeight = headerArea.getBoundingClientRect().height;
 	rendererWidth = window.innerWidth;
-	rendererHeight = window.innerHeight - headerArea.getBoundingClientRect().height;
+	rendererHeight = window.innerHeight - headerHeight;
 	renderer.setSize(rendererWidth, rendererHeight);
 	// 解像度に合わせて3Dモデルをきれいに表示
 	renderer.setPixelRatio(window.devicePixelRatio);
@@ -878,6 +879,46 @@ mapRotationBtn.addEventListener("click", async function(event) {
 		isTransitionedMap = true;
 	}
 });
+
+const footerArea = document.getElementById("footerArea");
+const overlay = document.getElementById("overlay");
+const linkSelection = document.getElementById("linkSelection");
+const modalWindows = document.getElementsByClassName("modalWindow");
+
+footerArea.addEventListener("click", function(event) {
+	overlay.classList.remove("hidden");
+	linkSelection.classList.remove("hidden");
+	controlScroll(true);
+});
+
+// モーダルウィンドウのaタグ・オーバーレイがクリックされたとき、モーダルウィンドウとオーバーレイを非表示にする
+document.querySelectorAll(".modalWindow a, #overlay").forEach((element) => {
+	element.addEventListener("click", function(event) {
+		overlay.classList.add("hidden");
+		for (let modalWindow of modalWindows) {
+			modalWindow.classList.add("hidden");
+		}
+		controlScroll(false);
+	});
+});
+
+// スクロールの無効化関数
+// 引数はtrueで無効化
+function controlScroll(disableScroll) {
+	if (disableScroll) {
+		document.addEventListener("pointermove", disableEvent, {passive: false});
+		document.addEventListener("wheel", disableEvent, {passive: false});
+	} else {
+		document.removeEventListener("pointermove", disableEvent);
+		document.removeEventListener("wheel", disableEvent);
+	}
+}
+
+function disableEvent(e) {
+	e.preventDefault();
+}
+
+
 
 // モバイル端末を判定する関数
 function isMobileDevice() {
