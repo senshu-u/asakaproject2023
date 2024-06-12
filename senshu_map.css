@@ -104,7 +104,7 @@ img.images1 {
 .itemName:last-child {
 	margin: 0px;
 	margin-left: 20px;
-	margin-bottom: 100px;
+	margin-bottom: 150px;
 }
 
 @media(max-height: 840px) {
@@ -426,7 +426,7 @@ canvas {
 #mapRotationBtn {
 	position: absolute;
 	z-index: 1;
-	bottom: 0px;
+	bottom: 3rem;
 	left: 0px;
 }
 
@@ -488,6 +488,79 @@ canvas {
 	background-color: rgba(217, 217, 217, 0.85);
 	padding: 4px;
 }
+
+#footerArea {
+	position: fixed;
+	z-index: 1;
+	width: 100%;
+	bottom: 0px;
+	background-color: rgba(255, 255, 255, 0.80);
+	text-align: center;
+	font-size: 1rem;
+	padding: 1rem 0px;
+	cursor: pointer;
+	user-select: none;
+}
+
+#overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+	backdrop-filter: blur(5px);
+}
+
+.modalWindow {
+	position: fixed;
+	z-index: 4;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	max-width: 20rem;
+	width: 50%;
+	background-color: #FFFFFF;
+	border-radius: 4px;
+	text-align: center;
+}
+
+.modalWindow ul {
+	display: flex;
+	flex-direction: column;
+	padding: 0px;
+	margin: 0px;
+}
+
+.modalWindow li {
+	padding-block: 1rem;
+	list-style: none;
+	border-bottom: 1px solid #484747;
+	box-sizing: border-box;
+}
+
+.modalWindow li:last-of-type {
+	border-bottom: none;
+}
+
+.modalWindow li:has(> a) {
+	padding-block: 0rem;
+}
+
+.modalWindow li > a {
+	display: block;
+	padding-block: 1rem;
+	text-decoration: none;
+	color: #484747;
+}
+
+#mapAreaWrapper {
+	position: relative;
+	z-index: 0;
+}
+
+
 
 .nav_item {
 	accent-color: #117132;
