@@ -33,7 +33,6 @@
   gtag('config', 'G-1JW65P59R0');
 </script>
 
-
 <body>
   <div id="headerArea">
     <img id="toplogo" src="data/logo/logo.png" alt="アイコン" class="images1">
@@ -103,18 +102,28 @@
       <p class="itemName">休憩所</p>
     </div>
   </div>
-  <div id="mapNav"></div>
-  <div id="mapArea">
-    <div id="floorsNav" class="hidden">
-      <div id="topFloor"></div>
-      <div id="selectedFloor"></div>
-      <div id="bottomFloor"></div>
-    </div>
-    <canvas id="canvas"></canvas>
-  </div>
-  <div id="mapRotationBtn" class="hidden">
-    <img src="data/icon/rotation.png" alt="マップ左回転ボタン" height="80">
-  </div>
+  <div id="mapAreaWrapper">
+		<div id="mapNav"></div>
+		<div id="mapArea">
+			<canvas id="canvas"></canvas>
+		</div>
+		<div id="mapRotationBtn" class="hidden">
+			<img src="data/icon/rotation.png" alt="マップ左回転ボタン" height="80">
+		</div>
+	</div>
+	<footer id="footerArea">
+		お問い合わせ & アンケート実施中！
+	</footer>
+
+	<!--モーダルウィンドウ-->
+	<div id="overlay" class="hidden"></div>
+	<div id="linkSelection" class="hidden modalWindow">
+		<ul>
+			<li><a href="https://asakaproject2023.tumblr.com/" target="_blank" rel="noopener">公式SNS</a></li>
+			<li><a href="https://forms.gle/Tp8s9uqYrputFbYD6" target="_blank" rel="noopener">お問い合わせ</a></li>
+			<li><a href="https://forms.gle/ijG681542awCYMjy9" target="_blank" rel="noopener">アンケート</a></li>
+		</ul>
+	</div>
 </body>
 
 </html>
